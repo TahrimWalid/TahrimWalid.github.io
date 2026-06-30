@@ -488,6 +488,44 @@ const PROJECT_ICONS = {
 
 const num = i => String(i + 1).padStart(2, '0');
 
+const TECH_ICONS = {
+  'Python':                 'https://skillicons.dev/icons?i=python',
+  'Linux':                  'https://skillicons.dev/icons?i=linux',
+  'Ubuntu':                 'https://skillicons.dev/icons?i=ubuntu',
+  'Apache':                 'https://skillicons.dev/icons?i=apache',
+  'Cloudflare Tunnel':      'https://skillicons.dev/icons?i=cloudflare',
+  'React':                  'https://skillicons.dev/icons?i=react',
+  'ReactFlow':              'https://skillicons.dev/icons?i=react',
+  'Next.js':                'https://skillicons.dev/icons?i=nextjs',
+  'Terraform':              'https://skillicons.dev/icons?i=terraform',
+  'Vercel':                 'https://skillicons.dev/icons?i=vercel',
+  'SQLite':                 'https://skillicons.dev/icons?i=sqlite',
+  'Docker':                 'https://skillicons.dev/icons?i=docker',
+  'AWS':                    'https://skillicons.dev/icons?i=aws',
+  'Azure':                  'https://skillicons.dev/icons?i=azure',
+  'Git':                    'https://skillicons.dev/icons?i=git',
+  'TypeScript':             'https://skillicons.dev/icons?i=ts',
+  'JavaScript':             'https://skillicons.dev/icons?i=js',
+  'Kotlin':                 'https://skillicons.dev/icons?i=kotlin',
+  'Pydantic':               'https://skillicons.dev/icons?i=pydantic',
+  'Monaco':                 'https://skillicons.dev/icons?i=vscode',
+  'ARM':                    'https://cdn.simpleicons.org/arm/0091BD',
+  'CSC OpenStack':          'https://cdn.simpleicons.org/openstack/ED1944',
+  'Ollama':                 'https://cdn.simpleicons.org/ollama/ffffff',
+  'Chart.js':               'https://cdn.simpleicons.org/chartdotjs/FF6384',
+  'RTX 6000 Ada':           'https://cdn.simpleicons.org/nvidia/76B900',
+  'Nmap':                   'https://cdn.simpleicons.org/nmap/0E83CD',
+};
+
+function techPill(t, bg, size, pad) {
+  bg  = bg   || 'var(--bg)';
+  size = size || '0.7rem';
+  pad  = pad  || '5px 10px';
+  const src = TECH_ICONS[t];
+  const img = src ? '<img src="' + src + '" width="14" height="14" style="border-radius:3px;flex-shrink:0" loading="lazy">' : '';
+  return '<span style="display:inline-flex;align-items:center;gap:' + (src ? '6px' : '0') + ';font-family:var(--font-mono);font-size:' + size + ';padding:' + pad + ';border:1px solid var(--border);border-radius:var(--radius);color:var(--text-dim);background:' + bg + '">' + img + t + '</span>';
+}
+
 function renderHome() {
   const cards = PROJECTS.map((p, i) => `
     <a href="#/projects/${p.id}" data-reveal class="card-link" style="position:relative">
@@ -592,7 +630,7 @@ function renderProjects() {
         </div>
         <p style="margin:4px 0 12px;font-family:var(--font-mono);font-size:0.78rem;color:var(--text-dim)">${p.subtitle}</p>
         <div style="display:flex;flex-wrap:wrap;gap:7px">
-          ${p.stack.map(t => `<span style="font-family:var(--font-mono);font-size:0.7rem;padding:5px 10px;border:1px solid var(--border);border-radius:var(--radius);color:var(--text-dim);background:var(--bg)">${t}</span>`).join('')}
+          ${p.stack.map(t => techPill(t)).join('')}
         </div>
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;position:relative;z-index:1;flex-shrink:0">
@@ -661,7 +699,7 @@ function renderProjectDetail() {
     </div>
     <p style="margin:0 0 var(--space-md);font-family:var(--font-mono);font-size:0.9rem;color:var(--text-dim)">${p.subtitle}</p>
     <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:var(--space-lg)">
-      ${p.stack.map(t => `<span style="font-family:var(--font-mono);font-size:0.72rem;padding:5px 11px;border:1px solid var(--border);border-radius:var(--radius);color:var(--text-dim);background:var(--bg-elev)">${t}</span>`).join('')}
+      ${p.stack.map(t => techPill(t, 'var(--bg-elev)', '0.72rem', '5px 11px')).join('')}
     </div>
     <p style="margin:0 0 var(--space-lg);font-size:1.18rem;line-height:1.7;max-width:70ch;color:var(--text)">${p.oneliner}</p>
 
