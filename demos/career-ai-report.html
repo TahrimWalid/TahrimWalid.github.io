@@ -2,28 +2,158 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;overflow:hidden;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%)}
-.wrap{position:relative;width:100%;height:100%;overflow:hidden}
-iframe{
-  position:absolute;
-  top:0;left:0;
-  /* render at 2.86× the container, scale 0.35 so it fits exactly */
-  /* at 0.35 scale: slot_height / 0.35 ≈ 930px content visible,
-     which clears the header (390px) + first chart (510px) fully */
-  width:286%;
-  height:286%;
-  transform:scale(0.35);
-  transform-origin:top left;
-  border:none;
-  background:transparent;
-}
+html,body{height:100%;overflow:hidden;background:#08080a}
+body{font-family:'JetBrains Mono',monospace;font-size:clamp(8px,1.7vw,11px);color:#ededf0}
+.win{display:flex;flex-direction:column;height:100vh}
+.bar{background:#111116;border-bottom:1px solid #222229;padding:7px 12px;display:flex;align-items:center;gap:6px;flex-shrink:0}
+.dot{width:10px;height:10px;border-radius:50%}
+.dr{background:#ff5f57}.dy{background:#febc2e}.dg{background:#28c840}
+.btit{margin-left:4px;color:#34343d;font-size:.82em;flex:1;text-align:center}
+.body{flex:1;overflow:hidden;padding:10px 14px;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto 1fr auto;gap:6px 14px}
+.sep{color:#00ff41;font-weight:700;font-size:.9em}
+.hdr{color:#00ff41;font-weight:700}
+.dim{color:#5f5f6a}
+.acc{color:#00ff41}
+.warn{color:#f59e0b}
+
+/* header row — spans both columns */
+.top-header{grid-column:1/-1;border-bottom:1px solid #222229;padding-bottom:6px;display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+.metric-big{display:flex;flex-direction:column}
+.m-num{font-size:1.6em;font-weight:700;color:#00ff41;line-height:1}
+.m-lbl{color:#5f5f6a;font-size:.8em;margin-top:2px}
+
+/* left column */
+.col-left{display:flex;flex-direction:column;gap:8px;min-width:0}
+/* right column */
+.col-right{display:flex;flex-direction:column;gap:8px;min-width:0}
+
+/* footer spans both */
+.footer-row{grid-column:1/-1;border-top:1px solid #222229;padding-top:5px;display:flex;gap:20px;flex-wrap:wrap}
+
+.section-title{color:#00ff41;font-weight:700;font-size:.85em;margin-bottom:3px;letter-spacing:.04em}
+
+.bar-row{display:flex;align-items:center;gap:6px;margin:1px 0}
+.bar-label{color:#9a9aa4;min-width:9ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.9em}
+.bar-track{flex:1;height:6px;background:#1a1a1f;border-radius:2px;overflow:hidden}
+.bar-fill{height:100%;border-radius:2px;width:0;transition:width 1s cubic-bezier(.4,0,.2,1)}
+.bar-val{color:#ededf0;min-width:4ch;text-align:right;font-size:.85em}
+
+.b-aws{background:#00ff41}
+.b-py{background:#3b82f6}
+.b-dk{background:#06b6d4}
+.b-mid{background:#00ff41}
+.b-sen{background:#3b82f6}
+.b-lea{background:#f59e0b}
+.b-jun{background:#ef4444}
+.b-esp{background:#00ff41}
+.b-hel{background:#3b82f6}
+.b-tam{background:#06b6d4}
+.b-oth{background:#5f5f6a}
+
+.stat-row{display:flex;justify-content:space-between;margin:2px 0;font-size:.88em}
+.stat-k{color:#5f5f6a}
+.stat-v{color:#ededf0;font-weight:700}
+.stat-v.green{color:#00ff41}
+.stat-v.amber{color:#f59e0b}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <iframe src="../career-ai_cli_logs/report.html" scrolling="no" loading="lazy"></iframe>
+<div class="win">
+  <div class="bar">
+    <span class="dot dr"></span><span class="dot dy"></span><span class="dot dg"></span>
+    <span class="btit">career-ai — report.html  |  duunitori.fi  |  1,998 jobs</span>
+  </div>
+  <div class="body">
+
+    <!-- header metrics -->
+    <div class="top-header">
+      <div class="metric-big">
+        <span class="m-num">1,998</span>
+        <span class="m-lbl">jobs analyzed</span>
+      </div>
+      <div class="metric-big">
+        <span class="m-num">100%</span>
+        <span class="m-lbl">extracted</span>
+      </div>
+      <div class="metric-big">
+        <span class="m-num">96%</span>
+        <span class="m-lbl">in English</span>
+      </div>
+      <div class="metric-big">
+        <span class="m-num">4.5%</span>
+        <span class="m-lbl warn">Finnish required</span>
+      </div>
+      <div class="metric-big">
+        <span class="m-num" style="color:#3b82f6">98%</span>
+        <span class="m-lbl">hybrid work</span>
+      </div>
+    </div>
+
+    <!-- left col: skills + frameworks -->
+    <div class="col-left">
+      <div>
+        <div class="section-title">TOP SKILLS</div>
+        <div class="bar-row"><span class="bar-label">AWS</span><div class="bar-track"><div class="bar-fill b-aws" data-w="100"></div></div><span class="bar-val">1,630</span></div>
+        <div class="bar-row"><span class="bar-label">Python</span><div class="bar-track"><div class="bar-fill b-py" data-w="95"></div></div><span class="bar-val">1,550</span></div>
+        <div class="bar-row"><span class="bar-label">SQL</span><div class="bar-track"><div class="bar-fill" style="background:#8b5cf6" data-w="2"></div></div><span class="bar-val">26</span></div>
+        <div class="bar-row"><span class="bar-label">JavaScript</span><div class="bar-track"><div class="bar-fill" style="background:#f59e0b" data-w="1.2"></div></div><span class="bar-val">20</span></div>
+        <div class="bar-row"><span class="bar-label">Linux</span><div class="bar-track"><div class="bar-fill" style="background:#ef4444" data-w="0.9"></div></div><span class="bar-val">14</span></div>
+      </div>
+      <div>
+        <div class="section-title">TOP FRAMEWORKS</div>
+        <div class="bar-row"><span class="bar-label">Docker</span><div class="bar-track"><div class="bar-fill b-dk" data-w="100"></div></div><span class="bar-val">1,638</span></div>
+        <div class="bar-row"><span class="bar-label">React</span><div class="bar-track"><div class="bar-fill" style="background:#06b6d4;opacity:.4" data-w="1.2"></div></div><span class="bar-val">20</span></div>
+        <div class="bar-row"><span class="bar-label">Kubernetes</span><div class="bar-track"><div class="bar-fill" style="background:#3b82f6;opacity:.4" data-w="1.1"></div></div><span class="bar-val">18</span></div>
+        <div class="bar-row"><span class="bar-label">Terraform</span><div class="bar-track"><div class="bar-fill" style="background:#8b5cf6;opacity:.4" data-w="0.25"></div></div><span class="bar-val">4</span></div>
+        <div class="bar-row"><span class="bar-label">Databricks</span><div class="bar-track"><div class="bar-fill" style="background:#f59e0b;opacity:.4" data-w="0.25"></div></div><span class="bar-val">4</span></div>
+      </div>
+    </div>
+
+    <!-- right col: seniority + locations -->
+    <div class="col-right">
+      <div>
+        <div class="section-title">SENIORITY</div>
+        <div class="bar-row"><span class="bar-label">Mid</span><div class="bar-track"><div class="bar-fill b-mid" data-w="100"></div></div><span class="bar-val">1,778</span></div>
+        <div class="bar-row"><span class="bar-label">Senior</span><div class="bar-track"><div class="bar-fill b-sen" data-w="4.7"></div></div><span class="bar-val">84</span></div>
+        <div class="bar-row"><span class="bar-label">Lead</span><div class="bar-track"><div class="bar-fill b-lea" data-w="2.7"></div></div><span class="bar-val">48</span></div>
+        <div class="bar-row"><span class="bar-label">Junior</span><div class="bar-track"><div class="bar-fill b-jun" data-w="0.6"></div></div><span class="bar-val">10</span></div>
+      </div>
+      <div>
+        <div class="section-title">TOP LOCATIONS</div>
+        <div class="bar-row"><span class="bar-label">Espoo</span><div class="bar-track"><div class="bar-fill b-esp" data-w="100"></div></div><span class="bar-val">794</span></div>
+        <div class="bar-row"><span class="bar-label">Helsinki</span><div class="bar-track"><div class="bar-fill b-hel" data-w="91.6"></div></div><span class="bar-val">728</span></div>
+        <div class="bar-row"><span class="bar-label">Tampere</span><div class="bar-track"><div class="bar-fill b-tam" data-w="8.6"></div></div><span class="bar-val">68</span></div>
+        <div class="bar-row"><span class="bar-label">Vantaa</span><div class="bar-track"><div class="bar-fill b-oth" data-w="5.3"></div></div><span class="bar-val">42</span></div>
+        <div class="bar-row"><span class="bar-label">Turku</span><div class="bar-track"><div class="bar-fill b-oth" data-w="4.8"></div></div><span class="bar-val">38</span></div>
+      </div>
+      <div>
+        <div class="section-title">EXPERIENCE REQUIRED</div>
+        <div class="stat-row"><span class="stat-k">2–5 yrs</span><span class="stat-v green">1,784 <span class="dim">(89%)</span></span></div>
+        <div class="stat-row"><span class="stat-k">5–10 yrs</span><span class="stat-v">52</span></div>
+        <div class="stat-row"><span class="stat-k">0–2 yrs</span><span class="stat-v amber">2 <span class="dim">(scarce)</span></span></div>
+      </div>
+    </div>
+
+    <!-- footer -->
+    <div class="footer-row">
+      <span class="dim">generated 2026-06-04 · duunitori.fi · MIT</span>
+      <span style="margin-left:auto;color:#5f5f6a">remote: hybrid 1,962 · on-site 12 · remote 10</span>
+    </div>
+
+  </div>
 </div>
+<script>
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.querySelectorAll('.bar-fill').forEach(el => {
+      const w = el.dataset.w;
+      el.style.width = w + '%';
+    });
+  }, 200);
+});
+</script>
 </body>
 </html>
