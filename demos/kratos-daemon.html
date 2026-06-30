@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:#08080a}
+body{font-family:'JetBrains Mono',monospace;font-size:clamp(9px,1.85vw,12px)}
+.win{display:flex;flex-direction:column;height:100vh}
+.bar{background:#111116;border-bottom:1px solid #222229;padding:7px 12px;display:flex;align-items:center;gap:6px;flex-shrink:0}
+.dot{width:10px;height:10px;border-radius:50%}
+.dr{background:#ff5f57}.dy{background:#febc2e}.dg{background:#28c840}
+.btit{margin-left:4px;color:#34343d;font-size:.82em;flex:1;text-align:center}
+.body{flex:1;overflow-y:auto;padding:10px 14px;line-height:1.65;scrollbar-width:none}
+.body::-webkit-scrollbar{display:none}
+.l{display:block;white-space:pre-wrap;word-break:break-all}
+.lp{color:#00ff41}.lo{color:#ededf0}.lk{color:#00ff41}
+.ld{color:#5f5f6a}.lb{}
+</style>
+</head>
+<body>
+<div class="win">
+  <div class="bar">
+    <span class="dot dr"></span><span class="dot dy"></span><span class="dot dg"></span>
+    <span class="btit">ubuntu@ubuntu:~/kratos — bash</span>
+  </div>
+  <div class="body" id="tb"></div>
+</div>
+<script>
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const S = [
+  {t:'p',v:'ubuntu@ubuntu:~$ cd /home/ubuntu/kratos',a:250},
+  {t:'p',v:'ubuntu@ubuntu:~/kratos$ source venv/bin/activate',a:180},
+  {t:'p',v:'(venv) ubuntu@ubuntu:~/kratos$ set -a; source .env; set +a',a:180},
+  {t:'p',v:'(venv) ubuntu@ubuntu:~/kratos$ kratos llm-serve',a:700},
+  {t:'k',v:'[KRATOS-LLM] Starting LLM server (Qwen2.5-Coder 7B)...',a:120},
+  {t:'d',v:'[KRATOS-LLM] Host : 127.0.0.1:8686',a:80},
+  {t:'d',v:'[KRATOS-LLM] Model: qwen2.5-coder-7b-q4_k_m.gguf',a:80},
+  {t:'d',v:"[KRATOS-LLM] Keep this terminal open. Run 'kratos chat' in another.",a:500},
+  {t:'b',v:'',a:120},
+  {t:'d',v:'llama_ctx: n_ctx_per_seq (2048) < n_ctx_train (131072)',a:1100},
+  {t:'o',v:'INFO:  Started server process [2049]',a:180},
+  {t:'o',v:'INFO:  Waiting for application startup.',a:1500},
+  {t:'k',v:'INFO:  Application startup complete.',a:160},
+  {t:'k',v:'INFO:  Uvicorn running on http://127.0.0.1:8686',a:1000},
+  {t:'d',v:'INFO:  127.0.0.1:60860 - "GET /v1/models HTTP/1.1" 200 OK',a:500},
+  {t:'d',v:'INFO:  127.0.0.1:60868 - "POST /v1/chat/completions HTTP/1.1" 200 OK',a:500},
+  {t:'d',v:'INFO:  127.0.0.1:55900 - "GET /v1/models HTTP/1.1" 200 OK',a:500},
+  {t:'d',v:'INFO:  127.0.0.1:55902 - "POST /v1/chat/completions HTTP/1.1" 200 OK',a:500},
+  {t:'d',v:'INFO:  127.0.0.1:40546 - "GET /v1/models HTTP/1.1" 200 OK',a:500},
+  {t:'d',v:'INFO:  127.0.0.1:40550 - "POST /v1/chat/completions HTTP/1.1" 200 OK',a:500},
+];
+const CLS={p:'lp',k:'lk',o:'lo',d:'ld',b:'lb'};
+async function run(){
+  const tb=document.getElementById('tb');
+  while(true){
+    tb.innerHTML='';
+    for(const e of S){
+      const d=document.createElement('span');
+      d.className='l '+(CLS[e.t]||'lo');
+      tb.appendChild(d);
+      if(e.t==='p'){
+        for(const c of e.v){d.textContent+=c;tb.scrollTop=tb.scrollHeight;await sleep(36+Math.random()*12);}
+      } else {d.textContent=e.v;tb.scrollTop=tb.scrollHeight;}
+      await sleep(e.a||60);
+    }
+    await sleep(3000);
+  }
+}
+run();
+</script>
+</body>
+</html>

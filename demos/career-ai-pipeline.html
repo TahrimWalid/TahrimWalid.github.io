@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:#08080a}
+body{font-family:'JetBrains Mono',monospace;font-size:clamp(9px,1.85vw,12px)}
+.win{display:flex;flex-direction:column;height:100vh}
+.bar{background:#111116;border-bottom:1px solid #222229;padding:7px 12px;display:flex;align-items:center;gap:6px;flex-shrink:0}
+.dot{width:10px;height:10px;border-radius:50%}
+.dr{background:#ff5f57}.dy{background:#febc2e}.dg{background:#28c840}
+.btit{margin-left:4px;color:#34343d;font-size:.82em;flex:1;text-align:center}
+.body{flex:1;overflow-y:auto;padding:10px 14px;line-height:1.65;scrollbar-width:none}
+.body::-webkit-scrollbar{display:none}
+.l{display:block;white-space:pre-wrap;word-break:break-all}
+.lp{color:#00ff41}.lo{color:#ededf0}.lk{color:#00ff41}
+.ld{color:#5f5f6a}.lh{color:#00ff41;font-weight:700}.lb{}
+</style>
+</head>
+<body>
+<div class="win">
+  <div class="bar">
+    <span class="dot dr"></span><span class="dot dy"></span><span class="dot dg"></span>
+    <span class="btit">career-ai pipeline — main.py</span>
+  </div>
+  <div class="body" id="tb"></div>
+</div>
+<script>
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const S = [
+  {t:'p',v:'$ python main.py',a:500},
+  {t:'d',v:'[main.py] Pipeline started at 2026-06-04 00:36:12',a:100},
+  {t:'d',v:'[database.py] Database initialized successfully',a:200},
+  {t:'b',v:'',a:80},
+  {t:'h',v:'══════════════════════════════════════════════',a:100},
+  {t:'h',v:'  PHASE 1: WEB SCRAPER',a:80},
+  {t:'h',v:'══════════════════════════════════════════════',a:200},
+  {t:'d',v:'[scraper.py] Rate strategy: balanced | Delays: 5–30s | Backoff: 2x | Jitter: True',a:180},
+  {t:'o',v:'[scraper.py] STEP 1: INDEX SCRAPING',a:180},
+  {t:'d',v:'[scraper.py] Fetching listing page 1...',a:100},
+  {t:'d',v:'[scraper.py] Found 54 job links on page 1',a:80},
+  {t:'d',v:'[scraper.py] Fetching listing page 2...',a:100},
+  {t:'d',v:'[scraper.py] Found 54 job links on page 2',a:80},
+  {t:'d',v:'[scraper.py] ... (37 listing pages scraped)',a:300},
+  {t:'k',v:'[scraper.py] Step 1 complete. Inserted 1998 new job shells.',a:250},
+  {t:'b',v:'',a:80},
+  {t:'o',v:'[scraper.py] STEP 2: HYDRATION  |  1998 jobs  |  4 cycles',a:180},
+  {t:'d',v:'[Cycle 1/4] [039/500]  ✓  Cluster Operations Manager | Espoo',a:80},
+  {t:'d',v:'[Cycle 1/4] [181/500]  ✓  Cloud Operations Specialist | Digia | Helsinki',a:80},
+  {t:'d',v:'[Cycle 1/4] [327/500]  ✓  Senior Integration Engineer | aTalent',a:80},
+  {t:'k',v:'[Cycle 1/4] Hydrated: 492/500',a:80},
+  {t:'k',v:'[Cycle 2/4] Hydrated: 488/500',a:80},
+  {t:'k',v:'[Cycle 3/4] Hydrated: 480/500',a:80},
+  {t:'k',v:'[Cycle 4/4] Hydrated: 472/500',a:180},
+  {t:'k',v:'HYDRATION COMPLETE — 1932 records hydrated (96.7%)  ✓',a:300},
+  {t:'b',v:'',a:80},
+  {t:'h',v:'══════════════════════════════════════════════',a:100},
+  {t:'h',v:'  PHASE 2: LLM EXTRACTION',a:80},
+  {t:'h',v:'══════════════════════════════════════════════',a:180},
+  {t:'d',v:'[extractor.py] Processing all 1998 pending records',a:180},
+  {t:'d',v:'[extractor.py] ✓  8dc8e945...  →  Software Developer | Mid | Python, AWS',a:100},
+  {t:'d',v:'[extractor.py] ✓  72c9b4cb...  →  Data Engineer | Mid | SQL, dbt, Python',a:100},
+  {t:'d',v:'[extractor.py] ✓  3a84275c...  →  Software Developer | Mid | React, Node',a:200},
+  {t:'k',v:'[extractor.py] Complete — processed: 1998  |  success: 1944 (100%)  ✓',a:300},
+  {t:'b',v:'',a:80},
+  {t:'h',v:'══════════════════════════════════════════════',a:100},
+  {t:'h',v:'  PHASE 3: ANALYTICS & REPORTING',a:80},
+  {t:'h',v:'══════════════════════════════════════════════',a:180},
+  {t:'d',v:'[analytics.py] Company extraction: 106/1932 unknown (5.5%)',a:100},
+  {t:'d',v:'[analytics.py] Location extraction: 52/1932 unknown (2.7%)',a:100},
+  {t:'d',v:'[analytics.py] Duplicates: 1046 potential matches flagged',a:100},
+  {t:'d',v:'[analytics.py] Language analysis: 88/1944 require Finnish (4.5%)',a:200},
+  {t:'k',v:'[analytics.py] Analytics pipeline completed successfully',a:200},
+  {t:'b',v:'',a:80},
+  {t:'h',v:'══════════════════════════════════════════════',a:80},
+  {t:'k',v:'  Total: 1998  |  Hydrated: 1932 (96.7%)  |  Extracted: 1944 (100%)',a:80},
+  {t:'k',v:'  TOTAL PIPELINE TIME: 9h 30m',a:80},
+  {t:'h',v:'══════════════════════════════════════════════',a:100},
+];
+const CLS={p:'lp',k:'lk',o:'lo',d:'ld',h:'lh',b:'lb'};
+async function run(){
+  const tb=document.getElementById('tb');
+  while(true){
+    tb.innerHTML='';
+    for(const e of S){
+      const d=document.createElement('span');
+      d.className='l '+(CLS[e.t]||'lo');
+      tb.appendChild(d);
+      if(e.t==='p'){
+        for(const c of e.v){d.textContent+=c;tb.scrollTop=tb.scrollHeight;await sleep(36+Math.random()*12);}
+      } else {d.textContent=e.v;tb.scrollTop=tb.scrollHeight;}
+      await sleep(e.a||60);
+    }
+    await sleep(3000);
+  }
+}
+run();
+</script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:#08080a}
+body{font-family:'JetBrains Mono',monospace;font-size:clamp(9px,1.85vw,12px)}
+.win{display:flex;flex-direction:column;height:100vh}
+.bar{background:#111116;border-bottom:1px solid #222229;padding:7px 12px;display:flex;align-items:center;gap:6px;flex-shrink:0}
+.dot{width:10px;height:10px;border-radius:50%}
+.dr{background:#ff5f57}.dy{background:#febc2e}.dg{background:#28c840}
+.btit{margin-left:4px;color:#34343d;font-size:.82em;flex:1;text-align:center}
+.body{flex:1;overflow-y:auto;padding:10px 14px;line-height:1.65;scrollbar-width:none}
+.body::-webkit-scrollbar{display:none}
+.l{display:block;white-space:pre-wrap;word-break:break-all}
+.lo{color:#ededf0}.lk{color:#00ff41}.lw{color:#f59e0b}.ld{color:#5f5f6a}.lb{}
+</style>
+</head>
+<body>
+<div class="win">
+  <div class="bar">
+    <span class="dot dr"></span><span class="dot dy"></span><span class="dot dg"></span>
+    <span class="btit">career-ai scraper — hydration cycle 4/4</span>
+  </div>
+  <div class="body" id="tb"></div>
+</div>
+<script>
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const S = [
+  {t:'d',v:'[Cycle 4/4] [386/500] Hydrating: avoin-hakemus-aurinkoenergiamyyja...',a:80},
+  {t:'k',v:'[Cycle 4/4] [386/500]  ✓  Avoin hakemus: Aurinkoenergiamyyjä | Helsinki',a:120},
+  {t:'d',v:'[Cycle 4/4] [387/500] Hydrating: avoin-hakemus-aurinkoenergiamyyja...',a:80},
+  {t:'k',v:'[Cycle 4/4] [387/500]  ✓  Avoin hakemus: Aurinkoenergiamyyjä | Helsinki',a:120},
+  {t:'d',v:'[Cycle 4/4] [388/500] Hydrating: avoin-hakemus-aurinkoenergiamyyja...',a:80},
+  {t:'k',v:'[Cycle 4/4] [388/500]  ✓  Avoin hakemus: Aurinkoenergiamyyjä / Asi | Helsinki',a:300},
+  // IP starts blocking here — long pause before next response
+  {t:'d',v:'[Cycle 4/4] [389/500] Hydrating: software-development-engineer-ii-identity...',a:900},
+  {t:'w',v:'WARNING  [scraper.py:450]  Empty/login response (1/30). Possible IP block.',a:200},
+  {t:'d',v:'[Cycle 4/4] [390/500] Hydrating: software-development-engineer-ii-identity...',a:700},
+  {t:'w',v:'WARNING  [scraper.py:450]  Empty/login response (2/30). Possible IP block.',a:200},
+  // backoff pause visual — annotation, not log output
+  {t:'d',v:'  ·  ·  ·  (adaptive backoff ~11s)',a:300},
+  {t:'d',v:'.',a:400},{t:'d',v:'. .',a:400},{t:'d',v:'. . .',a:1200},
+  // recovery
+  {t:'d',v:'[Cycle 4/4] [391/500] Hydrating: electrical-site-manager-data-center...',a:300},
+  {t:'k',v:'[Cycle 4/4] [391/500]  ✓  Electrical Site Manager - Data Center Pr | Helsinki',a:120},
+  {t:'d',v:'[Cycle 4/4] [392/500] Hydrating: electrical-site-manager-data-center...',a:300},
+  {t:'k',v:'[Cycle 4/4] [392/500]  ✓  Electrical Site Manager - Data Center Pr | Helsinki',a:120},
+  {t:'d',v:'[Cycle 4/4] [393/500] Hydrating: cloud-devops-engineer...',a:300},
+  {t:'k',v:'[Cycle 4/4] [393/500]  ✓  (Cloud) DevOps Engineer | Nitor Group Oy | Helsinki',a:120},
+  {t:'d',v:'[Cycle 4/4] [394/500] Hydrating: cloud-devops-engineer...',a:300},
+  {t:'k',v:'[Cycle 4/4] [394/500]  ✓  (Cloud) DevOps Engineer | Nitor Group Oy | Helsinki',a:200},
+  {t:'k',v:'[scraper.py] IP block resolved — resuming normal pace',a:100},
+];
+const CLS={k:'lk',o:'lo',w:'lw',d:'ld',b:'lb'};
+async function run(){
+  const tb=document.getElementById('tb');
+  while(true){
+    tb.innerHTML='';
+    for(const e of S){
+      const d=document.createElement('span');
+      d.className='l '+(CLS[e.t]||'lo');
+      tb.appendChild(d);
+      d.textContent=e.v;
+      tb.scrollTop=tb.scrollHeight;
+      await sleep(e.a||60);
+    }
+    await sleep(3000);
+  }
+}
+run();
+</script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:#08080a}
+body{font-family:'JetBrains Mono',monospace;font-size:clamp(9px,1.85vw,12px)}
+.win{display:flex;flex-direction:column;height:100vh}
+.bar{background:#111116;border-bottom:1px solid #222229;padding:7px 12px;display:flex;align-items:center;gap:6px;flex-shrink:0}
+.dot{width:10px;height:10px;border-radius:50%}
+.dr{background:#ff5f57}.dy{background:#febc2e}.dg{background:#28c840}
+.btit{margin-left:4px;color:#34343d;font-size:.82em;flex:1;text-align:center}
+.body{flex:1;overflow-y:auto;padding:10px 14px;line-height:1.65;scrollbar-width:none}
+.body::-webkit-scrollbar{display:none}
+.l{display:block;white-space:pre-wrap;word-break:break-all}
+.lp{color:#00ff41}.lo{color:#ededf0}.lk{color:#00ff41}
+.ld{color:#5f5f6a}.lh{color:#00ff41;font-weight:700}.lb{}
+</style>
+</head>
+<body>
+<div class="win">
+  <div class="bar">
+    <span class="dot dr"></span><span class="dot dy"></span><span class="dot dg"></span>
+    <span class="btit">ubuntu@ubuntu:~/kratos — bash</span>
+  </div>
+  <div class="body" id="tb"></div>
+</div>
+<script>
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const S = [
+  {t:'p',v:'(venv) ubuntu@ubuntu:~/kratos$ kratos run --target 192.168.1.1',a:600},
+  {t:'b',v:'',a:80},
+  {t:'h',v:'── STAGE 1/5  NETWORK SCAN ─────────────────────────',a:180},
+  {t:'o',v:'[KRATOS] Running: nmap -sV -oX data/scans/nmap_192.168.1.1_20260426_000335.xml 192.168.1.1',a:180},
+  {t:'d',v:'Starting Nmap 7.80 ( https://nmap.org ) at 2026-04-26 00:03 UTC',a:1600},
+  {t:'d',v:'PORT      STATE  SERVICE       VERSION',a:60},
+  {t:'d',v:'21/tcp    open   ftp',a:60},
+  {t:'d',v:'22/tcp    open   ssh           (protocol 2.0)',a:60},
+  {t:'d',v:'23/tcp    open   telnet',a:60},
+  {t:'d',v:'80/tcp    open   http',a:60},
+  {t:'d',v:'443/tcp   open   ssl/https',a:60},
+  {t:'d',v:'... +7 more open ports',a:300},
+  {t:'k',v:'[KRATOS] Scan complete → nmap_192.168.1.1_20260426_000335.xml',a:120},
+  {t:'o',v:'[KRATOS] Parsed scan: Hosts: 1, total open ports: 12',a:200},
+  {t:'b',v:'',a:80},
+  {t:'h',v:'── STAGE 2/5  LOG PARSE ────────────────────────────',a:180},
+  {t:'o',v:'[KRATOS] Parsed auth log → source: file:/var/log/auth.log',a:100},
+  {t:'o',v:'[KRATOS] Total events: 19',a:80},
+  {t:'o',v:'[KRATOS] ssh_failed_login: 4  |  top IP: 10.251.63.73 (×4)',a:200},
+  {t:'b',v:'',a:80},
+  {t:'h',v:'── STAGE 3/5  SYSTEM CONTEXT ───────────────────────',a:180},
+  {t:'o',v:'[KRATOS] System context written → system_context_20260426_000555.json',a:200},
+  {t:'b',v:'',a:80},
+  {t:'h',v:'── STAGE 4/5  CORRELATION ──────────────────────────',a:180},
+  {t:'o',v:'[KRATOS] 10 correlation rules evaluated',a:100},
+  {t:'o',v:'[KRATOS] Findings JSON → data/reports/findings_20260426_000555.json',a:200},
+  {t:'b',v:'',a:80},
+  {t:'h',v:'── STAGE 5/5  LLM ANALYSIS ─────────────────────────',a:180},
+  {t:'o',v:'[KRATOS] Bundle written → data/bundles/bundle_20260426_000735.txt',a:100},
+  {t:'d',v:'[KRATOS-LLM] Using running LLM server (fast path)...',a:1200},
+  {t:'k',v:'[KRATOS] Run artifact set: 20260426_000554',a:120},
+  {t:'k',v:'[KRATOS] All 5 stages complete.',a:100},
+];
+const CLS={p:'lp',k:'lk',o:'lo',d:'ld',h:'lh',b:'lb'};
+async function run(){
+  const tb=document.getElementById('tb');
+  while(true){
+    tb.innerHTML='';
+    for(const e of S){
+      const d=document.createElement('span');
+      d.className='l '+(CLS[e.t]||'lo');
+      tb.appendChild(d);
+      if(e.t==='p'){
+        for(const c of e.v){d.textContent+=c;tb.scrollTop=tb.scrollHeight;await sleep(36+Math.random()*12);}
+      } else {d.textContent=e.v;tb.scrollTop=tb.scrollHeight;}
+      await sleep(e.a||60);
+    }
+    await sleep(3000);
+  }
+}
+run();
+</script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:#08080a}
+body{font-family:'JetBrains Mono',monospace;font-size:clamp(9px,1.85vw,12px)}
+.win{display:flex;flex-direction:column;height:100vh}
+.bar{background:#111116;border-bottom:1px solid #222229;padding:7px 12px;display:flex;align-items:center;gap:6px;flex-shrink:0}
+.dot{width:10px;height:10px;border-radius:50%}
+.dr{background:#ff5f57}.dy{background:#febc2e}.dg{background:#28c840}
+.btit{margin-left:4px;color:#34343d;font-size:.82em;flex:1;text-align:center}
+.body{flex:1;overflow-y:auto;padding:10px 14px;line-height:1.65;scrollbar-width:none}
+.body::-webkit-scrollbar{display:none}
+.l{display:block;white-space:pre-wrap;word-break:break-all}
+.lp{color:#00ff41}.lo{color:#ededf0}.lk{color:#00ff41}
+.lw{color:#f59e0b}.le{color:#ef4444}.ld{color:#5f5f6a}.lb{}
+</style>
+</head>
+<body>
+<div class="win">
+  <div class="bar">
+    <span class="dot dr"></span><span class="dot dy"></span><span class="dot dg"></span>
+    <span class="btit">ubuntu@ubuntu:~/kratos — bash</span>
+  </div>
+  <div class="body" id="tb"></div>
+</div>
+<script>
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const S = [
+  {t:'d',v:'[ Terminal B — simulating auth burst ]',a:400},
+  {t:'b',v:'',a:80},
+  {t:'p',v:'ubuntu@ubuntu:~/kratos$ su ubuntu',s:50,a:400},
+  {t:'d',v:'Password:',a:700},
+  {t:'e',v:'su: Authentication failure',a:350},
+  {t:'p',v:'ubuntu@ubuntu:~/kratos$ su ubuntu',s:50,a:380},
+  {t:'d',v:'Password:',a:700},
+  {t:'e',v:'su: Authentication failure',a:350},
+  {t:'p',v:'ubuntu@ubuntu:~/kratos$ su ubuntu',s:50,a:380},
+  {t:'d',v:'Password:',a:700},
+  {t:'e',v:'su: Authentication failure',a:350},
+  {t:'p',v:'ubuntu@ubuntu:~/kratos$ su ubuntu',s:50,a:380},
+  {t:'d',v:'Password:',a:700},
+  {t:'e',v:'su: Authentication failure',a:350},
+  {t:'p',v:'ubuntu@ubuntu:~/kratos$ su ubuntu',s:50,a:380},
+  {t:'d',v:'Password:',a:700},
+  {t:'e',v:'su: Authentication failure',a:500},
+  {t:'b',v:'',a:100},
+  {t:'d',v:'... (auth.log accumulating failures)',a:800},
+  {t:'b',v:'',a:200},
+  {t:'d',v:'[ Terminal A — Kratos correlation engine ]',a:400},
+  {t:'b',v:'',a:80},
+  {t:'p',v:'(venv) ubuntu@ubuntu:~/kratos$ kratos findings-show',s:42,a:600},
+  {t:'d',v:'[KRATOS] Latest findings: findings_20260426_000555.json',a:100},
+  {t:'d',v:'Generated at: 2026-04-26T00:05:55',a:250},
+  {t:'b',v:'',a:80},
+  {t:'e',v:'[HIGH]   CORR-SSH-001 — SSH exposed with failed-login burst activity observed',a:200},
+  {t:'w',v:'[MEDIUM] NET-002 — Open ports detected (attack surface present)',a:150},
+  {t:'w',v:'[MEDIUM] CORR-001 — SSH exposure correlated with failed-login burst activity',a:150},
+  {t:'d',v:'[INFO]   CTX-001 — Sudo-capable users identified',a:100},
+  {t:'d',v:'[INFO]   AUTH-003 — Sudo session activity observed',a:100},
+  {t:'d',v:'[INFO]   AUTH-004 — Burst activity detected in authentication failures',a:100},
+];
+const CLS={p:'lp',k:'lk',o:'lo',d:'ld',w:'lw',e:'le',b:'lb'};
+async function run(){
+  const tb=document.getElementById('tb');
+  while(true){
+    tb.innerHTML='';
+    for(const e of S){
+      const d=document.createElement('span');
+      d.className='l '+(CLS[e.t]||'lo');
+      tb.appendChild(d);
+      if(e.t==='p'){
+        const spd=e.s||36;
+        for(const c of e.v){d.textContent+=c;tb.scrollTop=tb.scrollHeight;await sleep(spd+Math.random()*14);}
+      } else {d.textContent=e.v;tb.scrollTop=tb.scrollHeight;}
+      await sleep(e.a||60);
+    }
+    await sleep(3500);
+  }
+}
+run();
+</script>
+</body>
+</html>
