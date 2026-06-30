@@ -178,6 +178,7 @@ const PROJECTS = [
     tagline: '€5,000 Funded',
     subtitle: 'Course Benchmarking Platform',
     tag: '€5,000 Funded',
+    stat: { value: '40+', label: 'API endpoints' },
     oneliner: "A team-built course benchmarking platform for Finnish universities — funded by the TAMK Foundation, deployed on real infrastructure, targeting universities as B2B clients.",
     stack: ['Python','REST APIs','40+ endpoint Benchmarking API','Linux','Cloudflare Tunnel','Apache','systemd','Ubuntu'],
     links: [],
@@ -200,6 +201,7 @@ const PROJECTS = [
     tagline: "Bachelor's Thesis",
     subtitle: 'Offline AI Security Analysis System',
     tag: "Bachelor's Thesis",
+    stat: { value: '7B', label: 'params · air-gapped' },
     oneliner: "A fully offline, five-stage security pipeline running a 7B code model on ARM hardware — built for air-gapped environments where cloud APIs aren't an option.",
     stack: ['Python','Qwen2.5-Coder 7B','Llama.cpp','ARM','Linux','CSC OpenStack'],
     links: [{ label: 'GitHub', url: 'github.com/TahrimWalid/kratos' }],
@@ -227,6 +229,7 @@ const PROJECTS = [
     tagline: 'Full-Stack · Self-hosted AI',
     subtitle: 'AI-Powered AWS Infrastructure Compiler',
     tag: '',
+    stat: { value: '27B', label: 'self-hosted model' },
     oneliner: "A visual AWS architecture designer that validates against 32 rules, compiles to Terraform HCL, and syncs bidirectionally in real time — with a self-hosted 27B model doing the AI layer.",
     stack: ['Next.js','React','ReactFlow','Terraform','Qwen3-27B-FP8','vLLM','RTX 6000 Ada','Vercel'],
     links: [
@@ -252,6 +255,7 @@ const PROJECTS = [
     tagline: 'Data Engineering',
     subtitle: 'Finnish IT Job Market Analysis Pipeline',
     tag: '',
+    stat: { value: '1,998', label: 'jobs analyzed' },
     oneliner: "A 5-phase ETL pipeline that scraped ~2,000 Finnish IT job postings, hit 96.7% hydration and 100% LLM extraction success, and uncovered a fundamental bias problem in its own metrics along the way.",
     stack: ['Python','SQLite','Ollama','Qwen 2.5 3B','Pydantic','Chart.js'],
     links: [{ label: 'GitHub', url: 'github.com/TahrimWalid/career-ai' }],
@@ -475,11 +479,21 @@ function onHash() {
 }
 
 // ── Templates ──────────────────────────────────────────────────────────────
+const PROJECT_ICONS = {
+  oppipolku: '<svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="16" width="46" height="13" rx="2" stroke="currentColor" stroke-width="1.5"/><rect x="10" y="36" width="46" height="13" rx="2" stroke="currentColor" stroke-width="1.5"/><rect x="10" y="56" width="46" height="13" rx="2" stroke="currentColor" stroke-width="1.5"/><circle cx="18" cy="22.5" r="2" fill="currentColor"/><circle cx="18" cy="42.5" r="2" fill="currentColor"/><circle cx="18" cy="62.5" r="2" fill="currentColor"/><line x1="56" y1="20" x2="82" y2="12" stroke="currentColor" stroke-width="1.2"/><line x1="56" y1="25" x2="82" y2="28" stroke="currentColor" stroke-width="1.2"/><line x1="56" y1="40" x2="82" y2="36" stroke="currentColor" stroke-width="1.2"/><line x1="56" y1="46" x2="82" y2="50" stroke="currentColor" stroke-width="1.2"/><line x1="56" y1="60" x2="82" y2="60" stroke="currentColor" stroke-width="1.2"/><line x1="56" y1="65" x2="82" y2="72" stroke="currentColor" stroke-width="1.2"/><circle cx="82" cy="12" r="2.5" stroke="currentColor" stroke-width="1.5"/><circle cx="82" cy="28" r="2.5" stroke="currentColor" stroke-width="1.5"/><circle cx="82" cy="36" r="2.5" stroke="currentColor" stroke-width="1.5"/><circle cx="82" cy="50" r="2.5" stroke="currentColor" stroke-width="1.5"/><circle cx="82" cy="60" r="2.5" stroke="currentColor" stroke-width="1.5"/><circle cx="82" cy="72" r="2.5" stroke="currentColor" stroke-width="1.5"/></svg>',
+  kratos: '<svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M48 8 L82 22 L82 52 Q82 74 48 88 Q14 74 14 52 L14 22 Z" stroke="currentColor" stroke-width="1.5"/><rect x="30" y="38" width="36" height="24" rx="2" stroke="currentColor" stroke-width="1.5"/><line x1="30" y1="46" x2="66" y2="46" stroke="currentColor" stroke-width="1"/><line x1="34" y1="53" x2="44" y2="53" stroke="currentColor" stroke-width="1.5"/><line x1="46" y1="53" x2="49" y2="53" stroke="currentColor" stroke-width="2.5"/></svg>',
+  ingen: '<svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 44 Q20 30 32 30 Q34 22 44 20 Q50 14 58 20 Q70 20 72 32 Q82 34 80 46 Q78 56 66 56 L28 56 Q20 56 20 46 Z" stroke="currentColor" stroke-width="1.5"/><line x1="32" y1="56" x2="22" y2="72" stroke="currentColor" stroke-width="1.5"/><line x1="48" y1="56" x2="48" y2="72" stroke="currentColor" stroke-width="1.5"/><line x1="64" y1="56" x2="74" y2="72" stroke="currentColor" stroke-width="1.5"/><rect x="14" y="72" width="16" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/><rect x="40" y="72" width="16" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/><rect x="66" y="72" width="16" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/><line x1="30" y1="78" x2="40" y2="78" stroke="currentColor" stroke-width="1"/><line x1="56" y1="78" x2="66" y2="78" stroke="currentColor" stroke-width="1"/></svg>',
+  'career-ai': '<svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="30" width="14" height="50" rx="2" stroke="currentColor" stroke-width="1.5"/><rect x="28" y="42" width="14" height="38" rx="2" stroke="currentColor" stroke-width="1.5"/><rect x="48" y="18" width="14" height="62" rx="2" stroke="currentColor" stroke-width="1.5"/><rect x="68" y="36" width="14" height="44" rx="2" stroke="currentColor" stroke-width="1.5"/><line x1="6" y1="82" x2="84" y2="82" stroke="currentColor" stroke-width="1.5"/><line x1="6" y1="82" x2="6" y2="14" stroke="currentColor" stroke-width="1.5"/></svg>',
+};
+
 const num = i => String(i + 1).padStart(2, '0');
 
 function renderHome() {
   const cards = PROJECTS.map((p, i) => `
-    <a href="#/projects/${p.id}" data-reveal class="card-link">
+    <a href="#/projects/${p.id}" data-reveal class="card-link" style="position:relative">
+      <div style="position:absolute;top:14px;right:14px;color:var(--accent);opacity:0.1;pointer-events:none;width:58px;flex-shrink:0">
+        ${PROJECT_ICONS[p.id] || ''}
+      </div>
       <div style="display:flex;justify-content:space-between;align-items:flex-start;font-family:var(--font-mono);font-size:0.72rem">
         <span style="color:var(--accent)">${num(i)}</span>
         ${p.tag ? `<span style="font-family:var(--font-mono);font-size:0.68rem;font-weight:700;background:var(--accent);color:var(--on-accent);border-radius:99px;padding:3px 10px;white-space:nowrap;letter-spacing:0.02em">${p.tag}</span>` : ''}
@@ -489,7 +503,11 @@ function renderHome() {
         <p style="margin:5px 0 0;font-family:var(--font-mono);font-size:0.76rem;color:var(--text-dim)">${p.subtitle}</p>
       </div>
       <p style="margin:0;font-size:0.93rem;line-height:1.6;color:var(--text-dim)">${p.oneliner}</p>
-      <div style="margin-top:auto;display:flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:0.74rem;color:var(--accent)">view project <span>→</span></div>
+      <div style="display:flex;align-items:baseline;gap:7px;padding-top:10px;border-top:1px solid var(--border)">
+        <span style="font-family:var(--font-mono);font-size:1.45rem;font-weight:700;color:var(--accent);letter-spacing:-0.03em;line-height:1">${p.stat.value}</span>
+        <span style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-dim)">${p.stat.label}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:0.74rem;color:var(--accent)">view project <span>→</span></div>
     </a>`).join('');
 
   return `<section data-page>
@@ -562,9 +580,12 @@ function renderAbout() {
 
 function renderProjects() {
   const rows = PROJECTS.map((p, i) => `
-    <a href="#/projects/${p.id}" data-reveal class="project-row">
-      <span style="font-family:var(--font-mono);font-size:1.1rem;color:var(--accent);font-weight:500">${num(i)}</span>
-      <div style="min-width:0">
+    <a href="#/projects/${p.id}" data-reveal class="project-row" style="position:relative;overflow:hidden">
+      <div style="position:absolute;right:0;top:0;bottom:0;display:flex;align-items:center;padding-right:clamp(24px,3vw,36px);color:var(--accent);opacity:0.09;pointer-events:none">
+        ${PROJECT_ICONS[p.id] || ''}
+      </div>
+      <span style="font-family:var(--font-mono);font-size:1.1rem;color:var(--accent);font-weight:500;position:relative">${num(i)}</span>
+      <div style="min-width:0;position:relative">
         <div style="display:flex;align-items:center;flex-wrap:wrap;gap:10px">
           <h3 style="margin:0;font-size:1.5rem;font-weight:600;letter-spacing:-0.025em">${p.name}</h3>
           ${p.tag ? `<span style="font-family:var(--font-mono);font-size:0.69rem;font-weight:700;background:var(--accent);color:var(--on-accent);border-radius:99px;padding:3px 11px;white-space:nowrap;line-height:1.4;flex-shrink:0;letter-spacing:0.02em">${p.tag}</span>` : `<span style="font-family:var(--font-mono);font-size:0.72rem;color:var(--text-faint)">${p.tagline}</span>`}
@@ -574,7 +595,11 @@ function renderProjects() {
           ${p.stack.map(t => `<span style="font-family:var(--font-mono);font-size:0.7rem;padding:5px 10px;border:1px solid var(--border);border-radius:var(--radius);color:var(--text-dim);background:var(--bg)">${t}</span>`).join('')}
         </div>
       </div>
-      <span style="font-family:var(--font-mono);font-size:0.74rem;color:var(--accent);white-space:nowrap">open →</span>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;position:relative;z-index:1;flex-shrink:0">
+        <span style="font-family:var(--font-mono);font-size:1.9rem;font-weight:700;color:var(--accent);letter-spacing:-0.04em;line-height:1">${p.stat.value}</span>
+        <span style="font-family:var(--font-mono);font-size:0.64rem;color:var(--text-dim);white-space:nowrap;text-align:right">${p.stat.label}</span>
+        <span style="font-family:var(--font-mono);font-size:0.74rem;color:var(--accent);white-space:nowrap;margin-top:10px">open →</span>
+      </div>
     </a>`).join('');
 
   return `<section data-page style="max-width:var(--maxw);margin:0 auto;padding:var(--space-2xl) clamp(18px,5vw,48px)">
