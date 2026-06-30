@@ -515,6 +515,13 @@ const TECH_ICONS = {
   'Chart.js':               'https://cdn.simpleicons.org/chartdotjs/FF6384',
   'RTX 6000 Ada':           'https://cdn.simpleicons.org/nvidia/76B900',
   'Nmap':                   'https://cdn.simpleicons.org/nmap/0E83CD',
+  'REST APIs':              'https://cdn.simpleicons.org/swagger/85EA2D',
+  'systemd':                'https://cdn.simpleicons.org/systemd/ffffff',
+  'Llama.cpp':              'https://cdn.simpleicons.org/meta/0467DF',
+  'vLLM':                   'https://cdn.simpleicons.org/huggingface/FFD21E',
+  'Qwen2.5-Coder 7B':       'https://cdn.simpleicons.org/alibaba/FF6A00',
+  'Qwen3-27B-FP8':          'https://cdn.simpleicons.org/alibaba/FF6A00',
+  'Qwen 2.5 3B':            'https://cdn.simpleicons.org/alibaba/FF6A00',
 };
 
 function techPill(t, bg, size, pad) {
@@ -558,7 +565,7 @@ function renderHome() {
           AVAILABLE FOR HIRE · TAMPERE, FI
         </div>
         <h1 style="margin:0;font-size:var(--fs-display);font-weight:600;line-height:1.02;letter-spacing:-0.035em">Walid Hassan<br>Tahrim</h1>
-        <p style="margin:var(--space-md) 0 4px;font-family:var(--font-mono);font-size:0.95rem;color:var(--accent);font-weight:500">Full-Stack Software Engineer<span style="display:inline-block;width:9px;height:1.1em;background:var(--accent);margin-left:5px;vertical-align:-2px;animation:blink 1.1s step-end infinite"></span></p>
+        <p style="margin:var(--space-md) 0 4px;font-family:var(--font-mono);font-size:0.95rem;color:var(--accent);font-weight:500"><span id="home-role"></span><span style="display:inline-block;width:9px;height:1.1em;background:var(--accent);margin-left:2px;vertical-align:-2px;animation:blink 1.1s step-end infinite"></span></p>
         <p style="margin:0 0 var(--space-md);font-family:var(--font-mono);font-size:0.82rem;color:var(--text-faint);letter-spacing:0.01em">Backend · Cloud · Edge AI · Local LLM Infrastructure</p>
         <p style="margin:0 0 var(--space-lg);max-width:46ch;color:var(--text-dim);font-size:1.02rem;line-height:1.7">Software Engineering graduate from Tampere University of Applied Sciences. I build backend systems, cloud infrastructure, and local AI pipelines — work that sits at the intersection of data engineering, cloud architecture, and on-device AI, with a focus on things that work in the real world, not just in demos.</p>
         <div style="display:flex;flex-wrap:wrap;gap:14px">
@@ -726,9 +733,8 @@ function renderContact() {
   return `<section data-page style="max-width:var(--maxw);margin:0 auto;padding:var(--space-2xl) clamp(18px,5vw,48px);min-height:calc(100vh - var(--nav-h) - 120px)">
     <span data-reveal style="display:block;font-family:var(--font-mono);font-size:0.78rem;color:var(--accent);margin-bottom:var(--space-sm)">// contact</span>
     <h1 data-reveal style="margin:0 0 var(--space-md);font-size:var(--fs-display);font-weight:600;letter-spacing:-0.035em;line-height:1.04">Let's build<br>something.</h1>
-    <div data-reveal style="display:inline-flex;align-items:center;gap:10px;font-family:var(--font-mono);font-size:0.82rem;color:var(--text-dim);border:1px solid var(--border);border-radius:99px;padding:8px 15px;margin-bottom:var(--space-2xl)">
-      <span style="width:8px;height:8px;border-radius:50%;background:var(--accent);animation:pulse 2.4s var(--ease) infinite"></span>
-      I would love to work with cloud architecture, DevOps and low level LLM deployment at scale
+    <div data-reveal style="margin-bottom:var(--space-2xl)">
+      <p style="margin:0;font-family:var(--font-mono);font-size:0.95rem;color:var(--accent);font-weight:500"><span id="contact-tagline"></span><span style="display:inline-block;width:9px;height:1.1em;background:var(--accent);margin-left:2px;vertical-align:-2px;animation:blink 1.1s step-end infinite"></span></p>
     </div>
 
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden">
@@ -759,6 +765,58 @@ function renderContact() {
 // ── Main render ────────────────────────────────────────────────────────────
 let revealAllTimer = null;
 
+function typeText(id, text, delay) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  let i = 0;
+  el.textContent = '';
+  const interval = setInterval(() => {
+    el.textContent = text.slice(0, ++i);
+    if (i >= text.length) clearInterval(interval);
+  }, delay || 32);
+}
+
+function typeContactTagline() {
+  typeText('contact-tagline', 'I would love to work with cloud architecture, DevOps and low level LLM deployment at scale', 28);
+}
+
+function startRoleRotation() {
+  const el = document.getElementById('home-role');
+  if (!el) return;
+  const roles = [
+    'Full-Stack Software Engineer',
+    'Aspiring Cloud & Network Infrastructure Engineer',
+  ];
+  let roleIdx = 0;
+  function typeRole() {
+    const text = roles[roleIdx];
+    let i = 0;
+    el.textContent = '';
+    const typing = setInterval(() => {
+      if (!document.getElementById('home-role')) { clearInterval(typing); return; }
+      el.textContent = text.slice(0, ++i);
+      if (i >= text.length) {
+        clearInterval(typing);
+        setTimeout(deleteRole, 1800);
+      }
+    }, 52);
+  }
+  function deleteRole() {
+    const text = el.textContent;
+    let i = text.length;
+    const deleting = setInterval(() => {
+      if (!document.getElementById('home-role')) { clearInterval(deleting); return; }
+      el.textContent = text.slice(0, --i);
+      if (i <= 0) {
+        clearInterval(deleting);
+        roleIdx = (roleIdx + 1) % roles.length;
+        setTimeout(typeRole, 350);
+      }
+    }, 22);
+  }
+  typeRole();
+}
+
 function render() {
   const main = document.getElementById('main');
   const map = { home: renderHome, about: renderAbout, projects: renderProjects, project: renderProjectDetail, contact: renderContact };
@@ -771,6 +829,8 @@ function render() {
   setTimeout(() => observeReveals(), 360);
   clearTimeout(revealAllTimer);
   revealAllTimer = setTimeout(revealAll, 1400);
+  if (state.route === 'contact') setTimeout(typeContactTagline, 300);
+  if (state.route === 'home') setTimeout(startRoleRotation, 400);
 }
 
 // ── Boot ───────────────────────────────────────────────────────────────────
