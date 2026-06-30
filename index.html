@@ -67,6 +67,7 @@ canvas{display:block}
 ::selection{background:var(--accent);color:var(--on-accent)}
 
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 @keyframes pulse{0%{box-shadow:0 0 0 0 var(--accent-glow)}70%{box-shadow:0 0 0 7px transparent}100%{box-shadow:0 0 0 0 transparent}}
 
 [data-reveal]{opacity:0;transform:translateY(26px);will-change:transform,opacity}
@@ -564,7 +565,7 @@ function renderHome() {
           <span style="width:7px;height:7px;border-radius:50%;background:var(--accent);animation:pulse 2.4s var(--ease) infinite"></span>
           AVAILABLE FOR HIRE · TAMPERE, FI
         </div>
-        <h1 style="margin:0;font-size:var(--fs-display);font-weight:600;line-height:1.02;letter-spacing:-0.035em">Walid Hassan<br>Tahrim</h1>
+        <h1 style="margin:0;font-size:var(--fs-display);font-weight:600;line-height:1.02;letter-spacing:-0.035em;background:linear-gradient(105deg,var(--accent) 0%,var(--text) 52%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Walid Hassan<br>Tahrim</h1>
         <p style="margin:var(--space-md) 0 4px;font-family:var(--font-mono);font-size:0.95rem;color:var(--accent);font-weight:500"><span id="home-role"></span><span style="display:inline-block;width:9px;height:1.1em;background:var(--accent);margin-left:2px;vertical-align:-2px;animation:blink 1.1s step-end infinite"></span></p>
         <p style="margin:0 0 var(--space-md);font-family:var(--font-mono);font-size:0.82rem;color:var(--text-faint);letter-spacing:0.01em">Backend · Cloud · Edge AI · Local LLM Infrastructure</p>
         <p style="margin:0 0 var(--space-lg);max-width:46ch;color:var(--text-dim);font-size:1.02rem;line-height:1.7">Software Engineering graduate from Tampere University of Applied Sciences. I build backend systems, cloud infrastructure, and local AI pipelines — work that sits at the intersection of data engineering, cloud architecture, and on-device AI, with a focus on things that work in the real world, not just in demos.</p>
@@ -572,6 +573,13 @@ function renderHome() {
           <a href="#/projects" class="btn-primary">view projects <span>→</span></a>
           <a href="#/contact" class="btn-secondary">get in touch</a>
         </div>
+      </div>
+    </div>
+
+    <div style="width:100%;overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:13px 0;background:var(--bg-elev)">
+      <div style="display:inline-flex;white-space:nowrap;animation:ticker 32s linear infinite">
+        <span style="font-family:var(--font-mono);font-size:0.74rem;color:var(--text-dim);padding-right:0">4 projects shipped &nbsp;<span style="color:var(--accent)">·</span>&nbsp; 7B model on ARM &nbsp;<span style="color:var(--accent)">·</span>&nbsp; €5,000 funded &nbsp;<span style="color:var(--accent)">·</span>&nbsp; 1,998 jobs analyzed &nbsp;<span style="color:var(--accent)">·</span>&nbsp; 32 validation rules &nbsp;<span style="color:var(--accent)">·</span>&nbsp; 100% LLM extraction &nbsp;<span style="color:var(--accent)">·</span>&nbsp; air-gapped inference &nbsp;<span style="color:var(--accent)">·</span>&nbsp; self-hosted 27B model &nbsp;<span style="color:var(--accent)">·</span>&nbsp; 9.5h pipeline runtime &nbsp;<span style="color:var(--accent)">·</span>&nbsp; bidirectional HCL sync &nbsp;<span style="color:var(--accent)">·</span>&nbsp;&nbsp;</span>
+        <span style="font-family:var(--font-mono);font-size:0.74rem;color:var(--text-dim);padding-right:0">4 projects shipped &nbsp;<span style="color:var(--accent)">·</span>&nbsp; 7B model on ARM &nbsp;<span style="color:var(--accent)">·</span>&nbsp; €5,000 funded &nbsp;<span style="color:var(--accent)">·</span>&nbsp; 1,998 jobs analyzed &nbsp;<span style="color:var(--accent)">·</span>&nbsp; 32 validation rules &nbsp;<span style="color:var(--accent)">·</span>&nbsp; 100% LLM extraction &nbsp;<span style="color:var(--accent)">·</span>&nbsp; air-gapped inference &nbsp;<span style="color:var(--accent)">·</span>&nbsp; self-hosted 27B model &nbsp;<span style="color:var(--accent)">·</span>&nbsp; 9.5h pipeline runtime &nbsp;<span style="color:var(--accent)">·</span>&nbsp; bidirectional HCL sync &nbsp;<span style="color:var(--accent)">·</span>&nbsp;&nbsp;</span>
       </div>
     </div>
 
@@ -614,11 +622,16 @@ function renderAbout() {
       </div>
     </div>
 
-    <div data-reveal style="display:flex;align-items:baseline;gap:12px;margin:var(--space-2xl) 0 var(--space-lg)">
-      <h2 style="margin:0;font-size:var(--fs-h2);font-weight:600;letter-spacing:-0.03em"><span style="font-family:var(--font-mono);font-size:0.7em;color:var(--accent);margin-right:10px">//</span>Skills</h2>
-    </div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:var(--space-md)">
-      ${skillCards}
+    <div data-reveal style="margin:var(--space-2xl) 0 0">
+      <div style="background:#0d0d10;border:1px solid #222229;border-radius:var(--radius);overflow:hidden;font-family:'JetBrains Mono',monospace;font-size:clamp(0.72rem,1.5vw,0.84rem)">
+        <div style="background:#111116;border-bottom:1px solid #222229;padding:10px 14px;display:flex;align-items:center;gap:6px">
+          <span style="width:10px;height:10px;border-radius:50%;background:#ff5f57;flex-shrink:0"></span>
+          <span style="width:10px;height:10px;border-radius:50%;background:#febc2e;flex-shrink:0"></span>
+          <span style="width:10px;height:10px;border-radius:50%;background:#28c840;flex-shrink:0"></span>
+          <span style="margin-left:8px;color:#34343d;font-size:0.76rem">walid@tahrim: ~</span>
+        </div>
+        <div id="about-term-body" style="padding:18px 22px;min-height:280px;line-height:1.75;color:#9a9aa4"></div>
+      </div>
     </div>
   </section>`;
 }
@@ -780,6 +793,63 @@ function typeContactTagline() {
   typeText('contact-tagline', 'I would love to work with cloud architecture, DevOps and low level LLM deployment at scale', 28);
 }
 
+function runAboutTerminal() {
+  const body = document.getElementById('about-term-body');
+  if (!body) return;
+  body.innerHTML = '';
+  const PROMPT = '<span style="color:#00ff41">walid@tahrim</span><span style="color:#444450">:~$</span> ';
+  const steps = [
+    { t: 'cmd',  text: 'whoami' },
+    { t: 'out',  html: '<span style="color:#ededf0;font-weight:600">Walid Hassan Tahrim</span>  ·  Full-Stack Software Engineer  ·  Tampere, FI' },
+    { t: 'out',  html: '<span style="color:#5f5f6a">Backend · Cloud infrastructure · On-device AI inference</span>' },
+    { t: 'gap' },
+    { t: 'cmd',  text: 'cat timeline.txt' },
+    { t: 'out',  html: '<span style="color:#5f5f6a">2024–2026</span>  <span style="color:#ededf0">TAMK</span>  ·  B.Eng Software Engineering' },
+    { t: 'out',  html: '<span style="color:#5f5f6a">2025     </span>  <span style="color:#00ff41">Oppipolku</span>  ·  Backend Lead  ·  €5,000 TAMK Foundation grant' },
+    { t: 'out',  html: '<span style="color:#5f5f6a">2025     </span>  <span style="color:#00ff41">Kratos</span>    ·  Solo · Bachelor\'s Thesis · 7B model, air-gapped ARM' },
+    { t: 'out',  html: '<span style="color:#5f5f6a">2025     </span>  <span style="color:#00ff41">InGen</span>     ·  Full-Stack · self-hosted 27B · 32 validation rules' },
+    { t: 'out',  html: '<span style="color:#5f5f6a">2026     </span>  <span style="color:#00ff41">Career AI</span> ·  Solo · 1,998 jobs · 100% LLM extraction' },
+    { t: 'gap' },
+    { t: 'cmd',  text: 'echo $STATUS' },
+    { t: 'out',  html: '<span style="color:#febc2e">Pursuing AZ-104 (Azure Administrator Associate)</span>' },
+    { t: 'out',  html: '<span style="color:#ededf0">Open to backend, cloud &amp; infrastructure roles in Finland</span>' },
+    { t: 'cursor' },
+  ];
+  let ms = 0;
+  steps.forEach(step => {
+    if (step.t === 'cmd') {
+      setTimeout(() => {
+        const row = document.createElement('div');
+        row.innerHTML = PROMPT + '<span class="tc"></span>';
+        body.appendChild(row);
+        const span = row.querySelector('.tc');
+        let i = 0;
+        const iv = setInterval(() => {
+          if (!span.isConnected) { clearInterval(iv); return; }
+          span.textContent = step.text.slice(0, ++i);
+          if (i >= step.text.length) clearInterval(iv);
+        }, 46);
+      }, ms);
+      ms += step.text.length * 46 + 280;
+    } else if (step.t === 'out') {
+      setTimeout(() => {
+        const row = document.createElement('div');
+        row.innerHTML = step.html;
+        body.appendChild(row);
+      }, ms);
+      ms += 55;
+    } else if (step.t === 'gap') {
+      ms += 220;
+    } else if (step.t === 'cursor') {
+      setTimeout(() => {
+        const row = document.createElement('div');
+        row.innerHTML = PROMPT + '<span style="display:inline-block;width:8px;height:1em;background:#00ff41;vertical-align:-2px;animation:blink 1.1s step-end infinite"></span>';
+        body.appendChild(row);
+      }, ms);
+    }
+  });
+}
+
 function startRoleRotation() {
   const el = document.getElementById('home-role');
   if (!el) return;
@@ -831,6 +901,7 @@ function render() {
   revealAllTimer = setTimeout(revealAll, 1400);
   if (state.route === 'contact') setTimeout(typeContactTagline, 300);
   if (state.route === 'home') setTimeout(startRoleRotation, 400);
+  if (state.route === 'about') setTimeout(runAboutTerminal, 350);
 }
 
 // ── Boot ───────────────────────────────────────────────────────────────────
