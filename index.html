@@ -637,36 +637,39 @@ function renderAbout() {
 }
 
 function renderProjects() {
-  const rows = PROJECTS.map((p, i) => `
-    <a href="#/projects/${p.id}" data-reveal class="project-row" style="position:relative;overflow:hidden">
-      <div style="position:absolute;right:0;top:0;bottom:0;display:flex;align-items:center;padding-right:clamp(24px,3vw,36px);color:var(--accent);opacity:0.09;pointer-events:none">
+  const badge = p => p.tag
+    ? `<span style="font-family:var(--font-mono);font-size:0.69rem;font-weight:700;background:var(--accent);color:var(--on-accent);border-radius:99px;padding:3px 11px;white-space:nowrap;line-height:1.4;flex-shrink:0;letter-spacing:0.02em">${p.tag}</span>`
+    : `<span style="font-family:var(--font-mono);font-size:0.72rem;color:var(--text-faint)">${p.tagline}</span>`;
+
+  const card = (p, i) => `
+    <a href="#/projects/${p.id}" data-reveal class="project-row" style="position:relative;overflow:hidden;display:flex;flex-direction:column;gap:14px;align-items:flex-start">
+      <div style="position:absolute;right:18px;top:18px;color:var(--accent);opacity:0.11;pointer-events:none;width:80px">
         ${PROJECT_ICONS[p.id] || ''}
       </div>
-      <span style="font-family:var(--font-mono);font-size:1.1rem;color:var(--accent);font-weight:500;position:relative">${num(i)}</span>
-      <div style="min-width:0;position:relative">
-        <div style="display:flex;align-items:center;flex-wrap:wrap;gap:10px">
-          <h3 style="margin:0;font-size:1.5rem;font-weight:600;letter-spacing:-0.025em">${p.name}</h3>
-          ${p.tag ? `<span style="font-family:var(--font-mono);font-size:0.69rem;font-weight:700;background:var(--accent);color:var(--on-accent);border-radius:99px;padding:3px 11px;white-space:nowrap;line-height:1.4;flex-shrink:0;letter-spacing:0.02em">${p.tag}</span>` : `<span style="font-family:var(--font-mono);font-size:0.72rem;color:var(--text-faint)">${p.tagline}</span>`}
-        </div>
-        <p style="margin:4px 0 12px;font-family:var(--font-mono);font-size:0.78rem;color:var(--text-dim)">${p.subtitle}</p>
-        <div style="display:flex;flex-wrap:wrap;gap:7px">
-          ${p.stack.map(t => techPill(t)).join('')}
-        </div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <span style="font-family:var(--font-mono);font-size:0.95rem;color:var(--accent);font-weight:500">${num(i)}</span>
+        <h3 style="margin:0;font-size:1.5rem;font-weight:600;letter-spacing:-0.025em">${p.name}</h3>
+        ${badge(p)}
       </div>
-      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;position:relative;z-index:1;flex-shrink:0">
-        <span style="font-family:var(--font-mono);font-size:1.9rem;font-weight:700;color:var(--accent);letter-spacing:-0.04em;line-height:1">${p.stat.value}</span>
-        <span style="font-family:var(--font-mono);font-size:0.64rem;color:var(--text-dim);white-space:nowrap;text-align:right">${p.stat.label}</span>
-        <span style="font-family:var(--font-mono);font-size:0.74rem;color:var(--accent);white-space:nowrap;margin-top:10px">open →</span>
+      <p style="margin:0;font-family:var(--font-mono);font-size:0.78rem;color:var(--text-dim)">${p.subtitle}</p>
+      <p style="margin:0;font-size:0.93rem;line-height:1.65;color:var(--text-dim)">${p.oneliner}</p>
+      <div style="display:flex;flex-wrap:wrap;gap:7px">${p.stack.map(t => techPill(t)).join('')}</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;width:100%;margin-top:auto;padding-top:14px;border-top:1px solid var(--border)">
+        <div style="display:flex;align-items:baseline;gap:7px">
+          <span style="font-family:var(--font-mono);font-size:1.8rem;font-weight:700;color:var(--accent);letter-spacing:-0.04em;line-height:1">${p.stat.value}</span>
+          <span style="font-family:var(--font-mono);font-size:0.63rem;color:var(--text-dim)">${p.stat.label}</span>
+        </div>
+        <span style="font-family:var(--font-mono);font-size:0.74rem;color:var(--accent)">open →</span>
       </div>
-    </a>`).join('');
+    </a>`;
 
   return `<section data-page style="max-width:var(--maxw);margin:0 auto;padding:var(--space-2xl) clamp(18px,5vw,48px)">
     <span data-reveal style="display:block;font-family:var(--font-mono);font-size:0.78rem;color:var(--accent);margin-bottom:var(--space-sm)">// projects</span>
     <h1 data-reveal style="margin:0 0 var(--space-sm);font-size:var(--fs-h1);font-weight:600;letter-spacing:-0.03em">Four projects, built to run.</h1>
     <p data-reveal style="margin:0 0 var(--space-2xl);color:var(--text-dim);max-width:54ch">Each one shipped against a real constraint — air-gapped hardware, self-hosted models, scraped data at scale, or live institutional infrastructure.</p>
-    <div style="display:flex;flex-direction:column;gap:var(--space-md)">
-      ${rows}
-      <div data-reveal style="display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:12px;padding:clamp(36px,5vw,56px);border:1.5px dashed var(--border-strong);border-radius:var(--radius)">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:var(--space-md)">
+      ${PROJECTS.map((p, i) => card(p, i)).join('')}
+      <div data-reveal style="grid-column:1/-1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:12px;padding:clamp(36px,5vw,56px);border:1.5px dashed var(--border-strong);border-radius:var(--radius)">
         <span style="font-family:var(--font-mono);font-size:0.74rem;color:var(--accent)">// more soon</span>
         <h3 style="margin:0;font-size:1.3rem;font-weight:600;letter-spacing:-0.02em">Next project in progress</h3>
         <p style="margin:0;color:var(--text-dim);max-width:46ch">New work in cloud, data engineering, and edge AI is on the way. Currently pursuing AZ-104.</p>
