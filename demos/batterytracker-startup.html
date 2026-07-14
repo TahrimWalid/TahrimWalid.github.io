@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:#08080a}
+body{font-family:'JetBrains Mono',monospace;font-size:clamp(9px,1.85vw,12px)}
+.win{display:flex;flex-direction:column;height:100vh}
+.bar{background:#111116;border-bottom:1px solid #222229;padding:7px 12px;display:flex;align-items:center;gap:6px;flex-shrink:0}
+.dot{width:10px;height:10px;border-radius:50%}
+.dr{background:#ff5f57}.dy{background:#febc2e}.dg{background:#28c840}
+.btit{margin-left:4px;color:#34343d;font-size:.82em;flex:1;text-align:center}
+.body{flex:1;overflow-y:auto;padding:10px 14px;line-height:1.65;scrollbar-width:none}
+.body::-webkit-scrollbar{display:none}
+.l{display:block;white-space:pre-wrap;word-break:break-all}
+.lp{color:#febc2e}.lo{color:#ededf0}.lk{color:#00ff41}.ld{color:#5f5f6a}.lb{}
+</style>
+</head>
+<body>
+<div class="win">
+  <div class="bar">
+    <span class="dot dr"></span><span class="dot dy"></span><span class="dot dg"></span>
+    <span class="btit">Windows PowerShell — Administrator</span>
+  </div>
+  <div class="body" id="tb"></div>
+</div>
+<script>
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const S = [
+  {t:'p',v:'PS C:\\Users\\walid\\Desktop> Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass',a:260},
+  {t:'p',v:'PS C:\\Users\\walid\\Desktop> & ".\\BatteryTracker\\Launch-Trackers.ps1"',a:900},
+  {t:'b',v:'',a:60},
+  {t:'k',v:'[BatteryLogger]  Starting battery logger',a:100},
+  {t:'d',v:'[BatteryLogger]  WMI root\\wmi                    ·  connected',a:75},
+  {t:'d',v:'[BatteryLogger]  Battery: 78%  ·  Design: 45,760 mWh  ·  Health: 89.2%  ·  Cycles: 142',a:75},
+  {t:'d',v:'[BatteryLogger]  Power plan: Balanced',a:75},
+  {t:'d',v:'[BatteryLogger]  Tick: 2 s  ·  Rolling window: 30 min (900 entries)',a:75},
+  {t:'k',v:'[BatteryLogger]  ► RUNNING',a:1100},
+  {t:'b',v:'',a:60},
+  {t:'k',v:'[ProcessAudit]   Starting process auditor',a:100},
+  {t:'d',v:'[ProcessAudit]   Baseline census: 187 processes',a:75},
+  {t:'d',v:'[ProcessAudit]   Signature cache: warming up (0 / 187 paths queued)',a:75},
+  {t:'d',v:'[ProcessAudit]   Autoruns: 23 entries indexed across 4 vectors',a:75},
+  {t:'d',v:'[ProcessAudit]   TCP warm-up: 60 s — establishing connection baseline',a:75},
+  {t:'k',v:'[ProcessAudit]   ► RUNNING',a:1700},
+  {t:'b',v:'',a:60},
+  {t:'o',v:'Both trackers running in independent PS windows.',a:130},
+  {t:'o',v:'This launcher can be closed. Open Dashboard.html in any browser.',a:100},
+];
+const CLS={p:'lp',k:'lk',o:'lo',d:'ld',b:'lb'};
+async function run(){
+  const tb=document.getElementById('tb');
+  while(true){
+    tb.innerHTML='';
+    for(const e of S){
+      if(!document.getElementById('tb')) return;
+      const d=document.createElement('span');
+      d.className='l '+(CLS[e.t]||'lo');
+      tb.appendChild(d);
+      if(e.t==='p'){
+        for(const c of e.v){d.textContent+=c;tb.scrollTop=tb.scrollHeight;await sleep(26+Math.random()*10);}
+      } else {d.textContent=e.v;tb.scrollTop=tb.scrollHeight;}
+      await sleep(e.a||60);
+    }
+    await sleep(4000);
+  }
+}
+run();
+</script>
+</body>
+</html>

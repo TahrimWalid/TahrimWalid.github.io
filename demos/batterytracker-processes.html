@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:#08080a}
+body{font-family:'JetBrains Mono',monospace;font-size:clamp(7px,1.4vw,10px);color:#ededf0}
+.win{display:flex;flex-direction:column;height:100vh}
+.bar{background:#111116;border-bottom:1px solid #222229;padding:6px 12px;display:flex;align-items:center;gap:6px;flex-shrink:0}
+.dot{width:9px;height:9px;border-radius:50%}
+.dr{background:#ff5f57}.dy{background:#febc2e}.dg{background:#28c840}
+.btit{margin-left:4px;color:#34343d;font-size:.82em;flex:1;text-align:center}
+
+.stats-row{display:grid;grid-template-columns:repeat(5,1fr);border-bottom:1px solid #222229;flex-shrink:0}
+.sc{padding:5px 7px;border-right:1px solid #222229}
+.sc:last-child{border-right:none}
+.sc-n{font-size:1.15em;font-weight:700;line-height:1;color:#00ff41}
+.sc-n.red{color:#ef4444}
+.sc-n.blue{color:#3b82f6}
+.sc-l{color:#5f5f6a;font-size:.7em;margin-top:2px}
+
+.tbl-wrap{flex:1;overflow:hidden;display:flex;flex-direction:column}
+.tbl-head{display:grid;grid-template-columns:10ch 5ch 10ch 7ch 6ch 4ch;gap:0;background:#111116;border-bottom:1px solid #222229;padding:4px 10px;color:#5f5f6a;font-size:.72em;letter-spacing:.03em;flex-shrink:0}
+.tbl-body{flex:1;overflow:hidden}
+.row{display:grid;grid-template-columns:10ch 5ch 10ch 7ch 6ch 4ch;gap:0;padding:3px 10px;border-bottom:1px solid #16161b;align-items:center;animation:fadeIn .25s ease}
+.row.new{background:rgba(239,68,68,.08);border-left:2px solid #ef4444}
+.row.new .process-name{color:#ef4444}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.process-name{color:#ededf0;font-size:.85em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pid{color:#5f5f6a;font-size:.78em}
+.parent{color:#5f5f6a;font-size:.78em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.badge{display:inline-block;font-size:.68em;font-weight:700;padding:1px 5px;border-radius:3px;white-space:nowrap}
+.ms{background:rgba(59,130,246,.15);color:#3b82f6}
+.signed{background:rgba(0,255,65,.1);color:#00ff41}
+.unsigned{background:rgba(239,68,68,.15);color:#ef4444}
+.age{color:#9a9aa4;font-size:.78em}
+.net{color:#9a9aa4;font-size:.78em;text-align:right}
+.net.active{color:#febc2e}
+
+.new-log{border-top:1px solid #222229;padding:4px 10px;flex-shrink:0}
+.nl-head{font-size:.68em;color:#00ff41;font-weight:700;letter-spacing:.03em;margin-bottom:2px}
+.nl-entry{font-size:.72em;color:#9a9aa4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nl-entry .proc{color:#ef4444}
+.nl-entry .time{color:#5f5f6a}
+</style>
+</head>
+<body>
+<div class="win">
+  <div class="bar">
+    <span class="dot dr"></span><span class="dot dy"></span><span class="dot dg"></span>
+    <span class="btit">BatteryTracker — [#] PROCESSES</span>
+  </div>
+
+  <div class="stats-row">
+    <div class="sc"><div class="sc-n">187</div><div class="sc-l">total.procs</div></div>
+    <div class="sc"><div class="sc-n red" id="uns">0</div><div class="sc-l">unsigned</div></div>
+    <div class="sc"><div class="sc-n">124</div><div class="sc-l">windowless</div></div>
+    <div class="sc"><div class="sc-n blue">12</div><div class="sc-l">net.active</div></div>
+    <div class="sc"><div class="sc-n">23</div><div class="sc-l">autoruns</div></div>
+  </div>
+
+  <div class="tbl-wrap">
+    <div class="tbl-head">
+      <span>Process</span><span>PID</span><span>Parent</span><span>Signed</span><span>Age</span><span>Net</span>
+    </div>
+    <div class="tbl-body" id="tbl"></div>
+  </div>
+
+  <div class="new-log">
+    <div class="nl-head">NEW PROCESSES</div>
+    <div class="nl-entry" id="nl">—</div>
+  </div>
+</div>
+
+<script>
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+const ROWS = [
+  {name:'System',      pid:'4',    parent:'—',        sig:'ms',  age:'4h 42m', net:'—'},
+  {name:'explorer.exe',pid:'2104', parent:'userinit', sig:'ms',  age:'4h 41m', net:'—'},
+  {name:'dwm.exe',     pid:'1284', parent:'wininit',  sig:'ms',  age:'4h 41m', net:'—'},
+  {name:'svchost.exe', pid:'1024', parent:'services', sig:'ms',  age:'4h 40m', net:'6'},
+  {name:'chrome.exe',  pid:'5680', parent:'explorer', sig:'ok',  age:'1h 34m', net:'18'},
+  {name:'Code.exe',    pid:'9012', parent:'explorer', sig:'ok',  age:'1h 12m', net:'3'},
+  {name:'powershell',  pid:'3456', parent:'explorer', sig:'ms',  age:'42m',    net:'—'},
+  {name:'msedge.exe',  pid:'4812', parent:'explorer', sig:'ok',  age:'38m',    net:'7'},
+];
+
+const NEW_PROC = {name:'putty.exe', pid:'8844', parent:'explorer', sig:'unsigned', age:'0m 12s', net:'1'};
+
+function makeRow(r, isNew=false) {
+  const div = document.createElement('div');
+  div.className = 'row' + (isNew ? ' new' : '');
+  const sigClass = r.sig === 'ms' ? 'ms' : r.sig === 'unsigned' ? 'unsigned' : 'signed';
+  const sigLabel = r.sig === 'ms' ? '✓ MS' : r.sig === 'unsigned' ? '⚠ unsigned' : '✓ signed';
+  const netCls = r.net !== '—' ? 'active' : '';
+  div.innerHTML = `
+    <span class="process-name">${r.name}</span>
+    <span class="pid">${r.pid}</span>
+    <span class="parent">${r.parent}</span>
+    <span><span class="badge ${sigClass}">${sigLabel}</span></span>
+    <span class="age">${r.age}</span>
+    <span class="net ${netCls}">${r.net}</span>`;
+  return div;
+}
+
+async function run() {
+  const tbl = document.getElementById('tbl');
+  const nlEl = document.getElementById('nl');
+  const unsEl = document.getElementById('uns');
+
+  while (true) {
+    tbl.innerHTML = '';
+    nlEl.textContent = '—';
+    unsEl.textContent = '0';
+
+    for (const r of ROWS) {
+      tbl.appendChild(makeRow(r));
+      await sleep(160);
+    }
+
+    await sleep(900);
+
+    // New unsigned process appears
+    const newRow = makeRow(NEW_PROC, true);
+    tbl.appendChild(newRow);
+    unsEl.textContent = '1';
+    const t = new Date();
+    const ts = String(t.getHours()).padStart(2,'0') + ':' + String(t.getMinutes()).padStart(2,'0') + ':' + String(t.getSeconds()).padStart(2,'0');
+    nlEl.innerHTML = `<span class="time">${ts}</span>  <span class="proc">putty.exe</span>  PID 8844  ⚠ unsigned`;
+
+    await sleep(4500);
+  }
+}
+
+run();
+</script>
+</body>
+</html>

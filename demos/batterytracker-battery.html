@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:#08080a}
+body{font-family:'JetBrains Mono',monospace;font-size:clamp(7.5px,1.5vw,10.5px);color:#ededf0}
+.win{display:flex;flex-direction:column;height:100vh}
+.bar{background:#111116;border-bottom:1px solid #222229;padding:6px 12px;display:flex;align-items:center;gap:6px;flex-shrink:0}
+.dot{width:9px;height:9px;border-radius:50%}
+.dr{background:#ff5f57}.dy{background:#febc2e}.dg{background:#28c840}
+.btit{margin-left:4px;color:#34343d;font-size:.82em;flex:1;text-align:center}
+.live{display:flex;align-items:center;gap:4px;font-size:.78em;color:#00ff41}
+.live-dot{width:6px;height:6px;border-radius:50%;background:#00ff41;animation:blink 1.4s ease infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid #222229;flex-shrink:0}
+.stat{padding:7px 8px;border-right:1px solid #222229}
+.stat:last-child{border-right:none}
+.stat-n{font-size:1.25em;font-weight:700;line-height:1;color:#00ff41}
+.stat-n.amber{color:#f59e0b}
+.stat-n.blue{color:#3b82f6}
+.stat-l{color:#5f5f6a;font-size:.72em;margin-top:3px}
+
+.chart-wrap{flex:1;position:relative;overflow:hidden;background:#0a0a0d}
+canvas{position:absolute;inset:0;width:100%;height:100%}
+.y-left{position:absolute;left:2px;top:0;bottom:0;display:flex;flex-direction:column;justify-content:space-between;padding:5px 0;pointer-events:none}
+.y-right{position:absolute;right:2px;top:0;bottom:0;display:flex;flex-direction:column;justify-content:space-between;padding:5px 0;pointer-events:none;text-align:right}
+.yl{font-size:.64em;color:#5f5f6a;line-height:1}
+.yr{font-size:.64em;color:#f59e0b;opacity:.6;line-height:1}
+.chart-legend{position:absolute;bottom:5px;left:50%;transform:translateX(-50%);display:flex;gap:12px;pointer-events:none}
+.leg{display:flex;align-items:center;gap:4px;font-size:.68em;color:#5f5f6a}
+.leg-line{width:14px;height:2px}
+
+.leaderboard{border-top:1px solid #222229;padding:5px 10px;flex-shrink:0}
+.lb-head{font-size:.68em;color:#00ff41;font-weight:700;letter-spacing:.03em;margin-bottom:4px}
+.lb-row{display:flex;align-items:center;gap:6px;margin:2px 0}
+.lb-name{color:#9a9aa4;width:6.5ch;font-size:.8em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex-shrink:0}
+.lb-track{flex:1;height:5px;background:#1a1a1f;border-radius:2px;overflow:hidden}
+.lb-fill{height:100%;border-radius:2px;background:#00ff41;opacity:.85;width:0;transition:width 1.4s cubic-bezier(.4,0,.2,1)}
+.lb-pct{color:#5f5f6a;font-size:.75em;min-width:3ch;text-align:right;flex-shrink:0}
+
+.footer{border-top:1px solid #222229;padding:3px 10px;display:flex;justify-content:space-between;flex-shrink:0}
+.footer span{color:#5f5f6a;font-size:.7em}
+</style>
+</head>
+<body>
+<div class="win">
+  <div class="bar">
+    <span class="dot dr"></span><span class="dot dy"></span><span class="dot dg"></span>
+    <span class="btit">BatteryTracker — [~] BATTERY</span>
+    <div class="live"><span class="live-dot"></span>LIVE</div>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-n" id="sn0">—</div>
+      <div class="stat-l">rate.current</div>
+    </div>
+    <div class="stat">
+      <div class="stat-n amber" id="sn1">—</div>
+      <div class="stat-l">batt.level</div>
+    </div>
+    <div class="stat">
+      <div class="stat-n" id="sn2">—</div>
+      <div class="stat-l">rate.avg</div>
+    </div>
+    <div class="stat">
+      <div class="stat-n blue">89.2%</div>
+      <div class="stat-l">batt.health</div>
+    </div>
+  </div>
+
+  <div class="chart-wrap">
+    <div class="y-left">
+      <span class="yl">45W</span><span class="yl">30W</span><span class="yl">15W</span><span class="yl">0</span>
+    </div>
+    <div class="y-right">
+      <span class="yr">50%</span><span class="yr">37%</span><span class="yr">22%</span><span class="yr"></span>
+    </div>
+    <canvas id="ch"></canvas>
+    <div class="chart-legend">
+      <span class="leg"><span class="leg-line" style="background:#00ff41"></span>rate (W)</span>
+      <span class="leg"><span class="leg-line" style="background:#f59e0b;opacity:.7;border-top:2px dashed #f59e0b;height:0"></span>battery %</span>
+    </div>
+  </div>
+
+  <div class="leaderboard">
+    <div class="lb-head">DISCHARGE ATTRIBUTION</div>
+    <div class="lb-row">
+      <span class="lb-name">chrome</span>
+      <div class="lb-track"><div class="lb-fill" data-w="71"></div></div>
+      <span class="lb-pct">71%</span>
+    </div>
+    <div class="lb-row">
+      <span class="lb-name">Code</span>
+      <div class="lb-track"><div class="lb-fill" data-w="18"></div></div>
+      <span class="lb-pct">18%</span>
+    </div>
+    <div class="lb-row">
+      <span class="lb-name">msedge</span>
+      <div class="lb-track"><div class="lb-fill" data-w="8"></div></div>
+      <span class="lb-pct">8%</span>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>on battery · Balanced · discharging</span>
+    <span id="ft">session: 00:24</span>
+  </div>
+</div>
+
+<script>
+// Real data from BatteryLog.csv session (mW → W)
+const RATE = [18.2,26.2,12.8,18.0,14.8,21.1,26.5,18.1,21.9,20.1,14.8,19.5,16.4,21.0,18.3,38.2,41.3,17.8,18.6];
+const BATT = [38,37,37,37,37,37,36,36,36,23,23,23,22,22,22,22,22,22,22];
+const RATE_MAX = 50, BATT_MIN = 18, BATT_MAX = 42;
+const LOOP_DURATION = 7000;
+
+const canvas = document.getElementById('ch');
+const ctx = canvas.getContext('2d');
+let startT = null;
+
+function sizeCanvas() {
+  const r = canvas.parentElement.getBoundingClientRect();
+  if (r.width > 0 && r.height > 0) {
+    canvas.width = Math.round(r.width);
+    canvas.height = Math.round(r.height);
+  }
+}
+
+function toX(i, W) {
+  const pad = 26;
+  return pad + (W - pad * 2) * (i / (RATE.length - 1));
+}
+function toYRate(v, H) {
+  const pad = 8;
+  return (H - pad) - (v / RATE_MAX) * (H - pad * 2);
+}
+function toYBatt(v, H) {
+  const pad = 8;
+  return (H - pad) - ((v - BATT_MIN) / (BATT_MAX - BATT_MIN)) * (H - pad * 2);
+}
+
+function draw(frac) {
+  sizeCanvas();
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+
+  // Grid lines
+  ctx.strokeStyle = '#16161b';
+  ctx.lineWidth = 1;
+  [0.25, 0.5, 0.75].forEach(t => {
+    const y = Math.round(H * t) + 0.5;
+    ctx.beginPath(); ctx.moveTo(26, y); ctx.lineTo(W - 26, y); ctx.stroke();
+  });
+
+  const revN = Math.max(2, Math.round(frac * RATE.length));
+
+  // Filled area under rate line
+  ctx.beginPath();
+  ctx.moveTo(toX(0, W), H);
+  for (let i = 0; i < revN; i++) ctx.lineTo(toX(i, W), toYRate(RATE[i], H));
+  ctx.lineTo(toX(revN - 1, W), H);
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(0,255,65,0.06)';
+  ctx.fill();
+
+  // Power rate line (green)
+  ctx.beginPath();
+  ctx.strokeStyle = '#00ff41';
+  ctx.lineWidth = 2;
+  ctx.lineJoin = 'round';
+  ctx.lineCap = 'round';
+  for (let i = 0; i < revN; i++) {
+    const x = toX(i, W), y = toYRate(RATE[i], H);
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+
+  // Dot at head
+  const hx = toX(revN - 1, W), hy = toYRate(RATE[revN - 1], H);
+  ctx.beginPath();
+  ctx.arc(hx, hy, 3, 0, Math.PI * 2);
+  ctx.fillStyle = '#00ff41';
+  ctx.fill();
+
+  // Battery % line (amber dashed)
+  ctx.beginPath();
+  ctx.strokeStyle = '#f59e0b';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([3, 4]);
+  ctx.globalAlpha = 0.65;
+  for (let i = 0; i < revN; i++) {
+    const x = toX(i, W), y = toYBatt(BATT[i], H);
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.globalAlpha = 1;
+
+  // Peak marker
+  if (revN > 16) {
+    const px = toX(16, W), py = toYRate(41.3, H);
+    ctx.beginPath();
+    ctx.strokeStyle = 'rgba(255,95,87,0.4)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([2, 3]);
+    ctx.moveTo(px, 0); ctx.lineTo(px, H);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+}
+
+function updateStats(frac) {
+  const i = Math.min(RATE.length - 1, Math.round(frac * (RATE.length - 1)));
+  const slice = RATE.slice(0, i + 1);
+  const avg = slice.reduce((a, b) => a + b, 0) / slice.length;
+  document.getElementById('sn0').textContent = RATE[i].toFixed(1) + ' W';
+  document.getElementById('sn1').textContent = BATT[i] + '%';
+  document.getElementById('sn2').textContent = avg.toFixed(1) + ' W';
+}
+
+function animate(ts) {
+  if (!startT) startT = ts;
+  const elapsed = ts - startT;
+  const frac = Math.min(elapsed / LOOP_DURATION, 1);
+
+  draw(frac);
+  updateStats(frac);
+
+  if (frac < 1) {
+    requestAnimationFrame(animate);
+  } else {
+    setTimeout(() => {
+      startT = null;
+      requestAnimationFrame(animate);
+    }, 2800);
+  }
+}
+
+// Leaderboard bars
+setTimeout(() => {
+  document.querySelectorAll('.lb-fill').forEach(el => {
+    el.style.width = el.dataset.w + '%';
+  });
+}, 400);
+
+// Footer elapsed timer
+let sec = 24;
+setInterval(() => {
+  sec++;
+  const m = String(Math.floor(sec / 60)).padStart(2,'0');
+  const s = String(sec % 60).padStart(2,'0');
+  document.getElementById('ft').textContent = 'session: ' + m + ':' + s;
+}, 1000);
+
+window.addEventListener('resize', () => draw(1));
+requestAnimationFrame(animate);
+</script>
+</body>
+</html>

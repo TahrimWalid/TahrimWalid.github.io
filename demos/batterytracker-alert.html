@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:#08080a}
+body{font-family:'JetBrains Mono',monospace;font-size:clamp(7.5px,1.5vw,10.5px);color:#ededf0}
+.win{display:flex;flex-direction:column;height:100vh}
+.bar{background:#111116;border-bottom:1px solid #222229;padding:6px 12px;display:flex;align-items:center;gap:6px;flex-shrink:0}
+.dot{width:9px;height:9px;border-radius:50%}
+.dr{background:#ff5f57}.dy{background:#febc2e}.dg{background:#28c840}
+.btit{margin-left:4px;color:#34343d;font-size:.82em;flex:1;text-align:center}
+
+.banner{padding:5px 12px;border-bottom:1px solid #222229;font-size:.72em;color:#5f5f6a;flex-shrink:0}
+.banner span{color:#9a9aa4}
+
+.panels{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:8px;flex:1;overflow:hidden}
+.panel{border:1px solid #222229;border-radius:3px;display:flex;flex-direction:column;overflow:hidden;transition:border-color .4s ease,background .4s ease}
+.panel.fired-red{border-color:#ef4444;background:rgba(239,68,68,.04)}
+.panel.fired-amber{border-color:#f59e0b;background:rgba(245,158,11,.04)}
+.ph{background:#111116;padding:5px 9px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;border-bottom:1px solid #222229}
+.ph-title{font-size:.72em;font-weight:700;letter-spacing:.03em;color:#5f5f6a;transition:color .4s ease}
+.panel.fired-red .ph-title{color:#ef4444}
+.panel.fired-amber .ph-title{color:#f59e0b}
+.ph-count{font-size:.68em;padding:1px 6px;border-radius:2px;font-weight:700;background:#1a1a1f;color:#5f5f6a;transition:background .4s ease,color .4s ease}
+.panel.fired-red .ph-count{background:rgba(239,68,68,.2);color:#ef4444}
+.panel.fired-amber .ph-count{background:rgba(245,158,11,.2);color:#f59e0b}
+.pb{flex:1;padding:7px 9px;display:flex;flex-direction:column;gap:5px;overflow:hidden}
+.empty{color:#5f5f6a;font-size:.78em;margin:auto 0}
+
+.alert-entry{animation:slide .3s ease;overflow:hidden}
+@keyframes slide{from{opacity:0;max-height:0}to{opacity:1;max-height:120px}}
+.ae-head{font-size:.78em;font-weight:700}
+.ae-head.red{color:#ef4444}
+.ae-head.amber{color:#f59e0b}
+.ae-detail{font-size:.72em;color:#9a9aa4;margin-top:2px;line-height:1.55}
+.ae-detail .hi{color:#ededf0}
+.ae-detail .dim{color:#5f5f6a}
+.ae-time{font-size:.68em;color:#5f5f6a;margin-top:4px}
+
+.process-chain{display:flex;align-items:center;gap:5px;margin:3px 0;font-size:.76em}
+.pc-proc{background:#1a1a1f;padding:2px 6px;border-radius:2px;color:#ededf0;white-space:nowrap}
+.pc-arr{color:#ef4444}
+
+.notif{position:fixed;bottom:10px;right:10px;background:#1a1a1f;border:1px solid #ef4444;border-radius:4px;padding:7px 10px;font-size:.76em;max-width:160px;opacity:0;transform:translateY(8px);transition:all .35s ease;pointer-events:none}
+.notif.show{opacity:1;transform:none}
+.notif-title{color:#ef4444;font-weight:700;margin-bottom:2px}
+.notif-body{color:#9a9aa4;line-height:1.4}
+
+.footer{border-top:1px solid #222229;padding:3px 10px;flex-shrink:0;display:flex;justify-content:space-between}
+.footer span{color:#5f5f6a;font-size:.7em}
+</style>
+</head>
+<body>
+<div class="win">
+  <div class="bar">
+    <span class="dot dr"></span><span class="dot dy"></span><span class="dot dg"></span>
+    <span class="btit">BatteryTracker — [#] PROCESSES · Alert Panels</span>
+  </div>
+
+  <div class="banner">
+    Process census · <span>187 processes</span> · <span>2 unsigned</span> · Tick 5 s · Autoruns scan in <span id="countdown">4:38</span>
+  </div>
+
+  <div class="panels">
+    <div class="panel" id="p1">
+      <div class="ph">
+        <span class="ph-title">parent_alerts</span>
+        <span class="ph-count" id="c1">0</span>
+      </div>
+      <div class="pb" id="pb1">
+        <span class="empty">no alerts detected</span>
+      </div>
+    </div>
+
+    <div class="panel" id="p2">
+      <div class="ph">
+        <span class="ph-title">network_alerts</span>
+        <span class="ph-count" id="c2">0</span>
+      </div>
+      <div class="pb" id="pb2">
+        <span class="empty">no alerts detected</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>alert permissions: granted</span>
+    <span id="ft">02:14:18</span>
+  </div>
+</div>
+
+<div class="notif" id="notif">
+  <div class="notif-title">⚠ Process Alert</div>
+  <div class="notif-body" id="notif-body"></div>
+</div>
+
+<script>
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+function fireParent() {
+  const p1 = document.getElementById('p1');
+  const pb1 = document.getElementById('pb1');
+  const c1 = document.getElementById('c1');
+  p1.classList.add('fired-red');
+  c1.textContent = '1';
+  pb1.innerHTML = `
+    <div class="alert-entry">
+      <div class="ae-head red">parent chain anomaly</div>
+      <div class="process-chain">
+        <span class="pc-proc">WINWORD.EXE</span>
+        <span class="pc-arr">→</span>
+        <span class="pc-proc" style="color:#ef4444">powershell.exe</span>
+      </div>
+      <div class="ae-detail">
+        <span class="hi">PID 4892</span> spawned child <span class="hi">PID 5124</span><br>
+        macro execution path · first seen <span class="dim">02:14:33</span>
+      </div>
+      <div class="ae-time">02:14:33 — deduplicated by PID</div>
+    </div>`;
+  showNotif('WINWORD.EXE → powershell.exe · macro path');
+}
+
+function fireNetwork() {
+  const p2 = document.getElementById('p2');
+  const pb2 = document.getElementById('pb2');
+  const c2 = document.getElementById('c2');
+  p2.classList.add('fired-amber');
+  c2.textContent = '1';
+  pb2.innerHTML = `
+    <div class="alert-entry">
+      <div class="ae-head amber">new remote destination</div>
+      <div class="ae-detail">
+        <span class="hi">chrome.exe</span> PID 5680<br>
+        first seen: <span class="hi">185.70.41.130:443</span><br>
+        ESTABLISHED · warm-up elapsed <span class="dim">02:16:11</span>
+      </div>
+      <div class="ae-time">02:16:11 · subsequent conns silent</div>
+    </div>`;
+}
+
+function showNotif(msg) {
+  const notif = document.getElementById('notif');
+  document.getElementById('notif-body').textContent = msg;
+  notif.classList.add('show');
+  setTimeout(() => notif.classList.remove('show'), 2800);
+}
+
+function reset() {
+  ['p1','p2'].forEach(id => document.getElementById(id).classList.remove('fired-red','fired-amber'));
+  document.getElementById('c1').textContent = '0';
+  document.getElementById('c2').textContent = '0';
+  document.getElementById('pb1').innerHTML = '<span class="empty">no alerts detected</span>';
+  document.getElementById('pb2').innerHTML = '<span class="empty">no alerts detected</span>';
+}
+
+// Countdown timer
+let seconds = 278;
+setInterval(() => {
+  seconds = (seconds - 1 + 600) % 600;
+  const m = Math.floor(seconds / 60);
+  const s = String(seconds % 60).padStart(2,'0');
+  document.getElementById('countdown').textContent = m + ':' + s;
+}, 1000);
+
+// Clock
+let baseTime = new Date();
+baseTime.setHours(2,14,18,0);
+setInterval(() => {
+  baseTime = new Date(baseTime.getTime() + 1000);
+  const h = String(baseTime.getHours()).padStart(2,'0');
+  const m = String(baseTime.getMinutes()).padStart(2,'0');
+  const s = String(baseTime.getSeconds()).padStart(2,'0');
+  document.getElementById('ft').textContent = h + ':' + m + ':' + s;
+}, 1000);
+
+async function run() {
+  while (true) {
+    await sleep(1800);
+    fireParent();
+    await sleep(2200);
+    fireNetwork();
+    await sleep(4000);
+    reset();
+    await sleep(1200);
+  }
+}
+run();
+</script>
+</body>
+</html>
