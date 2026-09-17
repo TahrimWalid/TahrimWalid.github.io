@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:#08080a}
+body{font-family:'JetBrains Mono',monospace;font-size:clamp(8px,1.6vw,11px);color:#ededf0}
+.win{display:flex;flex-direction:column;height:100vh}
+.bar{background:#111116;border-bottom:1px solid #222229;padding:6px 12px;display:flex;align-items:center;gap:6px;flex-shrink:0}
+.dot{width:9px;height:9px;border-radius:50%}
+.dr{background:#ff5f57}.dy{background:#febc2e}.dg{background:#28c840}
+.btit{margin-left:4px;color:#34343d;font-size:.82em;flex:1;text-align:center}
+.model-tag{font-size:.68em;padding:1px 7px;background:rgba(59,130,246,.15);color:#3b82f6;border-radius:3px;border:1px solid rgba(59,130,246,.25)}
+
+.chat{flex:1;overflow-y:auto;padding:10px 14px;display:flex;flex-direction:column;gap:10px;scrollbar-width:none}
+.chat::-webkit-scrollbar{display:none}
+
+.msg{display:flex;gap:8px;align-items:flex-start}
+.msg.user{flex-direction:row-reverse}
+.avatar{width:22px;height:22px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:.65em;font-weight:700;flex-shrink:0;margin-top:2px}
+.av-user{background:rgba(0,255,65,.15);color:#00ff41;border:1px solid rgba(0,255,65,.3)}
+.av-ai{background:rgba(59,130,246,.15);color:#3b82f6;border:1px solid rgba(59,130,246,.3)}
+.bubble{max-width:86%;padding:7px 10px;border-radius:4px;line-height:1.65;font-size:.88em}
+.bubble.user{background:#111116;color:#ededf0;border:1px solid #222229;text-align:right}
+.bubble.ai{background:#0d0d12;color:#ededf0;border:1px solid #1e1e28}
+
+.tool-call{margin:5px 0;padding:6px 9px;background:#0a0a0f;border:1px solid #222229;border-left:2px solid #febc2e;border-radius:3px}
+.tc-head{font-size:.72em;color:#febc2e;font-weight:700;margin-bottom:3px}
+.tc-fn{color:#ededf0;font-size:.78em}
+.tc-args{color:#5f5f6a;font-size:.7em;margin-top:2px}
+.tc-ret{color:#00ff41;font-size:.7em;margin-top:3px;white-space:pre-wrap}
+
+.thinking{color:#5f5f6a;font-size:.76em;font-style:italic}
+.hi{color:#00ff41;font-weight:700}
+.dim{color:#5f5f6a}
+.num{color:#febc2e;font-weight:700}
+
+.input-row{border-top:1px solid #222229;padding:6px 12px;display:flex;align-items:center;gap:8px;flex-shrink:0}
+.fake-input{flex:1;background:#111116;border:1px solid #222229;border-radius:3px;padding:5px 8px;font-size:.78em;color:#5f5f6a}
+.send-btn{background:rgba(0,255,65,.12);border:1px solid rgba(0,255,65,.3);color:#00ff41;padding:4px 9px;border-radius:3px;font-family:inherit;font-size:.75em;cursor:default}
+
+.cursor{display:inline-block;width:6px;height:.85em;background:#00ff41;animation:blink 1s step-end infinite;vertical-align:text-bottom;margin-left:1px}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+</style>
+</head>
+<body>
+<div class="win">
+  <div class="bar">
+    <span class="dot dr"></span><span class="dot dy"></span><span class="dot dg"></span>
+    <span class="btit">Oppipolku Assistant — Open WebUI</span>
+    <span class="model-tag">Gemini 2.5 Pro</span>
+  </div>
+
+  <div class="chat" id="chat"></div>
+
+  <div class="input-row">
+    <div class="fake-input">Ask about Finnish university courses...</div>
+    <button class="send-btn">send</button>
+  </div>
+</div>
+
+<script>
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+async function typeInto(el, text, speed=28) {
+  for (const c of text) {
+    el.textContent += c;
+    document.getElementById('chat').scrollTop = 99999;
+    await sleep(speed + Math.random() * 10);
+  }
+}
+
+function addMsg(role, html) {
+  const chat = document.getElementById('chat');
+  const msg = document.createElement('div');
+  msg.className = 'msg ' + role;
+  const avatar = document.createElement('div');
+  avatar.className = 'avatar ' + (role === 'user' ? 'av-user' : 'av-ai');
+  avatar.textContent = role === 'user' ? 'U' : 'AI';
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble ' + role;
+  if (html) bubble.innerHTML = html;
+  msg.appendChild(avatar);
+  msg.appendChild(bubble);
+  chat.appendChild(msg);
+  chat.scrollTop = 99999;
+  return bubble;
+}
+
+function addToolCall(fnName, args, result) {
+  const chat = document.getElementById('chat');
+  const tc = document.createElement('div');
+  tc.className = 'tool-call';
+  tc.innerHTML = `
+    <div class="tc-head">⚡ tool call</div>
+    <div class="tc-fn">oppipolku_data_fetcher.<span style="color:#febc2e">${fnName}</span></div>
+    <div class="tc-args">${args}</div>
+    ${result ? `<div class="tc-ret">→ ${result}</div>` : ''}`;
+  chat.appendChild(tc);
+  chat.scrollTop = 99999;
+  return tc;
+}
+
+async function run() {
+  const chat = document.getElementById('chat');
+  while (true) {
+    chat.innerHTML = '';
+    await sleep(800);
+
+    // User message
+    addMsg('user', 'Which Finnish UAS offers the most English-language continuing education, and how does TAMK compare to the national average?');
+    await sleep(900);
+
+    // Thinking
+    const thinkBubble = addMsg('ai', '<span class="thinking">thinking…</span>');
+    await sleep(1200);
+    thinkBubble.remove();
+
+    // Tool call 1
+    addToolCall('get_rankings',
+      'metric="english_percentage"  ·  top=5  ·  org_type="UNIVERSITY_OF_APPLIED_SCIENCES"',
+      null
+    );
+    await sleep(600);
+    const tc1 = document.querySelector('.tool-call:last-child');
+    const ret1 = document.createElement('div');
+    ret1.className = 'tc-ret';
+    ret1.textContent = '→ [{rank:1, org:"Metropolia", en_pct:41.2}, {rank:2, org:"Haaga-Helia", en_pct:38.7}, {rank:5, org:"TAMK", en_pct:28.1}]';
+    tc1.appendChild(ret1);
+    await sleep(500);
+
+    // Tool call 2
+    addToolCall('get_market_gaps',
+      'org="TAMK"',
+      '→ {languages: [{lang:"en", tamk_pct:28.1, market_avg_pct:33.8, gap:-5.7}]}'
+    );
+    await sleep(800);
+
+    // AI response
+    const aiBubble = addMsg('ai', '');
+    const cursor = document.createElement('span');
+    cursor.className = 'cursor';
+    aiBubble.appendChild(cursor);
+
+    const lines = [
+      'Among Finnish UAS institutions, ',
+      '<span class="hi">Metropolia</span>',
+      ' leads English-language continuing education at ',
+      '<span class="num">41.2%</span>',
+      ' of courses taught in English, followed by Haaga-Helia at ',
+      '<span class="num">38.7%</span>',
+      '.\n\n',
+      'TAMK ranks <span class="num">5th</span> with ',
+      '<span class="num">28.1%</span>',
+      ' English-language coverage — ',
+      '<span class="dim">5.7 percentage points below the national UAS average of 33.8%.</span>',
+      ' This gap is flagged in the market gap analysis as a strategic opportunity: increasing English offerings would move TAMK toward the sector median without displacing its health-and-well-being strength.',
+    ];
+
+    for (const part of lines) {
+      if (part.startsWith('<')) {
+        cursor.insertAdjacentHTML('beforebegin', part);
+        await sleep(60);
+      } else {
+        for (const c of part) {
+          cursor.insertAdjacentText('beforebegin', c);
+          chat.scrollTop = 99999;
+          await sleep(20 + Math.random() * 8);
+        }
+      }
+    }
+    cursor.remove();
+
+    await sleep(5000);
+  }
+}
+
+run();
+</script>
+</body>
+</html>

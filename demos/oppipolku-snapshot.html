@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:#08080a}
+body{font-family:'JetBrains Mono',monospace;font-size:clamp(8px,1.6vw,11px)}
+.win{display:flex;flex-direction:column;height:100vh}
+.bar{background:#111116;border-bottom:1px solid #222229;padding:7px 12px;display:flex;align-items:center;gap:6px;flex-shrink:0}
+.dot{width:10px;height:10px;border-radius:50%}
+.dr{background:#ff5f57}.dy{background:#febc2e}.dg{background:#28c840}
+.btit{margin-left:4px;color:#34343d;font-size:.82em;flex:1;text-align:center}
+.body{flex:1;overflow-y:auto;padding:10px 14px;line-height:1.65;scrollbar-width:none}
+.body::-webkit-scrollbar{display:none}
+.l{display:block;white-space:pre-wrap;word-break:break-all}
+.lp{color:#00ff41}.lk{color:#00ff41}.lo{color:#ededf0}.ld{color:#5f5f6a}
+.lj{color:#9a9aa4}.ljk{color:#3b82f6}.ljv{color:#febc2e}.ljn{color:#00ff41}.lb{}
+</style>
+</head>
+<body>
+<div class="win">
+  <div class="bar">
+    <span class="dot dr"></span><span class="dot dy"></span><span class="dot dg"></span>
+    <span class="btit">walid@homelab-node1 — GET /benchmark/snapshot/TAMK</span>
+  </div>
+  <div class="body" id="tb"></div>
+</div>
+<script>
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+// Each entry: t=type, v=text, a=delay after
+const S = [
+  {t:'p',v:'$ curl https://cont-learning.komil.dev/benchmark/snapshot/TAMK | python -m json.tool',a:600},
+  {t:'b',v:'',a:100},
+  {t:'lj',v:'{',a:40},
+  {t:'lj',v:'  "organization": {',a:30},
+  {t:'ljk',v:'    "name":',a:20},{t:'ljv',v:'                    "Tampere University of Applied Sciences",',a:30},
+  {t:'ljk',v:'    "short_name":',a:20},{t:'ljv',v:'             "TAMK",',a:30},
+  {t:'ljk',v:'    "type":',a:20},{t:'ljv',v:'                  "UNIVERSITY_OF_APPLIED_SCIENCES"',a:30},
+  {t:'lj',v:'  },',a:40},
+  {t:'ljk',v:'  "total_courses":',a:20},{t:'ljn',v:'          310,',a:60},
+  {t:'lj',v:'  "categories": {',a:30},
+  {t:'ljk',v:'    "FORMAL":',a:20},{t:'lj',v:'    { "count": 252, "percentage": 81.3 },',a:30},
+  {t:'ljk',v:'    "INFORMAL":',a:20},{t:'lj',v:'  { "count":  58, "percentage": 18.7 }',a:40},
+  {t:'lj',v:'  },',a:40},
+  {t:'lj',v:'  "delivery": {',a:30},
+  {t:'ljk',v:'    "REMOTE_OR_ONLINE":',a:20},{t:'ljn',v:' { "count": 238, "percentage": 76.8 },',a:30},
+  {t:'ljk',v:'    "IN_PERSON":',a:20},{t:'lj',v:'       { "count":  74, "percentage": 23.9 },',a:30},
+  {t:'ljk',v:'    "REMOTE_ONLY":',a:20},{t:'lj',v:'     { "count":   5, "percentage":  1.6 }',a:40},
+  {t:'lj',v:'  },',a:40},
+  {t:'lj',v:'  "themes": {',a:30},
+  {t:'ljk',v:'    "health_and_well_being":',a:20},{t:'ljn',v:'             { "count": 59, "percentage": 19.0 },',a:30},
+  {t:'ljk',v:'    "renewal_of_working_life":',a:20},{t:'lj',v:'          { "count": 43, "percentage": 13.9 },',a:30},
+  {t:'ljk',v:'    "education_and_learning":',a:20},{t:'lj',v:'           { "count": 29, "percentage":  9.4 }',a:40},
+  {t:'lj',v:'  },',a:40},
+  {t:'lj',v:'  "credits": {',a:30},
+  {t:'ljk',v:'    "mean":',a:20},{t:'ljv',v:'   5.0,',a:20},
+  {t:'ljk',v:'    "median":',a:20},{t:'ljv',v:' 5.0,',a:20},
+  {t:'ljk',v:'    "p75":',a:20},{t:'ljv',v:'    8.0,',a:20},
+  {t:'ljk',v:'    "p95":',a:20},{t:'ljv',v:'   15.0',a:40},
+  {t:'lj',v:'  },',a:40},
+  {t:'lj',v:'  "pricing": {',a:30},
+  {t:'ljk',v:'    "mean":',a:20},{t:'ljv',v:'          71.7,',a:20},
+  {t:'ljk',v:'    "free_percentage":',a:20},{t:'ljn',v:'  42.3',a:40},
+  {t:'lj',v:'  },',a:40},
+  {t:'ljk',v:'  "response_ms":',a:20},{t:'ljn',v:'        18',a:30},
+  {t:'lj',v:'}',a:50},
+];
+const CLS={p:'lp',k:'lk',o:'lo',d:'ld',b:'lb',lj:'lj',ljk:'ljk',ljv:'ljv',ljn:'ljn'};
+async function run(){
+  const tb=document.getElementById('tb');
+  while(true){
+    tb.innerHTML='';
+    for(const e of S){
+      if(!document.getElementById('tb')) return;
+      const d=document.createElement('span');
+      d.className='l '+(CLS[e.t]||'lo');
+      tb.appendChild(d);
+      if(e.t==='p'){
+        for(const c of e.v){d.textContent+=c;tb.scrollTop=tb.scrollHeight;await sleep(26+Math.random()*10);}
+      } else {d.textContent=e.v;tb.scrollTop=tb.scrollHeight;}
+      await sleep(e.a||50);
+    }
+    await sleep(4500);
+  }
+}
+run();
+</script>
+</body>
+</html>
