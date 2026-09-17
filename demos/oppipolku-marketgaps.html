@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:#08080a}
+body{font-family:'JetBrains Mono',monospace;font-size:clamp(8px,1.6vw,11px);color:#ededf0}
+.win{display:flex;flex-direction:column;height:100vh}
+.bar{background:#111116;border-bottom:1px solid #222229;padding:6px 12px;display:flex;align-items:center;gap:6px;flex-shrink:0}
+.dot{width:9px;height:9px;border-radius:50%}
+.dr{background:#ff5f57}.dy{background:#febc2e}.dg{background:#28c840}
+.btit{margin-left:4px;color:#34343d;font-size:.82em;flex:1;text-align:center}
+
+.prompt-area{padding:6px 14px;flex-shrink:0;border-bottom:1px solid #222229;font-size:.82em}
+.cmd{color:#00ff41}
+
+.wrap{flex:1;overflow-y:auto;padding:9px 14px;scrollbar-width:none;display:flex;flex-direction:column;gap:11px}
+.wrap::-webkit-scrollbar{display:none}
+
+.section-head{display:flex;align-items:baseline;gap:8px;margin-bottom:3px}
+.sh-title{font-size:.76em;font-weight:700;color:#f59e0b;letter-spacing:.03em}
+.sh-note{font-size:.66em;color:#5f5f6a}
+
+.gap-row{display:flex;align-items:center;gap:8px;margin:3px 0;opacity:0;animation:fadeIn .4s ease forwards}
+@keyframes fadeIn{to{opacity:1}}
+.gap-label{width:15ch;flex-shrink:0;font-size:.78em;color:#9a9aa4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gap-bars{flex:1;display:flex;flex-direction:column;gap:2px}
+.gap-bar-line{display:flex;align-items:center;gap:5px}
+.gap-bar-tag{font-size:.62em;color:#5f5f6a;width:5ch;flex-shrink:0}
+.gap-track{flex:1;height:5px;background:#1a1a1f;border-radius:2px;overflow:hidden}
+.gap-fill{height:100%;border-radius:2px;width:0;transition:width 1s cubic-bezier(.4,0,.2,1)}
+.gap-fill.market{background:#5f5f6a}
+.gap-fill.org{background:#f59e0b}
+.gap-diff{font-size:.72em;font-weight:700;color:#ef4444;min-width:6ch;text-align:right;flex-shrink:0}
+
+.price-card{border:1px solid #222229;border-left:2px solid #ef4444;border-radius:3px;padding:8px 11px;display:flex;justify-content:space-between;align-items:center;background:rgba(239,68,68,.04)}
+.price-side{display:flex;flex-direction:column;gap:1px}
+.price-label{font-size:.66em;color:#5f5f6a}
+.price-val{font-size:1.1em;font-weight:700;color:#ededf0}
+.price-arrow{color:#ef4444;font-size:1.2em}
+.price-diff{font-size:.72em;color:#ef4444;font-weight:700}
+
+.footer-note{border-top:1px solid #222229;padding:5px 14px;font-size:.68em;color:#5f5f6a;flex-shrink:0;display:flex;justify-content:space-between}
+</style>
+</head>
+<body>
+<div class="win">
+  <div class="bar">
+    <span class="dot dr"></span><span class="dot dy"></span><span class="dot dg"></span>
+    <span class="btit">GET /market/gaps?org=TAMK</span>
+  </div>
+
+  <div class="prompt-area">
+    <span class="cmd">$ curl "https://cont-learning.komil.dev/market/gaps?org=TAMK"</span>
+  </div>
+
+  <div class="wrap">
+    <div>
+      <div class="section-head">
+        <span class="sh-title">THEME GAPS</span>
+        <span class="sh-note">GAP_THRESHOLD = 3.0 pts · sorted by gap desc</span>
+      </div>
+      <div id="themeGaps"></div>
+    </div>
+
+    <div>
+      <div class="section-head">
+        <span class="sh-title">PRICING GAP</span>
+        <span class="sh-note">direction: below_market</span>
+      </div>
+      <div class="price-card">
+        <div class="price-side">
+          <span class="price-label">TAMK avg price</span>
+          <span class="price-val" style="color:#00ff41">€71.7</span>
+        </div>
+        <span class="price-arrow">←</span>
+        <div class="price-side" style="text-align:right">
+          <span class="price-label">market avg (13,835 courses)</span>
+          <span class="price-val">€102.7</span>
+        </div>
+      </div>
+      <div style="margin-top:5px;text-align:right"><span class="price-diff">−€31.0 vs. national average</span></div>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    <span>organization: TAMK (Tampere UAS)</span>
+    <span id="rt">response: 22ms</span>
+  </div>
+</div>
+
+<script>
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+// Real computed data — market: 13,835 courses; TAMK: 310 courses
+const GAPS = [
+  { theme: 'study_voucher',        market: 22.7, org: 7.7,  gap: 15.0 },
+  { theme: 'society_&_interaction', market: 13.3, org: 5.2,  gap: 8.1 },
+  { theme: 'sustainable_growth',    market: 7.5,  org: 3.5,  gap: 4.0 },
+];
+
+function buildGapRow(g, i) {
+  const row = document.createElement('div');
+  row.className = 'gap-row';
+  row.style.animationDelay = (i * 0.15) + 's';
+  row.innerHTML = `
+    <span class="gap-label">${g.theme}</span>
+    <div class="gap-bars">
+      <div class="gap-bar-line">
+        <span class="gap-bar-tag">mkt</span>
+        <div class="gap-track"><div class="gap-fill market" data-w="${g.market}"></div></div>
+        <span style="font-size:.68em;color:#9a9aa4;min-width:4ch;text-align:right">${g.market}%</span>
+      </div>
+      <div class="gap-bar-line">
+        <span class="gap-bar-tag">TAMK</span>
+        <div class="gap-track"><div class="gap-fill org" data-w="${g.org}"></div></div>
+        <span style="font-size:.68em;color:#9a9aa4;min-width:4ch;text-align:right">${g.org}%</span>
+      </div>
+    </div>
+    <span class="gap-diff">−${g.gap.toFixed(1)}pt</span>`;
+  return row;
+}
+
+async function run() {
+  const container = document.getElementById('themeGaps');
+  while (true) {
+    container.innerHTML = '';
+    GAPS.forEach((g, i) => container.appendChild(buildGapRow(g, i)));
+    await sleep(500);
+    document.querySelectorAll('.gap-fill').forEach(el => {
+      el.style.width = el.dataset.w + '%';
+    });
+    await sleep(6500);
+  }
+}
+run();
+</script>
+</body>
+</html>
