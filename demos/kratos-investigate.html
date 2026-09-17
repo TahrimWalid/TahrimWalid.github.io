@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:#08080a}
+body{font-family:'JetBrains Mono',monospace;font-size:clamp(8px,1.6vw,11px);color:#ededf0}
+.win{display:flex;flex-direction:column;height:100vh}
+.bar{background:#111116;border-bottom:1px solid #222229;padding:6px 12px;display:flex;align-items:center;gap:6px;flex-shrink:0}
+.dot{width:9px;height:9px;border-radius:50%}
+.dr{background:#ff5f57}.dy{background:#febc2e}.dg{background:#28c840}
+.btit{margin-left:4px;color:#34343d;font-size:.82em;flex:1;text-align:center}
+
+.goal-bar{padding:6px 14px;border-bottom:1px solid #222229;font-size:.82em;flex-shrink:0}
+.goal-you{color:#5f5f6a}
+.goal-text{color:#ededf0;font-weight:700}
+
+.body{flex:1;overflow-y:auto;padding:9px 14px;display:flex;flex-direction:column;gap:6px;scrollbar-width:none}
+.body::-webkit-scrollbar{display:none}
+
+.step{opacity:0;animation:fadeIn .35s ease forwards}
+@keyframes fadeIn{to{opacity:1}}
+.reason{color:#5f5f6a;font-size:.78em;font-style:italic;margin-bottom:2px}
+.reason::before{content:"◇ ";color:#3b82f6}
+.tool-line{display:flex;align-items:center;gap:7px;font-size:.84em}
+.tool-line::before{content:"⚡";color:#febc2e}
+.tool-name{color:#febc2e;font-weight:700}
+.tool-args{color:#5f5f6a;font-size:.85em}
+.obs{margin:2px 0 4px 18px;padding:5px 9px;background:#0d0d12;border-left:2px solid #222229;border-radius:2px;font-size:.78em;color:#9a9aa4}
+
+.finding-card{margin:4px 0;padding:8px 10px;border-radius:3px;border-left:2px solid #ef4444;background:rgba(239,68,68,.05)}
+.finding-head{display:flex;align-items:center;gap:8px;font-size:.82em;font-weight:700}
+.sev-high{color:#ef4444}
+.finding-id{color:#5f5f6a;font-weight:400;font-size:.85em}
+.finding-body{color:#9a9aa4;font-size:.78em;margin-top:3px;line-height:1.6}
+
+.guard-note{font-size:.7em;color:#3b82f6;margin:2px 0 2px 18px}
+.guard-note::before{content:"✓ guard: ";color:#5f5f6a}
+
+.final-answer{margin-top:4px;padding:9px 11px;border:1px solid #222229;border-radius:3px;background:#0d0d12}
+.fa-head{color:#00ff41;font-size:.72em;font-weight:700;margin-bottom:5px;letter-spacing:.03em}
+.fa-body{font-size:.86em;line-height:1.7;color:#ededf0}
+.fa-body .hi{color:#00ff41;font-weight:700}
+.fa-body .risk{color:#ef4444;font-weight:700}
+.done-line{color:#5f5f6a;font-size:.7em;margin-top:6px}
+</style>
+</head>
+<body>
+<div class="win">
+  <div class="bar">
+    <span class="dot dr"></span><span class="dot dy"></span><span class="dot dg"></span>
+    <span class="btit">kratos investigate — agentic ReAct loop</span>
+  </div>
+
+  <div class="goal-bar">
+    <span class="goal-you">you› </span><span class="goal-text">check this host for signs of an SSH brute-force</span>
+  </div>
+
+  <div class="body" id="body"></div>
+</div>
+
+<script>
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+const STEPS = [
+  {type:'reason', text:'need current auth activity before anything else'},
+  {type:'tool', name:'read_journalctl', args:'unit=sshd  since=-2h', delay:700},
+  {type:'obs', text:'34 auth failures across 6 source IPs · burst detected 03:41–03:44 (28 attempts)'},
+  {type:'reason', text:'a burst that size on SSH is worth checking exposed surface for'},
+  {type:'tool', name:'run_nmap_scan', args:'target=127.0.0.1  ports=1-9000', delay:900},
+  {type:'obs', text:'4 open ports: 22/ssh, 3000/ppp, 8000/nagios-nsca, 8001/vcom-tunnel'},
+  {type:'reason', text:'correlate the burst against exposure before concluding anything'},
+  {type:'tool', name:'correlate_findings', args:'rules=CORR-SSH-001,CORR-001,NET-002', delay:1100},
+  {type:'finding', id:'CORR-SSH-001', sev:'HIGH', body:'SSH exposed (nmap + context) + active failed-login burst — 28 attempts in 3 minutes from a single source IP, port 22 confirmed reachable.'},
+  {type:'guard', text:'cannot conclude "all clear" — a HIGH finding is present in evidence'},
+  {type:'final'},
+];
+
+function el(html) {
+  const d = document.createElement('div');
+  d.innerHTML = html;
+  return d.firstElementChild;
+}
+
+async function run() {
+  const body = document.getElementById('body');
+  while (true) {
+    body.innerHTML = '';
+    for (const s of STEPS) {
+      let node;
+      if (s.type === 'reason') {
+        node = el(`<div class="step reason">${s.text}</div>`);
+      } else if (s.type === 'tool') {
+        node = el(`<div class="step tool-line"><span class="tool-name">${s.name}</span><span class="tool-args">(${s.args})</span></div>`);
+      } else if (s.type === 'obs') {
+        node = el(`<div class="step obs">${s.text}</div>`);
+      } else if (s.type === 'finding') {
+        node = el(`<div class="step finding-card">
+          <div class="finding-head"><span class="sev-high">[${s.sev}]</span><span class="finding-id">${s.id}</span></div>
+          <div class="finding-body">${s.body}</div>
+        </div>`);
+      } else if (s.type === 'guard') {
+        node = el(`<div class="step guard-note">${s.text}</div>`);
+      } else if (s.type === 'final') {
+        node = el(`<div class="step final-answer">
+          <div class="fa-head">FINAL ANSWER</div>
+          <div class="fa-body">Yes — evidence supports an active SSH brute-force. <span class="hi">28 failed attempts</span> from one source IP in a 3-minute window, against a confirmed-reachable SSH port. Overall risk: <span class="risk">HIGH</span> (CORR-SSH-001). Recommend rate-limiting or key-based auth immediately.</div>
+          <div class="done-line">Done in 6 steps · 41s · 0 hallucinated claims (structural guard verified)</div>
+        </div>`);
+      }
+      body.appendChild(node);
+      body.scrollTop = body.scrollHeight;
+      await sleep(s.delay || 550);
+    }
+    await sleep(4500);
+  }
+}
+run();
+</script>
+</body>
+</html>

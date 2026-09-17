@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:#08080a}
+body{font-family:'JetBrains Mono',monospace;font-size:clamp(8px,1.6vw,11px)}
+.win{display:flex;flex-direction:column;height:100vh}
+.bar{background:#111116;border-bottom:1px solid #222229;padding:6px 12px;display:flex;align-items:center;gap:6px;flex-shrink:0}
+.dot{width:9px;height:9px;border-radius:50%}
+.dr{background:#ff5f57}.dy{background:#febc2e}.dg{background:#28c840}
+.btit{margin-left:4px;color:#34343d;font-size:.82em;flex:1;text-align:center}
+.body{flex:1;overflow-y:auto;padding:9px 14px;line-height:1.6;scrollbar-width:none}
+.body::-webkit-scrollbar{display:none}
+.l{display:block;white-space:pre-wrap;word-break:break-all}
+.lp{color:#00ff41}.lo{color:#ededf0}.lk{color:#00ff41}.ld{color:#5f5f6a}
+.lw{color:#febc2e}.lj{color:#9a9aa4}.ljk{color:#3b82f6}.ljv{color:#febc2e}.lb{}
+.lock{color:#ef4444}
+</style>
+</head>
+<body>
+<div class="win">
+  <div class="bar">
+    <span class="dot dr"></span><span class="dot dy"></span><span class="dot dg"></span>
+    <span class="btit">kratos mcp-serve — Model Context Protocol (stdio)</span>
+  </div>
+  <div class="body" id="tb"></div>
+</div>
+<script>
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const S = [
+  {t:'p',v:'(venv) walid@homelab:~/kratos$ kratos mcp-serve',a:700},
+  {t:'b',v:'',a:60},
+  {t:'w',v:'[mcp] Starting stdio JSON-RPC server...',a:200},
+  {t:'ld',v:'[mcp] Registered surface: read/investigate-only (3 tools)',a:120},
+  {t:'ld',v:'[mcp]   - kratos_investigate   (agentic ReAct loop, goal in / findings out)',a:80},
+  {t:'ld',v:'[mcp]   - kratos_findings_show (query correlated findings)',a:80},
+  {t:'ld',v:'[mcp]   - kratos_run_tool      (single read-only tool, whitelisted subset)',a:80},
+  {t:'lock',v:'[mcp] Excluded by construction: run_linux_command, capture_traffic, self-write',a:900},
+  {t:'k',v:'[mcp] Ready. Listening on stdio.',a:1200},
+  {t:'b',v:'',a:60},
+  {t:'w',v:'← external client connects (e.g. Claude Desktop, another agent)',a:600},
+  {t:'lj',v:'{"jsonrpc":"2.0","method":"tools/list","id":1}',a:700},
+  {t:'lj',v:'→ {"tools":[',a:60},
+  {t:'lj',v:'    {"name":"kratos_investigate","description":"Run an agentic',a:40},
+  {t:'lj',v:'      security investigation against the configured target"},',a:40},
+  {t:'lj',v:'    {"name":"kratos_findings_show", ...},',a:40},
+  {t:'lj',v:'    {"name":"kratos_run_tool", ...}',a:40},
+  {t:'lj',v:'  ]}',a:900},
+  {t:'b',v:'',a:60},
+  {t:'lj',v:'{"jsonrpc":"2.0","method":"tools/call","id":2,',a:60},
+  {t:'lj',v:' "params":{"name":"kratos_investigate",',a:40},
+  {t:'lj',v:'   "arguments":{"goal":"check for signs of lateral movement"}}}',a:800},
+  {t:'ld',v:'[mcp] → dispatching into Kratos\'s own agent loop (same ReAct engine)',a:600},
+  {t:'ld',v:'[mcp]   read_journalctl → run_nmap_scan → correlate_findings',a:900},
+  {t:'lj',v:'→ {"findings":[{"id":"CORR-SSH-001","severity":"HIGH", ...}],',a:60},
+  {t:'lj',v:'   "final_answer":"...evidence supports active brute-force..."}',a:1400},
+  {t:'b',v:'',a:60},
+  {t:'k',v:'[mcp] External client drove a full investigation through Kratos\'s',a:80},
+  {t:'k',v:'      own reasoning loop — no shortcuts, same guards apply.',a:2200},
+];
+const CLS={p:'lp',k:'lk',o:'lo',d:'ld',b:'lb',w:'lw',lj:'lj',ljk:'ljk',ljv:'ljv',lock:'lock',ld:'ld'};
+async function run(){
+  const tb=document.getElementById('tb');
+  while(true){
+    tb.innerHTML='';
+    for(const e of S){
+      if(!document.getElementById('tb')) return;
+      const d=document.createElement('span');
+      d.className='l '+(CLS[e.t]||'lo');
+      tb.appendChild(d);
+      if(e.t==='p'){
+        for(const c of e.v){d.textContent+=c;tb.scrollTop=tb.scrollHeight;await sleep(26+Math.random()*10);}
+      } else {d.textContent=e.v;tb.scrollTop=tb.scrollHeight;}
+      await sleep(e.a||60);
+    }
+    await sleep(4500);
+  }
+}
+run();
+</script>
+</body>
+</html>

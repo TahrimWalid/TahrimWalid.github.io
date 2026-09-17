@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:#08080a}
+body{font-family:'JetBrains Mono',monospace;font-size:clamp(8px,1.6vw,11px);color:#ededf0}
+.win{display:flex;flex-direction:column;height:100vh}
+.bar{background:#111116;border-bottom:1px solid #222229;padding:6px 12px;display:flex;align-items:center;gap:6px;flex-shrink:0}
+.dot{width:9px;height:9px;border-radius:50%}
+.dr{background:#ff5f57}.dy{background:#febc2e}.dg{background:#28c840}
+.btit{margin-left:4px;color:#34343d;font-size:.82em;flex:1;text-align:center}
+
+.screen{flex:1;position:relative;overflow:hidden}
+.layer{position:absolute;inset:0;padding:12px 16px;display:flex;flex-direction:column;opacity:0;transition:opacity .5s ease}
+.layer.show{opacity:1}
+
+/* Session chooser */
+.chooser-title{color:#00ff41;font-weight:700;font-size:.9em;margin-bottom:8px;letter-spacing:.04em}
+.session-row{display:grid;grid-template-columns:3ch 1fr 10ch 8ch;gap:10px;padding:5px 8px;border-radius:3px;font-size:.82em}
+.session-row.head{color:#5f5f6a;font-size:.72em;border-bottom:1px solid #222229;padding-bottom:6px;margin-bottom:2px}
+.session-row.sel{background:rgba(0,255,65,.08);border-left:2px solid #00ff41}
+.s-target{color:#ededf0}
+.s-mode{color:#febc2e}
+.s-time{color:#5f5f6a}
+.chooser-footer{margin-top:auto;color:#5f5f6a;font-size:.72em;border-top:1px solid #222229;padding-top:6px}
+
+/* Idle workspace */
+.wordmark{color:#00ff41;font-weight:700;font-size:1.5em;letter-spacing:.15em;text-align:center;margin:14px 0 6px}
+.subwordmark{text-align:center;color:#5f5f6a;font-size:.74em;margin-bottom:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.gcard{border:1px solid #222229;border-radius:3px;padding:9px 11px}
+.gcard-label{color:#5f5f6a;font-size:.66em;letter-spacing:.03em;margin-bottom:4px}
+.gcard-val{font-size:.92em;color:#ededf0;font-weight:700}
+.gcard-val.accent{color:#00ff41}
+.tips{color:#5f5f6a;font-size:.72em;line-height:1.7;margin-bottom:auto}
+.prompt-box{border:1px solid #222229;border-radius:3px;padding:9px 12px;display:flex;align-items:center;gap:8px;margin-top:10px}
+.prompt-arrow{color:#00ff41}
+.prompt-text{flex:1;font-size:.86em}
+.cursor{display:inline-block;width:6px;height:1em;background:#00ff41;animation:blink 1s step-end infinite;vertical-align:text-bottom}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+.footer-status{border-top:1px solid #222229;padding:4px 12px;display:flex;justify-content:space-between;font-size:.68em;color:#5f5f6a;flex-shrink:0}
+</style>
+</head>
+<body>
+<div class="win">
+  <div class="bar">
+    <span class="dot dr"></span><span class="dot dy"></span><span class="dot dg"></span>
+    <span class="btit">kratos-mk2 — Textual TUI</span>
+  </div>
+
+  <div class="screen">
+    <div class="layer" id="chooser">
+      <div class="chooser-title">RECENT SESSIONS</div>
+      <div class="session-row head"><span>#</span><span>TARGET</span><span>MODE</span><span>LAST</span></div>
+      <div class="session-row sel"><span>1</span><span class="s-target">homelab-gw (192.168.1.1)</span><span class="s-mode">investigate</span><span class="s-time">2m ago</span></div>
+      <div class="session-row"><span>2</span><span class="s-target">incus-lab-01</span><span class="s-mode">run</span><span class="s-time">1h ago</span></div>
+      <div class="session-row"><span>3</span><span class="s-target">csc-openstack-vm</span><span class="s-mode">investigate</span><span class="s-time">yesterday</span></div>
+      <div class="chooser-footer">↑↓ select · enter resume · n new session · a archived · m more</div>
+    </div>
+
+    <div class="layer" id="idle">
+      <div class="wordmark">K R A T O S</div>
+      <div class="subwordmark">offline security assistant — mk2</div>
+      <div class="grid3">
+        <div class="gcard"><div class="gcard-label">TARGET</div><div class="gcard-val">homelab-gw</div></div>
+        <div class="gcard"><div class="gcard-label">MODE</div><div class="gcard-val accent">investigate</div></div>
+        <div class="gcard"><div class="gcard-label">TOOLS LOADED</div><div class="gcard-val">15 built-in · 5 kept</div></div>
+      </div>
+      <div class="tips">
+        tips: describe a goal in plain language — Kratos picks its own read-only tools<br>
+        · try: "check this host for signs of an SSH brute-force"<br>
+        · /doctor for self-diagnostics · /evolve to write a new tool · ? for help
+      </div>
+      <div class="prompt-box">
+        <span class="prompt-arrow">›</span>
+        <span class="prompt-text" id="typed"></span><span class="cursor"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-status">
+    <span>ctx: 12% (0.7k/6.1k)</span>
+    <span id="clk">14:02:18 EEST</span>
+  </div>
+</div>
+
+<script>
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+function show(id) {
+  document.querySelectorAll('.layer').forEach(l => l.classList.remove('show'));
+  document.getElementById(id).classList.add('show');
+}
+
+async function typeInto(el, text, speed=42) {
+  el.textContent = '';
+  for (const c of text) {
+    el.textContent += c;
+    await sleep(speed + Math.random() * 14);
+  }
+}
+
+let sec = 18;
+setInterval(() => {
+  sec = (sec + 1) % 60;
+  const m = 2 + Math.floor(sec / 60);
+  document.getElementById('clk').textContent = `14:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')} EEST`;
+}, 1000);
+
+async function run() {
+  while (true) {
+    show('chooser');
+    await sleep(3200);
+    show('idle');
+    await sleep(900);
+    await typeInto(document.getElementById('typed'), 'check this host for signs of an SSH brute-force');
+    await sleep(4500);
+  }
+}
+run();
+</script>
+</body>
+</html>

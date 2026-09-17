@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:#08080a}
+body{font-family:'JetBrains Mono',monospace;font-size:clamp(7.5px,1.5vw,10.5px);color:#ededf0}
+.win{display:flex;flex-direction:column;height:100vh}
+.bar{background:#111116;border-bottom:1px solid #222229;padding:6px 12px;display:flex;align-items:center;gap:6px;flex-shrink:0}
+.dot{width:9px;height:9px;border-radius:50%}
+.dr{background:#ff5f57}.dy{background:#febc2e}.dg{background:#28c840}
+.btit{margin-left:4px;color:#34343d;font-size:.82em;flex:1;text-align:center}
+
+.body{flex:1;overflow-y:auto;padding:9px 13px;line-height:1.6;scrollbar-width:none}
+.body::-webkit-scrollbar{display:none}
+.l{display:block;white-space:pre-wrap;word-break:break-all}
+.lp{color:#00ff41}.lo{color:#ededf0}.lk{color:#00ff41}.ld{color:#5f5f6a}
+.lw{color:#febc2e}.lc{color:#3b82f6}.lb{}
+
+.code-block{margin:4px 0 6px 14px;padding:7px 10px;background:#0d0d12;border:1px solid #1e1e28;border-left:2px solid #3b82f6;border-radius:2px;font-size:.86em;color:#9a9aa4;white-space:pre}
+.code-kw{color:#3b82f6}
+.code-str{color:#00ff41}
+.code-fn{color:#febc2e}
+
+.approval-box{margin:6px 0;padding:9px 11px;border:1px solid #febc2e;border-radius:3px;background:rgba(254,188,46,.06)}
+.ab-head{color:#febc2e;font-weight:700;font-size:.82em;margin-bottom:5px}
+.ab-line{font-size:.78em;color:#9a9aa4;margin:2px 0}
+.ab-prompt{margin-top:6px;color:#ededf0;font-size:.84em}
+.ab-answer{color:#00ff41;font-weight:700}
+</style>
+</head>
+<body>
+<div class="win">
+  <div class="bar">
+    <span class="dot dr"></span><span class="dot dy"></span><span class="dot dg"></span>
+    <span class="btit">kratos /evolve — self-writing tool (evo-loop)</span>
+  </div>
+  <div class="body" id="tb"></div>
+</div>
+<script>
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+const CODE = `<span class="code-kw">@register_tool</span>(
+    name=<span class="code-str">"flag_risky_open_ports"</span>,
+    description=<span class="code-str">"Flags open ports for commonly-risky</span>
+<span class="code-str">                 services (telnet, ftp, rdp, vnc)."</span>,
+)
+<span class="code-kw">def</span> <span class="code-fn">tool_flag_risky_open_ports</span>(nmap_parsed_file, risky_ports=None):
+    <span class="ld">default_risky_ports = [23, 3389]</span>
+    <span class="ld">... flags matches against scan_data["hosts"] ...</span>
+    <span class="code-kw">return</span> {"flagged_count": ..., "flagged_ports": [...]}`;
+
+const S = [
+  {t:'p',v:'you› /evolve I need something that flags risky open ports after a scan',a:900},
+  {t:'b',v:'',a:80},
+  {t:'w',v:'[evo-loop] No existing tool covers this. Drafting a new tool...',a:700},
+  {t:'ld',v:'[evo-loop] Reading adapters/nmap_parse.py output shape for compatibility',a:900},
+  {t:'k',v:'[evo-loop] Draft complete: flag_risky_open_ports.py',a:1200},
+  {t:'code',v:'',a:600},
+  {t:'b',v:'',a:60},
+  {t:'w',v:'[evo-loop] Sandbox-testing in isolated Incus container (no network)...',a:700},
+  {t:'ld',v:'  spinning up sandbox-kratos-eval-2f9a1c ...',a:600},
+  {t:'ld',v:'  injecting mocked nmap_parsed.json fixture ...',a:500},
+  {t:'ld',v:'  running tool_flag_risky_open_ports(fixture) ...',a:700},
+  {t:'k',v:'  ✓ 3/3 assertions passed  ·  no exceptions  ·  no unexpected I/O',a:1100},
+  {t:'ld',v:'  tearing down sandbox container',a:900},
+  {t:'b',v:'',a:80},
+  {t:'approval',v:'',a:100},
+];
+
+const CLS={p:'lp',k:'lk',o:'lo',d:'ld',b:'lb',w:'lw',c:'lc',ld:'ld'};
+
+function makeApproval() {
+  const box = document.createElement('div');
+  box.className = 'approval-box';
+  box.innerHTML = `
+    <div class="ab-head">⚠ APPROVAL REQUIRED — keep this tool?</div>
+    <div class="ab-line">name: flag_risky_open_ports</div>
+    <div class="ab-line">sandbox: passed 3/3 · no network access requested</div>
+    <div class="ab-line">requires_approval flag: false (read-only computation, no side effects)</div>
+    <div class="ab-prompt">Keep this tool for future investigations? [y/N] <span class="ab-answer">y</span></div>
+    <div class="ab-line" style="margin-top:5px;color:#00ff41">✓ kept_tools/flag_risky_open_ports.py · metadata.json updated · available next run</div>`;
+  return box;
+}
+
+async function run(){
+  const tb=document.getElementById('tb');
+  while(true){
+    tb.innerHTML='';
+    for(const e of S){
+      if(!document.getElementById('tb')) return;
+      if (e.t === 'code') {
+        const d = document.createElement('div');
+        d.className = 'code-block';
+        d.innerHTML = CODE;
+        tb.appendChild(d);
+        tb.scrollTop = tb.scrollHeight;
+        await sleep(e.a || 60);
+        continue;
+      }
+      if (e.t === 'approval') {
+        const box = makeApproval();
+        tb.appendChild(box);
+        tb.scrollTop = tb.scrollHeight;
+        await sleep(e.a || 60);
+        continue;
+      }
+      const d=document.createElement('span');
+      d.className='l '+(CLS[e.t]||'lo');
+      tb.appendChild(d);
+      if(e.t==='p'){
+        for(const c of e.v){d.textContent+=c;tb.scrollTop=tb.scrollHeight;await sleep(28+Math.random()*10);}
+      } else {d.textContent=e.v;tb.scrollTop=tb.scrollHeight;}
+      await sleep(e.a||60);
+    }
+    await sleep(4500);
+  }
+}
+run();
+</script>
+</body>
+</html>
