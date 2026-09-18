@@ -239,27 +239,30 @@ const PROJECTS = [
     tagline: 'Full-Stack · Self-hosted AI',
     subtitle: 'AI-Powered AWS Infrastructure Compiler',
     tag: '',
-    stat: { value: '27B', label: 'self-hosted model' },
-    oneliner: "A visual AWS architecture designer that validates against 32 rules, compiles to Terraform HCL, and syncs bidirectionally in real time — with a self-hosted 27B model doing the AI layer.",
-    stack: ['Next.js','React','ReactFlow','Terraform','Qwen3-27B-FP8','vLLM','RTX 6000 Ada','Vercel'],
+    stat: { value: '32', label: 'validation rules · deterministic' },
+    oneliner: "A visual AWS architecture designer that validates against 32 rules, compiles to Terraform HCL with true bidirectional canvas↔code sync, and layers on an AI architect backed by both a self-hosted 27B model and Gemini.",
+    stack: ['Next.js','React','ReactFlow','Terraform','Monaco','Qwen3.6-27B-FP8','vLLM','Gemini','Vercel'],
     links: [
       { label: 'Live',   url: 'in-gen-five.vercel.app' },
       { label: 'GitHub', url: 'github.com/TahrimWalid/in-gen' },
     ],
     description: [
-      "InGen is a visual AWS architecture designer: you drag and connect components on a ReactFlow canvas, and the design is continuously checked against 32 validation rules that catch misconfigurations before they reach Terraform — a dead-end API Gateway with no compute target, an orphaned Lambda with no trigger, unreserved concurrency, missing encryption. Valid architectures compile to Terraform HCL, rendered live in an embedded Monaco editor.",
-      "The AI layer runs on a self-hosted Qwen3-27B-FP8 model served with vLLM on an RTX 6000 Ada, generating a full architecture from a plain-language prompt — 'DynamoDB storage, Cognito auth' becomes 6 wired resources with exportable HCL, no third-party API involved. Crucially, the validation engine doesn't trust the AI's output any more than a human's: AI-generated architectures get flagged for the same misconfigurations, and asking the assistant to fix them triggers a second generation pass that re-validates from scratch.",
+      "InGen is a visual AWS architecture designer: you drag and connect components on a ReactFlow canvas, and the design is continuously checked against 32 deterministic validation rules that catch misconfigurations before they reach Terraform — a dead-end API Gateway with no compute target, an orphaned Lambda with no trigger, unreserved concurrency, missing encryption. This layer runs entirely client-side with zero LLM calls, zero latency, and zero cost per check.",
+      "The canvas and the Terraform HCL stay in sync bidirectionally, not just canvas-to-code: dragging a component recompiles the HCL live in an embedded Monaco editor, and typing a new resource block directly into that editor parses it back and drops the matching node onto the canvas, validation and all. Neither side is the source of truth — they're kept consistent by a shared compiler/parser pair running both directions.",
+      "The AI layer is provider-agnostic by design — built and validated against a self-hosted Qwen3.6-27B-FP8 model served with vLLM, with first-class Gemini support for when a GPU server isn't the constraint. A plain-language prompt like 'DynamoDB storage, Cognito auth' becomes a fully wired, exportable architecture. Crucially, the validation engine doesn't trust the AI's output any more than a human's: AI-generated architectures get flagged for the same misconfigurations, and asking the assistant to fix them triggers a second generation pass that re-validates from scratch.",
       "Built with Next.js and React, deployed on Vercel.",
     ],
     stages: [
       'Dragging & connecting components — validation catches a dead-end API Gateway',
       'Architecture compiling live to Terraform HCL in Monaco',
+      'Typing HCL directly — the canvas syncs back and validation clears',
       'AI Architect generating a full stack from a plain-language prompt',
       'AI iterating on feedback — validation still catches a residual issue',
     ],
     stageDemos: [
       'demos/ingen-connect.html',
       'demos/ingen-hcl.html',
+      'demos/ingen-sync.html',
       'demos/ingen-ai-gen.html',
       'demos/ingen-ai-iterate.html',
     ],
@@ -576,6 +579,8 @@ const TECH_ICONS = {
   'Tailscale':              'https://cdn.simpleicons.org/tailscale/242424',
   'Textual':                'https://cdn.simpleicons.org/python/3776AB',
   'MCP':                    'https://cdn.simpleicons.org/anthropic/D97757',
+  'Gemini':                 'https://cdn.simpleicons.org/googlegemini/8E75B2',
+  'Qwen3.6-27B-FP8':        'https://cdn.simpleicons.org/alibaba/FF6A00',
 };
 
 function techPill(t, bg, size, pad) {
