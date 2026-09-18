@@ -539,25 +539,29 @@ const PROJECT_ICONS = {
 
 const num = i => String(i + 1).padStart(2, '0');
 
+// One icon family (simpleicons.org, flat single-color marks) everywhere it has
+// coverage. skillicons.dev is kept only for the handful of vendor/OS logos
+// simpleicons doesn't carry at all (AWS, Azure, VS Code, PowerShell, Windows) --
+// a hard coverage gap, not a stylistic choice.
 const TECH_ICONS = {
-  'Python':                 'https://skillicons.dev/icons?i=python',
-  'Linux':                  'https://skillicons.dev/icons?i=linux',
-  'Ubuntu':                 'https://skillicons.dev/icons?i=ubuntu',
+  'Python':                 'https://cdn.simpleicons.org/python/3776AB',
+  'Linux':                  'https://cdn.simpleicons.org/linux/FCC624',
+  'Ubuntu':                 'https://cdn.simpleicons.org/ubuntu/E95420',
   'Apache':                 'https://cdn.simpleicons.org/apache/D22128',
-  'Cloudflare Tunnel':      'https://skillicons.dev/icons?i=cloudflare',
-  'React':                  'https://skillicons.dev/icons?i=react',
-  'ReactFlow':              'https://skillicons.dev/icons?i=react',
-  'Next.js':                'https://skillicons.dev/icons?i=nextjs',
-  'Terraform':              'https://skillicons.dev/icons?i=terraform',
-  'Vercel':                 'https://skillicons.dev/icons?i=vercel',
-  'SQLite':                 'https://skillicons.dev/icons?i=sqlite',
-  'Docker':                 'https://skillicons.dev/icons?i=docker',
+  'Cloudflare Tunnel':      'https://cdn.simpleicons.org/cloudflare/F38020',
+  'React':                  'https://cdn.simpleicons.org/react/61DAFB',
+  'ReactFlow':              'https://cdn.simpleicons.org/react/61DAFB',
+  'Next.js':                'https://cdn.simpleicons.org/nextdotjs/ffffff',
+  'Terraform':              'https://cdn.simpleicons.org/terraform/844FBA',
+  'Vercel':                 'https://cdn.simpleicons.org/vercel/ffffff',
+  'SQLite':                 'https://cdn.simpleicons.org/sqlite/003B57',
+  'Docker':                 'https://cdn.simpleicons.org/docker/2496ED',
   'AWS':                    'https://skillicons.dev/icons?i=aws',
   'Azure':                  'https://skillicons.dev/icons?i=azure',
-  'Git':                    'https://skillicons.dev/icons?i=git',
-  'TypeScript':             'https://skillicons.dev/icons?i=ts',
-  'JavaScript':             'https://skillicons.dev/icons?i=js',
-  'Kotlin':                 'https://skillicons.dev/icons?i=kotlin',
+  'Git':                    'https://cdn.simpleicons.org/git/F05032',
+  'TypeScript':             'https://cdn.simpleicons.org/typescript/3178C6',
+  'JavaScript':             'https://cdn.simpleicons.org/javascript/F7DF1E',
+  'Kotlin':                 'https://cdn.simpleicons.org/kotlin/7F52FF',
   'Pydantic':               'https://cdn.simpleicons.org/pydantic/E92063',
   'Monaco':                 'https://skillicons.dev/icons?i=vscode',
   'ARM':                    'https://cdn.simpleicons.org/arm/0091BD',
@@ -565,26 +569,23 @@ const TECH_ICONS = {
   'Ollama':                 'https://cdn.simpleicons.org/ollama/ffffff',
   'Chart.js':               'https://cdn.simpleicons.org/chartdotjs/FF6384',
   'RTX 6000 Ada':           'https://cdn.simpleicons.org/nvidia/76B900',
-  'Nmap':                   'https://cdn.simpleicons.org/nmap/0E83CD',
   'REST APIs':              'https://cdn.simpleicons.org/swagger/85EA2D',
-  'systemd':                'https://cdn.simpleicons.org/systemd/ffffff',
   'Llama.cpp':              'https://cdn.simpleicons.org/meta/0467DF',
   'vLLM':                   'https://cdn.simpleicons.org/huggingface/FFD21E',
-  'Qwen2.5-Coder 7B':       'https://cdn.simpleicons.org/alibaba/FF6A00',
-  'Qwen3-27B-FP8':          'https://cdn.simpleicons.org/alibaba/FF6A00',
-  'Qwen 2.5 3B':            'https://cdn.simpleicons.org/alibaba/FF6A00',
+  'Qwen2.5-Coder 7B':       'https://cdn.simpleicons.org/alibabacloud/FF6A00',
+  'Qwen3-27B-FP8':          'https://cdn.simpleicons.org/alibabacloud/FF6A00',
+  'Qwen 2.5 3B':            'https://cdn.simpleicons.org/alibabacloud/FF6A00',
+  'Qwen3.6-27B-FP8':        'https://cdn.simpleicons.org/alibabacloud/FF6A00',
   'PowerShell':             'https://skillicons.dev/icons?i=powershell',
-  'WMI':                    'https://cdn.simpleicons.org/windows/0078D4',
-  'HTML':                   'https://skillicons.dev/icons?i=html',
+  'WMI':                    'https://skillicons.dev/icons?i=windows',
+  'HTML':                   'https://cdn.simpleicons.org/html5/E34F26',
   'FastAPI':                'https://cdn.simpleicons.org/fastapi/009688',
-  'Docker':                 'https://skillicons.dev/icons?i=docker',
   'Gemini 2.5 Pro':         'https://cdn.simpleicons.org/googlegemini/8E75B2',
   'Open WebUI':             'https://cdn.simpleicons.org/ollama/ffffff',
   'Tailscale':              'https://cdn.simpleicons.org/tailscale/242424',
   'Textual':                'https://cdn.simpleicons.org/python/3776AB',
   'MCP':                    'https://cdn.simpleicons.org/anthropic/D97757',
   'Gemini':                 'https://cdn.simpleicons.org/googlegemini/8E75B2',
-  'Qwen3.6-27B-FP8':        'https://cdn.simpleicons.org/alibaba/FF6A00',
 };
 
 function techPill(t, bg, size, pad) {
@@ -592,7 +593,7 @@ function techPill(t, bg, size, pad) {
   size = size || '0.7rem';
   pad  = pad  || '5px 10px';
   const src = TECH_ICONS[t];
-  const img = src ? '<img src="' + src + '" width="14" height="14" style="border-radius:3px;flex-shrink:0" loading="lazy">' : '';
+  const img = src ? '<img src="' + src + '" width="14" height="14" style="border-radius:3px;flex-shrink:0" loading="lazy" onerror="this.style.display=\'none\'">' : '';
   return '<span style="display:inline-flex;align-items:center;gap:' + (src ? '6px' : '0') + ';font-family:var(--font-mono);font-size:' + size + ';padding:' + pad + ';border:1px solid var(--border);border-radius:var(--radius);color:var(--text-dim);background:' + bg + '">' + img + t + '</span>';
 }
 
@@ -665,8 +666,8 @@ function renderAbout() {
 
     <div style="display:grid;grid-template-columns:1.3fr 0.7fr;gap:clamp(30px,5vw,70px);align-items:start" class="two-col">
       <div data-reveal style="font-size:1.08rem;line-height:1.8;color:var(--text-dim)">
-        <p style="margin:0 0 var(--space-md)">I graduated from <span style="color:var(--text)">TAMK in May 2026</span> with a Bachelor's in Software Engineering. Over the past year I've built five projects spanning offline AI inference on ARM hardware, ETL pipelines that surface algorithmic bias in job markets, AI-driven cloud infrastructure compilers, a course benchmarking platform that won <span style="color:var(--text)">€5,000 in institutional funding</span>, and zero-dependency Windows systems tooling.</p>
-        <p style="margin:0 0 var(--space-md)">I'm actively pursuing <span style="color:var(--text)">AZ-104 (Azure Administrator Associate)</span> and targeting backend, cloud, and data engineering roles in Finland. I work well at the edges of a stack — the parts where data moves, infrastructure gets provisioned, and models run without a cloud dependency.</p>
+        <p style="margin:0 0 var(--space-md)">I graduated from <span style="color:var(--text)">TAMK in May 2026</span> with a Bachelor's in Software Engineering. Over the past year I've built five projects spanning agentic AI security tooling, ETL pipelines that surface algorithmic bias in job markets, AI-driven cloud infrastructure compilers, a course benchmarking platform that won <span style="color:var(--text)">€5,000 in institutional funding</span>, and zero-dependency Windows systems tooling.</p>
+        <p style="margin:0 0 var(--space-md)">I'm actively pursuing <span style="color:var(--text)">AZ-104 (Azure Administrator Associate)</span> and targeting backend, cloud, and data engineering roles in Finland. I work well at the edges of a stack — the parts where data moves, infrastructure gets provisioned, and models run, whether that's a self-hosted model on-device or a cloud API.</p>
         <p style="margin:0;color:var(--text-faint);font-family:var(--font-mono);font-size:0.85rem">Based in Tampere. Open to roles across Finland.</p>
       </div>
       <div data-reveal style="display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden">
@@ -721,7 +722,7 @@ function renderProjects() {
   return `<section data-page style="max-width:var(--maxw);margin:0 auto;padding:var(--space-2xl) clamp(18px,5vw,48px)">
     <span data-reveal style="display:block;font-family:var(--font-mono);font-size:0.78rem;color:var(--accent);margin-bottom:var(--space-sm)">// projects</span>
     <h1 data-reveal style="margin:0 0 var(--space-sm);font-size:var(--fs-h1);font-weight:600;letter-spacing:-0.03em">Five projects, built to run.</h1>
-    <p data-reveal style="margin:0 0 var(--space-2xl);color:var(--text-dim);max-width:54ch">Each one shipped against a real constraint — air-gapped hardware, self-hosted models, scraped data at scale, live institutional infrastructure, or zero-dependency Windows systems tooling.</p>
+    <p data-reveal style="margin:0 0 var(--space-2xl);color:var(--text-dim);max-width:54ch">Each one shipped against a real constraint — an agentic safety boundary, self-hosted models, scraped data at scale, live institutional infrastructure, or zero-dependency Windows systems tooling.</p>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:var(--space-md)">
       ${PROJECTS.map((p, i) => card(p, i)).join('')}
       <div data-reveal style="grid-column:1/-1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:12px;padding:clamp(36px,5vw,56px);border:1.5px dashed var(--border-strong);border-radius:var(--radius)">
