@@ -132,7 +132,6 @@ nav a[data-active]{color:var(--accent)!important}
   .nav-links{position:fixed;top:var(--nav-h);left:0;right:0;z-index:99;flex-direction:column;align-items:stretch;gap:0;margin:0;background:var(--bg);border-bottom:1px solid var(--border);max-height:0;overflow:hidden;transition:max-height var(--dur-slow) var(--ease);padding:0 clamp(18px,5vw,48px)}
   .nav-links.open{max-height:340px;padding-top:10px;padding-bottom:20px}
   .nav-links a.nav-link{width:100%;padding:13px 0;border-bottom:1px solid var(--border)}
-  .nav-links .nav-btn{margin-top:14px;align-self:flex-start}
 }
 </style>
 </head>
@@ -144,19 +143,23 @@ nav a[data-active]{color:var(--accent)!important}
     <span style="width:9px;height:9px;background:var(--accent);border-radius:1px;box-shadow:0 0 12px var(--accent-glow)"></span>
     <span>tahrim<span class="nav-logo-sub" style="color:var(--text-faint)">, walid</span></span>
   </a>
-  <div class="nav-links" id="nav-links" style="display:flex;align-items:center;gap:clamp(14px,2.4vw,30px)">
-    <a href="#/" data-route="home" class="nav-link">home<span data-bar style="position:absolute;left:0;right:0;bottom:-7px;height:1.5px;background:var(--accent);opacity:0;transition:opacity var(--dur)"></span></a>
-    <a href="#/about" data-route="about" class="nav-link">about<span data-bar style="position:absolute;left:0;right:0;bottom:-7px;height:1.5px;background:var(--accent);opacity:0;transition:opacity var(--dur)"></span></a>
-    <a href="#/projects" data-route="projects" class="nav-link">projects<span data-bar style="position:absolute;left:0;right:0;bottom:-7px;height:1.5px;background:var(--accent);opacity:0;transition:opacity var(--dur)"></span></a>
-    <a href="#/contact" data-route="contact" class="nav-link">contact<span data-bar style="position:absolute;left:0;right:0;bottom:-7px;height:1.5px;background:var(--accent);opacity:0;transition:opacity var(--dur)"></span></a>
-    <button id="theme-btn" class="nav-btn" aria-label="Toggle theme">
-      <span style="width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent-glow)"></span>
-      <span id="theme-label">dark</span>
-    </button>
+  <div style="display:flex;align-items:center;gap:clamp(14px,2.4vw,30px)">
+    <div class="nav-links" id="nav-links" style="display:flex;align-items:center;gap:clamp(14px,2.4vw,30px)">
+      <a href="#/" data-route="home" class="nav-link">home<span data-bar style="position:absolute;left:0;right:0;bottom:-7px;height:1.5px;background:var(--accent);opacity:0;transition:opacity var(--dur)"></span></a>
+      <a href="#/about" data-route="about" class="nav-link">about<span data-bar style="position:absolute;left:0;right:0;bottom:-7px;height:1.5px;background:var(--accent);opacity:0;transition:opacity var(--dur)"></span></a>
+      <a href="#/projects" data-route="projects" class="nav-link">projects<span data-bar style="position:absolute;left:0;right:0;bottom:-7px;height:1.5px;background:var(--accent);opacity:0;transition:opacity var(--dur)"></span></a>
+      <a href="#/contact" data-route="contact" class="nav-link">contact<span data-bar style="position:absolute;left:0;right:0;bottom:-7px;height:1.5px;background:var(--accent);opacity:0;transition:opacity var(--dur)"></span></a>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;flex-shrink:0">
+      <button id="theme-btn" class="nav-btn" aria-label="Toggle theme">
+        <span style="width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent-glow)"></span>
+        <span id="theme-label">dark</span>
+      </button>
+      <button id="nav-burger" class="nav-burger" aria-label="Menu" aria-expanded="false" aria-controls="nav-links">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
   </div>
-  <button id="nav-burger" class="nav-burger" aria-label="Menu" aria-expanded="false" aria-controls="nav-links">
-    <span></span><span></span><span></span>
-  </button>
 </nav>
 
 <main id="main" style="position:relative;padding-top:var(--nav-h)"></main>
