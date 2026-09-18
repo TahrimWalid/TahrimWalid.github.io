@@ -67,7 +67,6 @@ canvas{display:block}
 ::selection{background:var(--accent);color:var(--on-accent)}
 
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
-@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 @keyframes pulse{0%{box-shadow:0 0 0 0 var(--accent-glow)}70%{box-shadow:0 0 0 7px transparent}100%{box-shadow:0 0 0 0 transparent}}
 
 [data-reveal]{opacity:0;transform:translateY(26px);will-change:transform,opacity}
@@ -207,17 +206,17 @@ const PROJECTS = [
     id: 'kratos',
     name: 'Kratos',
     tagline: "Bachelor's Thesis",
-    subtitle: 'Offline Agentic Security Assistant',
+    subtitle: 'Agentic Security Assistant',
     tag: "Bachelor's Thesis",
     stat: { value: '0', label: 'hallucinations · 12 queries' },
-    oneliner: "An offline security assistant that's grown from a fixed five-stage pipeline into an agentic ReAct loop with 15 read-only tools, a self-writing tool loop gated on human approval, a full Textual TUI, and an MCP server — all running on a 7B model with zero cloud dependency.",
-    stack: ['Python','Qwen2.5-Coder 7B','Ollama','Llama.cpp','Textual','MCP','ARM','Linux'],
+    oneliner: "A security assistant that's grown from a fixed five-stage pipeline into an agentic ReAct loop with 15 read-only tools, a self-writing tool loop gated on human approval, a full Textual TUI, and an MCP server — model-agnostic by design, running on a local self-hosted model or a cloud API like Gemini depending on what the deployment needs.",
+    stack: ['Python','Qwen2.5-Coder 7B','Gemini','Ollama','Llama.cpp','Textual','MCP','Linux'],
     links: [{ label: 'GitHub', url: 'github.com/TahrimWalid/kratos' }],
     description: [
-      "Kratos started as a Bachelor's thesis prototype answering one question: can a quantized LLM running entirely on ARM edge hardware produce meaningful, explainable security analysis without sending data outside the machine? It's since grown into an agentic assistant that reasons about a goal, picks its own read-only tools, correlates findings through a 10-rule deterministic engine, and can write and keep new tools for itself under human review — without giving up the offline, safe-by-construction design.",
+      "Kratos started as a Bachelor's thesis prototype answering one question: can a locally-run LLM produce meaningful, explainable security analysis without sending data outside the machine? It's since grown into an agentic assistant that reasons about a goal, picks its own read-only tools, correlates findings through a 10-rule deterministic engine, and can write and keep new tools for itself under human review. The model backend is swappable — a fully offline local model when that's the requirement, or a cloud API like Gemini when it isn't — the agent loop, tools, and safety boundary work identically either way.",
       "Every screen in the walkthrough below is a genuine render of kratos-mk2 — exported from a headless Textual pilot session driving the actual app (session chooser, idle screen, a scripted investigation, the approval gate, an evo-loop suggestion, the command palette, and /settings), the same technique the project's own test suite uses to verify the UI. None of it is a mockup.",
       "The boundary is the whole point: every target-facing tool is read/observe-only, by design, exhaustively. Kratos investigates and recommends — it never executes state-changing actions on the monitored host. The self-writing tool loop (evo-loop) drafts a Python tool for a capability gap, sandbox-tests it in a no-network Incus container, and keeps it only after explicit human approval — no force-accept, ever.",
-      "The empirical result: across three adversarial thesis runs against a real gateway, Kratos connected a gateway lockout to an unrelated-looking internal auth burst and correctly inferred a lateral-movement pivot attempt — something a rule-only system would have reported as two disconnected alerts. Zero hallucinated claims across 12 evaluation queries, running entirely on a Mixtile Blade 3 (RK3588 ARM64, CPU-only, ~2GB RAM during inference).",
+      "The empirical result: across three adversarial thesis runs against a real gateway, Kratos connected a gateway lockout to an unrelated-looking internal auth burst and correctly inferred a lateral-movement pivot attempt — something a rule-only system would have reported as two disconnected alerts. Zero hallucinated claims across 12 evaluation queries in the thesis benchmark.",
     ],
     stages: [
       'Session chooser — recent investigations, filter-as-you-type, real data',
@@ -639,13 +638,6 @@ function renderHome() {
       </div>
     </div>
 
-    <div style="width:100%;overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:13px 0;background:var(--bg-elev)">
-      <div style="display:inline-flex;white-space:nowrap;animation:ticker 32s linear infinite">
-        <span style="font-family:var(--font-mono);font-size:0.74rem;color:var(--text-dim);padding-right:0">4 projects shipped &nbsp;<span style="color:var(--accent)">·</span>&nbsp; 7B model on ARM &nbsp;<span style="color:var(--accent)">·</span>&nbsp; €5,000 funded &nbsp;<span style="color:var(--accent)">·</span>&nbsp; 1,998 jobs analyzed &nbsp;<span style="color:var(--accent)">·</span>&nbsp; 32 validation rules &nbsp;<span style="color:var(--accent)">·</span>&nbsp; 100% LLM extraction &nbsp;<span style="color:var(--accent)">·</span>&nbsp; air-gapped inference &nbsp;<span style="color:var(--accent)">·</span>&nbsp; self-hosted 27B model &nbsp;<span style="color:var(--accent)">·</span>&nbsp; 9.5h pipeline runtime &nbsp;<span style="color:var(--accent)">·</span>&nbsp; bidirectional HCL sync &nbsp;<span style="color:var(--accent)">·</span>&nbsp;&nbsp;</span>
-        <span style="font-family:var(--font-mono);font-size:0.74rem;color:var(--text-dim);padding-right:0">4 projects shipped &nbsp;<span style="color:var(--accent)">·</span>&nbsp; 7B model on ARM &nbsp;<span style="color:var(--accent)">·</span>&nbsp; €5,000 funded &nbsp;<span style="color:var(--accent)">·</span>&nbsp; 1,998 jobs analyzed &nbsp;<span style="color:var(--accent)">·</span>&nbsp; 32 validation rules &nbsp;<span style="color:var(--accent)">·</span>&nbsp; 100% LLM extraction &nbsp;<span style="color:var(--accent)">·</span>&nbsp; air-gapped inference &nbsp;<span style="color:var(--accent)">·</span>&nbsp; self-hosted 27B model &nbsp;<span style="color:var(--accent)">·</span>&nbsp; 9.5h pipeline runtime &nbsp;<span style="color:var(--accent)">·</span>&nbsp; bidirectional HCL sync &nbsp;<span style="color:var(--accent)">·</span>&nbsp;&nbsp;</span>
-      </div>
-    </div>
-
     <div style="max-width:var(--maxw);margin:0 auto;padding:var(--space-2xl) clamp(18px,5vw,48px)">
       <div data-reveal style="display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:14px;margin-bottom:var(--space-lg)">
         <h2 style="margin:0;font-size:var(--fs-h2);font-weight:600;letter-spacing:-0.03em"><span style="font-family:var(--font-mono);font-size:0.7em;color:var(--accent);margin-right:10px">//</span>Selected work</h2>
@@ -872,7 +864,7 @@ function runAboutTerminal() {
     { t: 'cmd',  text: 'cat timeline.txt' },
     { t: 'out',  html: '<span style="color:#5f5f6a">2024–2026</span>  <span style="color:#ededf0">TAMK</span>  ·  B.Eng Software Engineering' },
     { t: 'out',  html: '<span style="color:#5f5f6a">2025     </span>  <span style="color:#00ff41">Oppipolku</span>  ·  Backend Lead  ·  €5,000 TAMK Foundation grant' },
-    { t: 'out',  html: '<span style="color:#5f5f6a">2025     </span>  <span style="color:#00ff41">Kratos</span>    ·  Solo · Bachelor\'s Thesis · 7B model, air-gapped ARM' },
+    { t: 'out',  html: '<span style="color:#5f5f6a">2025     </span>  <span style="color:#00ff41">Kratos</span>    ·  Solo · Bachelor\'s Thesis · agentic, model-agnostic' },
     { t: 'out',  html: '<span style="color:#5f5f6a">2025     </span>  <span style="color:#00ff41">InGen</span>     ·  Full-Stack · self-hosted 27B · 32 validation rules' },
     { t: 'out',  html: '<span style="color:#5f5f6a">2026     </span>  <span style="color:#00ff41">Career AI</span> ·  Solo · 1,998 jobs · 100% LLM extraction' },
     { t: 'gap' },
