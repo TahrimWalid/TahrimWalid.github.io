@@ -119,12 +119,20 @@ nav a[data-active]{color:var(--accent)!important}
 @media(max-width:840px){
   .two-col{grid-template-columns:1fr!important}
 }
+
+.nav-burger{display:none;background:transparent;border:1px solid var(--border);border-radius:var(--radius);width:36px;height:36px;align-items:center;justify-content:center;cursor:pointer;flex-direction:column;gap:4px;flex-shrink:0}
+.nav-burger span{display:block;width:16px;height:1.5px;background:var(--text-dim);transition:transform var(--dur) var(--ease),opacity var(--dur)}
+.nav-burger[aria-expanded="true"] span:nth-child(1){transform:translateY(5.5px) rotate(45deg)}
+.nav-burger[aria-expanded="true"] span:nth-child(2){opacity:0}
+.nav-burger[aria-expanded="true"] span:nth-child(3){transform:translateY(-5.5px) rotate(-45deg)}
+
 @media(max-width:680px){
-  .nav-links{gap:14px!important}
   .nav-logo-sub{display:none}
-}
-@media(max-width:520px){
-  .nav-links a[data-route]{font-size:0.72rem}
+  .nav-burger{display:flex}
+  .nav-links{position:fixed;top:var(--nav-h);left:0;right:0;z-index:99;flex-direction:column;align-items:stretch;gap:0;margin:0;background:var(--bg);border-bottom:1px solid var(--border);max-height:0;overflow:hidden;transition:max-height var(--dur-slow) var(--ease);padding:0 clamp(18px,5vw,48px)}
+  .nav-links.open{max-height:340px;padding-top:10px;padding-bottom:20px}
+  .nav-links a.nav-link{width:100%;padding:13px 0;border-bottom:1px solid var(--border)}
+  .nav-links .nav-btn{margin-top:14px;align-self:flex-start}
 }
 </style>
 </head>
@@ -136,7 +144,7 @@ nav a[data-active]{color:var(--accent)!important}
     <span style="width:9px;height:9px;background:var(--accent);border-radius:1px;box-shadow:0 0 12px var(--accent-glow)"></span>
     <span>tahrim<span class="nav-logo-sub" style="color:var(--text-faint)">, walid</span></span>
   </a>
-  <div class="nav-links" style="display:flex;align-items:center;gap:clamp(14px,2.4vw,30px)">
+  <div class="nav-links" id="nav-links" style="display:flex;align-items:center;gap:clamp(14px,2.4vw,30px)">
     <a href="#/" data-route="home" class="nav-link">home<span data-bar style="position:absolute;left:0;right:0;bottom:-7px;height:1.5px;background:var(--accent);opacity:0;transition:opacity var(--dur)"></span></a>
     <a href="#/about" data-route="about" class="nav-link">about<span data-bar style="position:absolute;left:0;right:0;bottom:-7px;height:1.5px;background:var(--accent);opacity:0;transition:opacity var(--dur)"></span></a>
     <a href="#/projects" data-route="projects" class="nav-link">projects<span data-bar style="position:absolute;left:0;right:0;bottom:-7px;height:1.5px;background:var(--accent);opacity:0;transition:opacity var(--dur)"></span></a>
@@ -146,6 +154,9 @@ nav a[data-active]{color:var(--accent)!important}
       <span id="theme-label">dark</span>
     </button>
   </div>
+  <button id="nav-burger" class="nav-burger" aria-label="Menu" aria-expanded="false" aria-controls="nav-links">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
 <main id="main" style="position:relative;padding-top:var(--nav-h)"></main>
@@ -511,6 +522,12 @@ function updateNav() {
 
 // ── Router ─────────────────────────────────────────────────────────────────
 function onHash() {
+  const navLinks = document.getElementById('nav-links');
+  const burger = document.getElementById('nav-burger');
+  if (navLinks && navLinks.classList.contains('open')) {
+    navLinks.classList.remove('open');
+    if (burger) burger.setAttribute('aria-expanded', 'false');
+  }
   const raw = (location.hash || '').replace(/^#\/?/, '');
   const parts = raw.split('/').filter(Boolean);
   let route = 'home', projectId = null;
@@ -971,6 +988,13 @@ document.addEventListener('DOMContentLoaded', () => {
   applyTheme(t);
 
   document.getElementById('theme-btn').addEventListener('click', toggleTheme);
+
+  const burger = document.getElementById('nav-burger');
+  const navLinks = document.getElementById('nav-links');
+  burger.addEventListener('click', () => {
+    const open = navLinks.classList.toggle('open');
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
 
   let scrollTick = false;
   const onScroll = () => {
