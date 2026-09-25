@@ -3,288 +3,210 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Walid Hassan Tahrim — Engineer</title>
+<title>Walid Hassan Tahrim — Full-Stack Software Engineer</title>
 <meta name="description" content="Software Engineering graduate from TAMK. Backend, cloud, and local AI pipelines. Based in Tampere, Finland.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&family=Outfit:wght@200;400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #030305;
-  --bg-glass: rgba(10, 10, 15, 0.4);
-  --border: rgba(255, 255, 255, 0.08);
-  --border-hover: rgba(255, 255, 255, 0.2);
-  --text: #f0f0f5;
-  --text-dim: #9494a0;
-  --text-faint: #565665;
-  --accent: #00FFA3;
-  --accent-dim: rgba(0, 255, 163, 0.15);
-  --accent2: #7B61FF;
-  --font-sans: 'Space Grotesk', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
-  --font-display: 'Outfit', sans-serif;
-  --nav-h: 80px;
+  --bg:#08080a;
+  --bg-elev:#111116;
+  --bg-elev-2:#191920;
+  --border:#222229;
+  --border-strong:#34343d;
+  --text:#ededf0;
+  --text-dim:#9a9aa4;
+  --text-faint:#5f5f6a;
+  --accent:#00ff41;
+  --accent-soft:rgba(0,255,65,0.10);
+  --accent-glow:rgba(0,255,65,0.42);
+  --particle:rgba(0,255,65,0.45);
+  --on-accent:#08080a;
+  --font-display:'Space Grotesk',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono',ui-monospace,monospace;
+  --fs-display:clamp(2.6rem,7vw,5rem);
+  --fs-h1:clamp(2rem,4.6vw,3.2rem);
+  --fs-h2:clamp(1.5rem,3vw,2.2rem);
+  --fs-h3:clamp(1.2rem,2vw,1.45rem);
+  --fs-body:clamp(1rem,1.05vw,1.08rem);
+  --space-xs:8px; --space-sm:16px; --space-md:24px;
+  --space-lg:40px; --space-xl:64px; --space-2xl:104px;
+  --maxw:1180px;
+  --nav-h:70px;
+  --radius:4px;
+  --radius-lg:8px;
+  --ease:cubic-bezier(0.22,1,0.36,1);
+  --dur-fast:160ms;
+  --dur:280ms;
+  --dur-slow:520ms;
+  --page-dur:620ms;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body { 
-  background-color: var(--bg); 
-  color: var(--text); 
-  font-family: var(--font-sans); 
-  line-height: 1.6;
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
+[data-theme="light"] {
+  --bg:#f5f5f7;
+  --bg-elev:#ffffff;
+  --bg-elev-2:#ececef;
+  --border:#e3e3e8;
+  --border-strong:#cdcdd5;
+  --text:#121217;
+  --text-dim:#54545e;
+  --text-faint:#9b9ba4;
+  --accent:#0891b2;
+  --accent-soft:rgba(8,145,178,0.10);
+  --accent-glow:rgba(8,145,178,0.30);
+  --particle:rgba(8,145,178,0.38);
+  --on-accent:#ffffff;
 }
 
-::selection { background: var(--accent); color: #000; }
-a { color: inherit; text-decoration: none; }
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-display);font-size:var(--fs-body);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+canvas{display:block}
+::selection{background:var(--accent);color:var(--on-accent)}
 
-/* Noise Overlay */
-.noise {
-  position: fixed; inset: 0; z-index: 9998; pointer-events: none; opacity: 0.04;
-  background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noise"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noise)"/%3E%3C/svg%3E');
-}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes pulse{0%{box-shadow:0 0 0 0 var(--accent-glow)}70%{box-shadow:0 0 0 7px transparent}100%{box-shadow:0 0 0 0 transparent}}
 
-/* Fluid Background Glow */
-.bg-glow {
-  position: fixed; inset: -50%; z-index: -1;
-  background: 
-    radial-gradient(circle at 20% 30%, rgba(0, 255, 163, 0.07) 0%, transparent 40%),
-    radial-gradient(circle at 80% 70%, rgba(123, 97, 255, 0.07) 0%, transparent 40%);
-  filter: blur(80px);
-  animation: pulse-glow 20s ease-in-out infinite alternate;
-}
-@keyframes pulse-glow {
-  0% { transform: scale(1) rotate(0deg); }
-  100% { transform: scale(1.1) rotate(5deg); }
-}
+[data-reveal]{opacity:0;transform:translateY(26px);will-change:transform,opacity}
+[data-reveal].is-visible{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){[data-reveal]{opacity:1!important;transform:none!important}*{scroll-behavior:auto}}
 
-/* Grid overlay */
-.bg-grid {
-  position: fixed; inset: 0; z-index: -1; pointer-events: none;
-  background-size: 60px 60px;
-  background-image: linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
-                    linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
-  mask-image: radial-gradient(ellipse at center, black 20%, transparent 70%);
-  -webkit-mask-image: radial-gradient(ellipse at center, black 20%, transparent 70%);
-}
+[data-page]{transition:opacity var(--page-dur) var(--ease),transform var(--page-dur) var(--ease)}
 
-/* Custom Follow Cursor */
-#cursor-glow {
-  position: fixed; width: 400px; height: 400px;
-  background: radial-gradient(circle, rgba(0,255,163,0.12) 0%, transparent 60%);
-  border-radius: 50%; pointer-events: none; z-index: 0;
-  transform: translate(-50%, -50%);
-  transition: width 0.2s, height 0.2s;
-  mix-blend-mode: screen;
-}
+nav a[data-active]{color:var(--accent)!important}
 
-/* Nav */
-.navbar {
-  position: fixed; top: 30px; left: 50%; transform: translateX(-50%);
-  background: rgba(10, 10, 15, 0.65);
-  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-  border: 1px solid var(--border); border-radius: 100px;
-  padding: 8px 12px; display: flex; align-items: center; gap: 8px;
-  z-index: 1000; box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-}
-.nav-link {
-  font-family: var(--font-mono); font-size: 0.8rem;
-  padding: 10px 24px; border-radius: 100px;
-  color: var(--text-dim); transition: all 0.3s ease;
-  position: relative; overflow: hidden;
-}
-.nav-link::before {
-  content: ''; position: absolute; inset: 0; background: var(--accent-dim);
-  border-radius: 100px; opacity: 0; transition: opacity 0.3s; z-index: -1;
-}
-.nav-link:hover { color: var(--text); }
-.nav-link[data-active] { color: var(--accent); }
-.nav-link[data-active]::before { opacity: 1; }
+.nav-link{position:relative;font-family:var(--font-mono);font-size:0.8rem;color:var(--text-dim);transition:color var(--dur) var(--ease)}
+.nav-link:hover{color:var(--text)}
 
-.container { max-width: 1200px; margin: 0 auto; padding: 0 5vw; position: relative; z-index: 1; }
+.nav-btn{display:flex;align-items:center;gap:7px;font-family:var(--font-mono);font-size:0.75rem;color:var(--text-dim);background:transparent;border:1px solid var(--border);border-radius:var(--radius);padding:7px 11px;cursor:pointer;transition:border-color var(--dur),color var(--dur)}
+.nav-btn:hover{border-color:var(--accent);color:var(--text)}
 
-/* Typography */
-.display-title {
-  font-family: var(--font-display); font-size: clamp(3rem, 9vw, 7.5rem);
-  font-weight: 800; line-height: 0.9; letter-spacing: -0.04em;
-  background: linear-gradient(135deg, #fff 0%, #7B61FF 50%, #00FFA3 100%);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  margin-bottom: 24px;
-}
-.subtitle {
-  font-family: var(--font-mono); font-size: clamp(1rem, 1.5vw, 1.2rem);
-  color: var(--accent); letter-spacing: 0.05em; margin-bottom: 30px;
-}
-.text-body {
-  font-size: 1.15rem; color: var(--text-dim); line-height: 1.8; max-width: 600px;
+.btn-primary{display:inline-flex;align-items:center;gap:9px;font-family:var(--font-mono);font-size:0.82rem;background:var(--accent);color:var(--on-accent);padding:13px 22px;border-radius:var(--radius);transition:transform var(--dur) var(--ease),filter var(--dur)}
+.btn-primary:hover{transform:translateY(-2px);filter:brightness(1.12)}
+
+.btn-secondary{display:inline-flex;align-items:center;gap:9px;font-family:var(--font-mono);font-size:0.82rem;color:var(--text);border:1px solid var(--border-strong);padding:13px 22px;border-radius:var(--radius);transition:border-color var(--dur),transform var(--dur) var(--ease)}
+.btn-secondary:hover{border-color:var(--accent);transform:translateY(-2px)}
+
+.card-link{position:relative;display:flex;flex-direction:column;gap:15px;padding:26px;background:var(--bg-elev);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:border-color var(--dur) var(--ease),translate var(--dur) var(--ease),scale var(--dur) var(--ease),box-shadow var(--dur) var(--ease)}
+.card-link:hover{border-color:var(--accent);translate:0 -8px;scale:1.02;box-shadow:0 22px 60px -22px var(--accent-glow)}
+
+.project-row{display:grid;grid-template-columns:auto 1fr auto;gap:clamp(18px,4vw,48px);align-items:start;padding:clamp(24px,3vw,36px);background:var(--bg-elev);border:1px solid var(--border);border-radius:var(--radius);transition:border-color var(--dur) var(--ease),translate var(--dur) var(--ease),scale var(--dur) var(--ease),box-shadow var(--dur) var(--ease)}
+.project-row:hover{border-color:var(--accent);translate:0 -8px;scale:1.02;box-shadow:0 22px 60px -22px var(--accent-glow)}
+
+.skill-card{padding:24px;background:var(--bg-elev);border:1px solid var(--border);border-radius:var(--radius);transition:border-color var(--dur)}
+.skill-card:hover{border-color:var(--border-strong)}
+
+.contact-card{display:flex;flex-direction:column;gap:14px;padding:30px;background:var(--bg-elev);transition:background var(--dur)}
+.contact-card:hover{background:var(--bg-elev-2)}
+
+.ext-link{display:inline-flex;align-items:center;gap:9px;font-family:var(--font-mono);font-size:0.78rem;padding:11px 16px;border:1px solid var(--border-strong);border-radius:var(--radius);transition:border-color var(--dur)}
+.ext-link:hover{border-color:var(--accent)}
+
+.next-link{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:var(--space-2xl);padding:26px clamp(20px,3vw,32px);background:var(--bg-elev);border:1px solid var(--border);border-radius:var(--radius);transition:border-color var(--dur),transform var(--dur) var(--ease)}
+.next-link:hover{border-color:var(--accent);transform:translateY(-3px)}
+
+.back-link{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:0.78rem;color:var(--text-dim);margin-bottom:var(--space-lg);transition:color var(--dur)}
+.back-link:hover{color:var(--accent)}
+
+.dim-link{color:var(--text-dim);transition:color var(--dur)}
+.dim-link:hover{color:var(--accent)}
+
+.footer-link{color:var(--text-dim);transition:color var(--dur)}
+.footer-link:hover{color:var(--accent)}
+
+@media(max-width:840px){
+  .two-col{grid-template-columns:1fr!important}
 }
 
-/* Glass Cards */
-.bento-grid {
-  display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px;
-}
-.glass-card {
-  background: var(--bg-glass); border: 1px solid var(--border);
-  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-  border-radius: 24px; padding: 40px; position: relative; overflow: hidden;
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s, box-shadow 0.3s;
-}
-.glass-card::before {
-  content: ''; position: absolute; inset: 0; z-index: 0; opacity: 0; pointer-events: none;
-  background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.06), transparent 40%);
-  transition: opacity 0.4s;
-}
-.glass-card:hover::before { opacity: 1; }
-.glass-card:hover {
-  border-color: var(--border-hover); transform: translateY(-5px);
-  box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,255,163,0.1);
-}
-.glass-card > * { position: relative; z-index: 1; }
+.nav-burger{display:none;background:transparent;border:1px solid var(--border);border-radius:var(--radius);width:36px;height:36px;align-items:center;justify-content:center;cursor:pointer;flex-direction:column;gap:4px;flex-shrink:0}
+.nav-burger span{display:block;width:16px;height:1.5px;background:var(--text-dim);transition:transform var(--dur) var(--ease),opacity var(--dur)}
+.nav-burger[aria-expanded="true"] span:nth-child(1){transform:translateY(5.5px) rotate(45deg)}
+.nav-burger[aria-expanded="true"] span:nth-child(2){opacity:0}
+.nav-burger[aria-expanded="true"] span:nth-child(3){transform:translateY(-5.5px) rotate(-45deg)}
 
-.col-span-12 { grid-column: span 12; }
-.col-span-8 { grid-column: span 8; }
-.col-span-7 { grid-column: span 7; }
-.col-span-6 { grid-column: span 6; }
-.col-span-5 { grid-column: span 5; }
-.col-span-4 { grid-column: span 4; }
-
-@media (max-width: 900px) {
-  .col-span-8, .col-span-7, .col-span-6, .col-span-5, .col-span-4 { grid-column: span 12; }
-  .navbar { width: 90%; justify-content: space-between; padding: 8px; }
-  .nav-link { padding: 10px 14px; font-size: 0.75rem; }
-}
-
-/* Buttons */
-.btn {
-  display: inline-flex; align-items: center; gap: 12px;
-  padding: 16px 32px; border-radius: 100px;
-  font-family: var(--font-mono); font-size: 0.9rem; font-weight: 500;
-  text-transform: uppercase; letter-spacing: 0.05em;
-  transition: all 0.3s ease; cursor: pointer;
-}
-.btn-primary {
-  background: var(--text); color: var(--bg);
-}
-.btn-primary:hover {
-  background: var(--accent); transform: scale(1.05);
-  box-shadow: 0 10px 30px var(--accent-dim);
-}
-.btn-secondary {
-  background: transparent; color: var(--text);
-  border: 1px solid var(--border);
-}
-.btn-secondary:hover {
-  border-color: var(--text); transform: scale(1.05);
-}
-
-/* Reveal Animation */
-.reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
-.reveal.active { opacity: 1; transform: translateY(0); }
-
-/* Custom elements */
-.status-pill {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 6px 14px; border-radius: 100px;
-  border: 1px solid var(--border); background: var(--bg-glass);
-  font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-dim);
-  margin-bottom: 40px;
-}
-.status-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 10px var(--accent); }
-
-.project-tag {
-  font-family: var(--font-mono); font-size: 0.7rem; font-weight: 700;
-  background: var(--accent-dim); color: var(--accent);
-  padding: 4px 12px; border-radius: 100px; text-transform: uppercase;
-}
-
-.tech-pill {
-  font-family: var(--font-mono); font-size: 0.75rem;
-  padding: 6px 12px; border-radius: 8px;
-  border: 1px solid var(--border); background: rgba(0,0,0,0.3);
-  color: var(--text-dim); display: inline-flex; align-items: center; gap: 6px;
-}
-
-/* Terminal */
-.terminal {
-  background: #09090b; border: 1px solid var(--border);
-  border-radius: 16px; overflow: hidden;
-  font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-dim);
-  box-shadow: 0 30px 60px rgba(0,0,0,0.4);
-}
-.terminal-header {
-  background: #121216; padding: 12px 20px; display: flex; gap: 8px; border-bottom: 1px solid var(--border);
-}
-.terminal-dot { width: 12px; height: 12px; border-radius: 50%; }
-.terminal-body { padding: 30px; line-height: 1.8; min-height: 300px; }
-
-/* Demo iFrames */
-.demo-frame-wrapper {
-  position: relative; width: 100%; aspect-ratio: 16/9;
-  border-radius: 12px; overflow: hidden; border: 1px solid var(--border);
-  margin-top: 20px; background: #000;
-}
-.demo-frame-wrapper iframe {
-  position: absolute; inset: 0; width: 100%; height: 100%; border: none;
+@media(max-width:680px){
+  .nav-logo-sub{display:none}
+  .nav-burger{display:flex}
+  .nav-links{position:fixed;top:var(--nav-h);left:0;right:0;z-index:99;flex-direction:column;align-items:stretch;gap:0;margin:0;background:var(--bg);border-bottom:1px solid var(--border);max-height:0;overflow:hidden;transition:max-height var(--dur-slow) var(--ease);padding:0 clamp(18px,5vw,48px)}
+  .nav-links.open{max-height:340px;padding-top:10px;padding-bottom:20px}
+  .nav-links a.nav-link{width:100%;padding:13px 0;border-bottom:1px solid var(--border)}
 }
 </style>
 </head>
 <body>
-<div class="noise"></div>
-<div class="bg-glow"></div>
-<div class="bg-grid"></div>
-<div id="cursor-glow"></div>
+<div id="app" data-theme="dark" style="min-height:100vh;background:var(--bg);color:var(--text)">
 
-<nav class="navbar">
-  <a href="#/" class="nav-link" data-route="home">Home</a>
-  <a href="#/projects" class="nav-link" data-route="projects">Projects</a>
-  <a href="#/about" class="nav-link" data-route="about">About</a>
-  <a href="#/contact" class="nav-link" data-route="contact">Contact</a>
+<nav style="position:fixed;top:0;left:0;right:0;height:var(--nav-h);z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(18px,5vw,48px);background:color-mix(in srgb,var(--bg) 80%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border)">
+  <a href="#/" style="display:flex;align-items:center;gap:10px;font-family:var(--font-mono);font-weight:500;font-size:0.9rem;letter-spacing:-0.02em">
+    <span style="width:9px;height:9px;background:var(--accent);border-radius:1px;box-shadow:0 0 12px var(--accent-glow)"></span>
+    <span>tahrim<span class="nav-logo-sub" style="color:var(--text-faint)">, walid</span></span>
+  </a>
+  <div style="display:flex;align-items:center;gap:clamp(14px,2.4vw,30px)">
+    <div class="nav-links" id="nav-links" style="display:flex;align-items:center;gap:clamp(14px,2.4vw,30px)">
+      <a href="#/" data-route="home" class="nav-link">home<span data-bar style="position:absolute;left:0;right:0;bottom:-7px;height:1.5px;background:var(--accent);opacity:0;transition:opacity var(--dur)"></span></a>
+      <a href="#/about" data-route="about" class="nav-link">about<span data-bar style="position:absolute;left:0;right:0;bottom:-7px;height:1.5px;background:var(--accent);opacity:0;transition:opacity var(--dur)"></span></a>
+      <a href="#/projects" data-route="projects" class="nav-link">projects<span data-bar style="position:absolute;left:0;right:0;bottom:-7px;height:1.5px;background:var(--accent);opacity:0;transition:opacity var(--dur)"></span></a>
+      <a href="#/contact" data-route="contact" class="nav-link">contact<span data-bar style="position:absolute;left:0;right:0;bottom:-7px;height:1.5px;background:var(--accent);opacity:0;transition:opacity var(--dur)"></span></a>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;flex-shrink:0">
+      <button id="theme-btn" class="nav-btn" aria-label="Toggle theme">
+        <span style="width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent-glow)"></span>
+        <span id="theme-label">dark</span>
+      </button>
+      <button id="nav-burger" class="nav-burger" aria-label="Menu" aria-expanded="false" aria-controls="nav-links">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
 </nav>
 
-<main id="app" style="min-height: 100vh; padding-top: 160px; padding-bottom: 100px;"></main>
+<main id="main" style="position:relative;padding-top:var(--nav-h)"></main>
 
-<footer style="margin-top: 100px; padding: 40px 0; border-top: 1px solid var(--border);">
-  <div class="container" style="display: flex; justify-content: space-between; align-items: center; font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-faint);">
-    <span>© 2026 Walid Hassan Tahrim. Designed for performance.</span>
-    <div style="display: flex; gap: 20px;">
-      <a href="https://github.com/TahrimWalid" style="color: var(--text-dim); transition: color 0.3s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-dim)'">GitHub</a>
-      <a href="https://linkedin.com/in/walid-hassan-tahrim" style="color: var(--text-dim); transition: color 0.3s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-dim)'">LinkedIn</a>
+<footer style="border-top:1px solid var(--border);padding:var(--space-lg) clamp(18px,5vw,48px)">
+  <div style="max-width:var(--maxw);margin:0 auto;display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between">
+    <span style="font-family:var(--font-mono);font-size:0.74rem;color:var(--text-faint)">Walid Hassan Tahrim © 2026 · Tampere, FI</span>
+    <div style="display:flex;gap:20px;font-family:var(--font-mono);font-size:0.74rem">
+      <a href="mailto:tahrimwalid@gmail.com" class="footer-link" aria-label="Email" style="display:flex;align-items:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></a>
+      <a href="https://github.com/TahrimWalid" target="_blank" rel="noopener" class="footer-link" aria-label="GitHub" style="display:flex;align-items:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg></a>
+      <a href="https://linkedin.com/in/walid-hassan-tahrim" target="_blank" rel="noopener" class="footer-link" aria-label="LinkedIn" style="display:flex;align-items:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14zM8.34 18.34V9.99H5.67v8.35h2.67zM7 8.8a1.55 1.55 0 1 0 0-3.1 1.55 1.55 0 0 0 0 3.1zm11.34 9.54v-4.58c0-2.45-1.31-3.59-3.06-3.59-1.41 0-2.04.78-2.39 1.32v-1.13h-2.67c.04.75 0 8.35 0 8.35h2.67v-4.66c0-.24.02-.48.09-.65.19-.48.63-.98 1.37-.98.97 0 1.35.74 1.35 1.82v4.47h2.64z"/></svg></a>
     </div>
   </div>
 </footer>
 
+</div>
 <script>
 const SKILLS = [
   { cat: 'Frontend',        items: ['React','React Native','Next.js','ReactFlow','Monaco'] },
   { cat: 'Backend',         items: ['Python','REST APIs','Web Scraping','API inspection (DevTools)'] },
-  { cat: 'AI & Edge',       items: ['LLMs (Llama.cpp, Qwen 2.5ÔÇô27B, vLLM)','4-bit quantization','ARM & GPU deployment'] },
+  { cat: 'AI & Edge',       items: ['LLMs (Llama.cpp, Qwen 2.5–27B, vLLM)','4-bit quantization','ARM & GPU deployment'] },
   { cat: 'Data',            items: ['SQLite','SQL','ETL pipelines','NLP parsing'] },
   { cat: 'Security',        items: ['NDR','Log analysis','Nmap','adversarial benchmarking'] },
   { cat: 'Infrastructure',  items: ['Linux','Apache','Cloudflare','SSH','systemd','Git','Terraform','Vercel','CI/CD'] },
 ];
+
 const PROJECTS = [
   {
     id: 'oppipolku',
     name: 'Oppipolku',
-    tagline: 'Ôé¼5,000 Funded',
+    tagline: '€5,000 Funded',
     subtitle: 'Finnish HE Course Benchmarking API',
-    tag: 'Ôé¼5,000 Funded',
-    stat: { value: '13,846', label: 'courses ┬À 36 institutions' },
-    oneliner: "A production-deployed benchmarking API covering 13,846 continuing education courses across 36 Finnish universities ÔÇö 5-tier endpoint structure, deterministic <50ms responses, and a Gemini 2.5 Pro agent layer that answers HE market questions from live structured data.",
+    tag: '€5,000 Funded',
+    stat: { value: '13,846', label: 'courses · 36 institutions' },
+    oneliner: "A production-deployed benchmarking API covering 13,846 continuing education courses across 36 Finnish universities — 5-tier endpoint structure, deterministic <50ms responses, and a Gemini 2.5 Pro agent layer that answers HE market questions from live structured data.",
     stack: ['Python','FastAPI','Docker','Gemini 2.5 Pro','Open WebUI','Tailscale','systemd','Linux'],
     links: [],
-    note: 'Repo private ÔÇö code available on request.',
+    note: 'Repo private — code available on request.',
     description: [
-      "Oppipolku is a course benchmarking API for the Finnish higher education market, awarded Ôé¼5,000 by the TAMK Foundation. The dataset covers 13,846 continuing education courses scraped from opin.fi across 36 institutions. All data loads into memory at startup; every request hits pure computation functions with no database round-trip ÔÇö p99 latency under 50ms.",
+      "Oppipolku is a course benchmarking API for the Finnish higher education market, awarded €5,000 by the TAMK Foundation. The dataset covers 13,846 continuing education courses scraped from opin.fi across 36 institutions. All data loads into memory at startup; every request hits pure computation functions with no database round-trip — p99 latency under 50ms.",
       "The API is structured in five tiers: market-wide aggregates (price, ECTS, language, delivery distributions), per-organization snapshots and side-by-side comparisons, dimensional breakdowns (delivery, availability, themes, study fields, credits, pricing per org), rankings and gap analysis, and a course search endpoint supporting eight combinable filters. The data pipeline runs nightly via a systemd timer, fetches from opin.fi, and auto-deploys via a git-polling script every three minutes.",
-      "The AI layer is a Gemini 2.5 Pro assistant running inside Open WebUI with a 19-function Python tool that calls the benchmark API. A middleware patch was required to fix a Gemini streaming tool-call bug in Open WebUI ÔÇö the patch is idempotent and ships in the repo. The whole stack (API + Open WebUI) runs on a single ARM homelab node behind Tailscale Serve with auto-issued TLS, reachable from any device on the tailnet.",
+      "The AI layer is a Gemini 2.5 Pro assistant running inside Open WebUI with a 19-function Python tool that calls the benchmark API. A middleware patch was required to fix a Gemini streaming tool-call bug in Open WebUI — the patch is idempotent and ships in the repo. The whole stack (API + Open WebUI) runs on a single ARM homelab node behind Tailscale Serve with auto-issued TLS, reachable from any device on the tailnet.",
     ],
     stages: [
       'Data pipeline: reverse-engineering opin.fi to scrape 13,846 courses',
-      '/benchmark/snapshot/TAMK ÔÇö full org profile, <20ms response',
-      '/market/gaps?org=TAMK ÔÇö where TAMK trails the national average',
+      '/benchmark/snapshot/TAMK — full org profile, <20ms response',
+      '/market/gaps?org=TAMK — where TAMK trails the national average',
       'Gemini 2.5 Pro agent calling the tool to answer a market question',
     ],
     stageDemos: [
@@ -300,24 +222,24 @@ const PROJECTS = [
     tagline: "Bachelor's Thesis",
     subtitle: 'Agentic Security Assistant',
     tag: "Bachelor's Thesis",
-    stat: { value: '0', label: 'hallucinations ┬À 12 queries' },
-    oneliner: "A security assistant that's grown from a fixed five-stage pipeline into an agentic ReAct loop with 15 read-only tools, a self-writing tool loop gated on human approval, a full Textual TUI, and an MCP server ÔÇö model-agnostic by design, running on a local self-hosted model or a cloud API depending on what the deployment needs.",
+    stat: { value: '0', label: 'hallucinations · 12 queries' },
+    oneliner: "A security assistant that's grown from a fixed five-stage pipeline into an agentic ReAct loop with 15 read-only tools, a self-writing tool loop gated on human approval, a full Textual TUI, and an MCP server — model-agnostic by design, running on a local self-hosted model or a cloud API depending on what the deployment needs.",
     stack: ['Python','Qwen2.5-Coder 7B','Gemini','Ollama','Llama.cpp','Textual','MCP','Linux'],
     links: [{ label: 'GitHub', url: 'github.com/TahrimWalid/kratos' }],
     description: [
-      "Kratos started as a Bachelor's thesis prototype answering one question: can a locally-run LLM produce meaningful, explainable security analysis without sending data outside the machine? It's since grown into an agentic assistant that reasons about a goal, picks its own read-only tools, correlates findings through a 10-rule deterministic engine, and can write and keep new tools for itself under human review. The model backend is swappable ÔÇö a fully offline local model when that's the requirement, or a cloud API when it isn't ÔÇö the agent loop, tools, and safety boundary work identically either way.",
-      "Every screen in the walkthrough below is a genuine render of kratos-mk2 ÔÇö exported from a headless Textual pilot session driving the actual app (session chooser, idle screen, a scripted investigation, the approval gate, an evo-loop suggestion, the command palette, and /settings), the same technique the project's own test suite uses to verify the UI. None of it is a mockup.",
-      "The boundary is the whole point: every target-facing tool is read/observe-only, by design, exhaustively. Kratos investigates and recommends ÔÇö it never executes state-changing actions on the monitored host. The self-writing tool loop (evo-loop) drafts a Python tool for a capability gap, sandbox-tests it in a no-network Incus container, and keeps it only after explicit human approval ÔÇö no force-accept, ever.",
-      "The empirical result: across three adversarial thesis runs against a real gateway, Kratos connected a gateway lockout to an unrelated-looking internal auth burst and correctly inferred a lateral-movement pivot attempt ÔÇö something a rule-only system would have reported as two disconnected alerts. Zero hallucinated claims across 12 evaluation queries in the thesis benchmark.",
+      "Kratos started as a Bachelor's thesis prototype answering one question: can a locally-run LLM produce meaningful, explainable security analysis without sending data outside the machine? It's since grown into an agentic assistant that reasons about a goal, picks its own read-only tools, correlates findings through a 10-rule deterministic engine, and can write and keep new tools for itself under human review. The model backend is swappable — a fully offline local model when that's the requirement, or a cloud API when it isn't — the agent loop, tools, and safety boundary work identically either way.",
+      "Every screen in the walkthrough below is a genuine render of kratos-mk2 — exported from a headless Textual pilot session driving the actual app (session chooser, idle screen, a scripted investigation, the approval gate, an evo-loop suggestion, the command palette, and /settings), the same technique the project's own test suite uses to verify the UI. None of it is a mockup.",
+      "The boundary is the whole point: every target-facing tool is read/observe-only, by design, exhaustively. Kratos investigates and recommends — it never executes state-changing actions on the monitored host. The self-writing tool loop (evo-loop) drafts a Python tool for a capability gap, sandbox-tests it in a no-network Incus container, and keeps it only after explicit human approval — no force-accept, ever.",
+      "The empirical result: across three adversarial thesis runs against a real gateway, Kratos connected a gateway lockout to an unrelated-looking internal auth burst and correctly inferred a lateral-movement pivot attempt — something a rule-only system would have reported as two disconnected alerts. Zero hallucinated claims across 12 evaluation queries in the thesis benchmark.",
     ],
     stages: [
-      'Session chooser ÔÇö recent investigations, filter-as-you-type, real data',
-      'kratos-mk2 idle screen ÔÇö live clock, context meter, target/mode/tools grid',
-      'A live investigation: tool calls ÔåÆ findings ÔåÆ the lateral-movement pivot Kratos catches',
-      'The approval gate ÔÇö every state-changing ask stops here; esc/n always denies',
+      'Session chooser — recent investigations, filter-as-you-type, real data',
+      'kratos-mk2 idle screen — live clock, context meter, target/mode/tools grid',
+      'A live investigation: tool calls → findings → the lateral-movement pivot Kratos catches',
+      'The approval gate — every state-changing ask stops here; esc/n always denies',
       'Evo-loop: Kratos proposes a new tool for a capability gap it just hit',
-      '/ command palette ÔÇö the full command surface, filter-as-you-type',
-      '/settings ÔÇö local vs. cloud model management, live from the actual app',
+      '/ command palette — the full command surface, filter-as-you-type',
+      '/settings — local vs. cloud model management, live from the actual app',
     ],
     stageDemos: [
       'demos/kratos-chooser.html',
@@ -332,28 +254,28 @@ const PROJECTS = [
   {
     id: 'ingen',
     name: 'InGen',
-    tagline: 'Full-Stack ┬À Self-hosted AI',
+    tagline: 'Full-Stack · Self-hosted AI',
     subtitle: 'AI-Powered AWS Infrastructure Compiler',
     tag: '',
-    stat: { value: '32', label: 'validation rules ┬À deterministic' },
-    oneliner: "A visual AWS architecture designer that validates against 32 rules, compiles to Terraform HCL with true bidirectional canvasÔåöcode sync, and layers on an AI architect backed by both a self-hosted 27B model and Gemini.",
+    stat: { value: '32', label: 'validation rules · deterministic' },
+    oneliner: "A visual AWS architecture designer that validates against 32 rules, compiles to Terraform HCL with true bidirectional canvas↔code sync, and layers on an AI architect backed by both a self-hosted 27B model and Gemini.",
     stack: ['Next.js','React','ReactFlow','Terraform','Monaco','Qwen3.6-27B-FP8','vLLM','Gemini','Vercel'],
     links: [
       { label: 'Live',   url: 'in-gen-five.vercel.app' },
       { label: 'GitHub', url: 'github.com/TahrimWalid/in-gen' },
     ],
     description: [
-      "InGen is a visual AWS architecture designer: you drag and connect components on a ReactFlow canvas, and the design is continuously checked against 32 deterministic validation rules that catch misconfigurations before they reach Terraform ÔÇö a dead-end API Gateway with no compute target, an orphaned Lambda with no trigger, unreserved concurrency, missing encryption. This layer runs entirely client-side with zero LLM calls, zero latency, and zero cost per check.",
-      "The canvas and the Terraform HCL stay in sync bidirectionally, not just canvas-to-code: dragging a component recompiles the HCL live in an embedded Monaco editor, and typing a new resource block directly into that editor parses it back and drops the matching node onto the canvas, validation and all. Neither side is the source of truth ÔÇö they're kept consistent by a shared compiler/parser pair running both directions.",
-      "The AI layer is provider-agnostic by design ÔÇö built and validated against a self-hosted Qwen3.6-27B-FP8 model served with vLLM, with first-class Gemini support for when a GPU server isn't the constraint. A plain-language prompt like 'DynamoDB storage, Cognito auth' becomes a fully wired, exportable architecture. Crucially, the validation engine doesn't trust the AI's output any more than a human's: AI-generated architectures get flagged for the same misconfigurations, and asking the assistant to fix them triggers a second generation pass that re-validates from scratch.",
+      "InGen is a visual AWS architecture designer: you drag and connect components on a ReactFlow canvas, and the design is continuously checked against 32 deterministic validation rules that catch misconfigurations before they reach Terraform — a dead-end API Gateway with no compute target, an orphaned Lambda with no trigger, unreserved concurrency, missing encryption. This layer runs entirely client-side with zero LLM calls, zero latency, and zero cost per check.",
+      "The canvas and the Terraform HCL stay in sync bidirectionally, not just canvas-to-code: dragging a component recompiles the HCL live in an embedded Monaco editor, and typing a new resource block directly into that editor parses it back and drops the matching node onto the canvas, validation and all. Neither side is the source of truth — they're kept consistent by a shared compiler/parser pair running both directions.",
+      "The AI layer is provider-agnostic by design — built and validated against a self-hosted Qwen3.6-27B-FP8 model served with vLLM, with first-class Gemini support for when a GPU server isn't the constraint. A plain-language prompt like 'DynamoDB storage, Cognito auth' becomes a fully wired, exportable architecture. Crucially, the validation engine doesn't trust the AI's output any more than a human's: AI-generated architectures get flagged for the same misconfigurations, and asking the assistant to fix them triggers a second generation pass that re-validates from scratch.",
       "Built with Next.js and React, deployed on Vercel.",
     ],
     stages: [
-      'Dragging & connecting components ÔÇö validation catches a dead-end API Gateway',
+      'Dragging & connecting components — validation catches a dead-end API Gateway',
       'Architecture compiling live to Terraform HCL in Monaco',
-      'Typing HCL directly ÔÇö the canvas syncs back and validation clears',
+      'Typing HCL directly — the canvas syncs back and validation clears',
       'AI Architect generating a full stack from a plain-language prompt',
-      'AI iterating on feedback ÔÇö validation still catches a residual issue',
+      'AI iterating on feedback — validation still catches a residual issue',
     ],
     stageDemos: [
       'demos/ingen-connect.html',
@@ -376,12 +298,12 @@ const PROJECTS = [
     description: [
       "Career AI is a five-phase ETL pipeline for the Finnish IT job market. After discovering the underlying job-board API through DevTools inspection, it scraped roughly 2,000 postings, reaching 96.7% hydration and 100% LLM extraction success across the dataset.",
       "Request throttling is handled by an adaptive backoff strategy that eases off when the source pushes back and accelerates when it doesn't. A local Qwen 2.5 3B model running via Ollama parses each posting into structured fields validated with Pydantic.",
-      "The most interesting finding was methodological: a single bias metric swung from 5% to 82.5% to 4.5% depending on how it was computed ÔÇö a reminder that the measurement can manufacture the result. Output ships as an interactive HTML report with Chart.js visualizations.",
+      "The most interesting finding was methodological: a single bias metric swung from 5% to 82.5% to 4.5% depending on how it was computed — a reminder that the measurement can manufacture the result. Output ships as an interactive HTML report with Chart.js visualizations.",
     ],
     stages: [
       'Pipeline running all 5 phases',
       'Adaptive backoff triggering',
-      'Bias metric swing visualization (5% ÔåÆ 82.5% ÔåÆ 4.5%)',
+      'Bias metric swing visualization (5% → 82.5% → 4.5%)',
       'Interactive HTML report output',
     ],
     stageDemos: [
@@ -397,14 +319,14 @@ const PROJECTS = [
     tagline: 'Systems Tooling',
     subtitle: 'Windows Battery Telemetry & Process Audit Dashboard',
     tag: 'Systems Tooling',
-    stat: { value: '0', label: 'external deps ┬À fully offline' },
-    oneliner: "A pure-PowerShell battery and process transparency tool ÔÇö live WMI telemetry every 2 seconds, Authenticode verification, parent-chain anomaly detection, and autorun diffing, all rendered in a self-contained browser dashboard with no install, no server, and no network calls ever.",
+    stat: { value: '0', label: 'external deps · fully offline' },
+    oneliner: "A pure-PowerShell battery and process transparency tool — live WMI telemetry every 2 seconds, Authenticode verification, parent-chain anomaly detection, and autorun diffing, all rendered in a self-contained browser dashboard with no install, no server, and no network calls ever.",
     stack: ['PowerShell', 'WMI', 'Chart.js', 'HTML'],
     links: [{ label: 'GitHub', url: 'github.com/TahrimWalid/BatteryTracker' }],
     description: [
-      "BatteryTracker is two dashboards in one browser tab ÔÇö implemented entirely in PowerShell with no dependencies beyond what ships with Windows. Drop the folder on your Desktop, run one script, open Dashboard.html in any browser. Chart.js and JetBrains Mono are bundled locally; everything else comes with the OS. No npm install, no Python environment, no server process.",
-      "The Battery Logger polls WMI every 2 seconds ÔÇö signed power rate, battery percentage, foreground window, and per-process CPU deltas ÔÇö writing to flat JS files that the dashboard reads by injecting script tags. The live chart plots a dual-axis view (discharge rate in green, battery percentage in amber) with per-process energy attribution computed from discharge rate ├ù elapsed foreground time.",
-      "The Process Auditor runs a full census every 5 seconds: Authenticode signature verification cached per executable path, parent-child lineage checked against a suspicious-pair ruleset (Word ÔåÆ PowerShell, browser ÔåÆ cmd.exe), TCP connections mapped per PID, and autoruns diffed across four persistence vectors every 5 minutes. The dashboard DOM updates by keyed PID diff ÔÇö no full rebuilds, no flicker.",
+      "BatteryTracker is two dashboards in one browser tab — implemented entirely in PowerShell with no dependencies beyond what ships with Windows. Drop the folder on your Desktop, run one script, open Dashboard.html in any browser. Chart.js and JetBrains Mono are bundled locally; everything else comes with the OS. No npm install, no Python environment, no server process.",
+      "The Battery Logger polls WMI every 2 seconds — signed power rate, battery percentage, foreground window, and per-process CPU deltas — writing to flat JS files that the dashboard reads by injecting script tags. The live chart plots a dual-axis view (discharge rate in green, battery percentage in amber) with per-process energy attribution computed from discharge rate × elapsed foreground time.",
+      "The Process Auditor runs a full census every 5 seconds: Authenticode signature verification cached per executable path, parent-child lineage checked against a suspicious-pair ruleset (Word → PowerShell, browser → cmd.exe), TCP connections mapped per PID, and autoruns diffed across four persistence vectors every 5 minutes. The dashboard DOM updates by keyed PID diff — no full rebuilds, no flicker.",
     ],
     stages: [
       'Launching both trackers (single PS command, no install)',
@@ -420,6 +342,213 @@ const PROJECTS = [
     ],
   },
 ];
+
+// ── State ──────────────────────────────────────────────────────────────────
+const state = { route: 'home', projectId: null, theme: 'dark' };
+
+// ── Particles ──────────────────────────────────────────────────────────────
+let pRaf = null, pCanvas = null, pCtx = null, pParts = [];
+let pW = 0, pH = 0, pDpr = 1;
+let pColor = 'rgba(0,255,65,0.45)', pAccent = '#00ff41';
+const mouse = { x: -9999, y: -9999 };
+let preResizeFn = null, pMoveFn = null, pLeaveFn = null;
+
+function refreshParticleColor() {
+  try {
+    const cs = getComputedStyle(document.getElementById('app') || document.body);
+    pColor = cs.getPropertyValue('--particle').trim();
+    pAccent = cs.getPropertyValue('--accent').trim();
+  } catch (e) {}
+}
+
+function stopParticles() {
+  if (pRaf) { cancelAnimationFrame(pRaf); pRaf = null; }
+  if (preResizeFn) { window.removeEventListener('resize', preResizeFn); preResizeFn = null; }
+  if (pMoveFn)  { window.removeEventListener('mousemove', pMoveFn); pMoveFn = null; }
+  if (pLeaveFn) { window.removeEventListener('mouseout', pLeaveFn); pLeaveFn = null; }
+  pCanvas = null;
+}
+
+function setupParticles() {
+  const canvas = document.getElementById('hero-particles');
+  if (state.route !== 'home' || !canvas) { stopParticles(); return; }
+  if (pCanvas === canvas) return;
+  pCanvas = canvas;
+  pCtx = canvas.getContext('2d');
+  refreshParticleColor();
+
+  const resize = () => {
+    const rect = canvas.getBoundingClientRect();
+    pDpr = Math.min(window.devicePixelRatio || 1, 2);
+    pW = rect.width; pH = rect.height;
+    canvas.width = pW * pDpr; canvas.height = pH * pDpr;
+    pCtx.setTransform(pDpr, 0, 0, pDpr, 0, 0);
+    const count = Math.max(34, Math.min(115, Math.floor(pW * pH / 9500)));
+    pParts = Array.from({ length: count }, () => ({
+      x: Math.random() * pW, y: Math.random() * pH,
+      vx: (Math.random() - 0.5) * 0.32, vy: (Math.random() - 0.5) * 0.32,
+    }));
+  };
+  resize();
+  if (preResizeFn) window.removeEventListener('resize', preResizeFn);
+  preResizeFn = resize;
+  window.addEventListener('resize', resize);
+
+  if (pMoveFn) window.removeEventListener('mousemove', pMoveFn);
+  if (pLeaveFn) window.removeEventListener('mouseout', pLeaveFn);
+  pMoveFn = e => { const r = canvas.getBoundingClientRect(); mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top; };
+  pLeaveFn = () => { mouse.x = -9999; mouse.y = -9999; };
+  window.addEventListener('mousemove', pMoveFn);
+  window.addEventListener('mouseout', pLeaveFn);
+
+  const draw = () => {
+    if (pCanvas !== canvas) return;
+    pCtx.clearRect(0, 0, pW, pH);
+    const col = pColor || 'rgba(0,255,65,0.45)';
+    const acc = pAccent || '#00ff41';
+    for (let i = 0; i < pParts.length; i++) {
+      const p = pParts[i];
+      const dx = p.x - mouse.x, dy = p.y - mouse.y, d2 = dx * dx + dy * dy;
+      if (d2 < 16000) { const d = Math.sqrt(d2) || 1; const f = (130 - d) / 130; p.vx += dx / d * f * 0.25; p.vy += dy / d * f * 0.25; }
+      p.x += p.vx; p.y += p.vy;
+      p.vx *= 0.985; p.vy *= 0.985;
+      if (Math.abs(p.vx) < 0.05) p.vx += (Math.random() - 0.5) * 0.05;
+      if (Math.abs(p.vy) < 0.05) p.vy += (Math.random() - 0.5) * 0.05;
+      if (p.x < 0 || p.x > pW) p.vx *= -1;
+      if (p.y < 0 || p.y > pH) p.vy *= -1;
+      p.x = Math.max(0, Math.min(pW, p.x)); p.y = Math.max(0, Math.min(pH, p.y));
+      pCtx.beginPath(); pCtx.arc(p.x, p.y, 1.5, 0, 7); pCtx.fillStyle = col; pCtx.fill();
+    }
+    for (let i = 0; i < pParts.length; i++) {
+      for (let j = i + 1; j < pParts.length; j++) {
+        const a = pParts[i], b = pParts[j];
+        const dx = a.x - b.x, dy = a.y - b.y, dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 118) {
+          pCtx.globalAlpha = (1 - dist / 118) * 0.5;
+          pCtx.strokeStyle = col; pCtx.lineWidth = 0.6;
+          pCtx.beginPath(); pCtx.moveTo(a.x, a.y); pCtx.lineTo(b.x, b.y); pCtx.stroke();
+        }
+      }
+    }
+    if (mouse.x > -9000) {
+      for (let i = 0; i < pParts.length; i++) {
+        const a = pParts[i];
+        const dx = a.x - mouse.x, dy = a.y - mouse.y, dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 165) {
+          pCtx.globalAlpha = (1 - dist / 165) * 0.75;
+          pCtx.strokeStyle = acc; pCtx.lineWidth = 0.8;
+          pCtx.beginPath(); pCtx.moveTo(a.x, a.y); pCtx.lineTo(mouse.x, mouse.y); pCtx.stroke();
+        }
+      }
+    }
+    pCtx.globalAlpha = 1;
+    pRaf = requestAnimationFrame(draw);
+  };
+  pRaf = requestAnimationFrame(draw);
+}
+
+// ── Scroll reveal ──────────────────────────────────────────────────────────
+function tweenReveal(el, delay) {
+  if (el._tweening) return;
+  el._tweening = true;
+  const dur = 620, dist = 26;
+  const begin = performance.now() + delay;
+  const ease = t => 1 - Math.pow(1 - t, 3);
+  const step = now => {
+    const t = Math.min(1, Math.max(0, (now - begin) / dur));
+    const e = ease(t);
+    el.style.opacity = String(e);
+    el.style.transform = `translateY(${dist * (1 - e)}px)`;
+    if (t < 1) requestAnimationFrame(step);
+    else { el.style.opacity = ''; el.style.transform = ''; el.style.willChange = 'auto'; }
+  };
+  requestAnimationFrame(step);
+}
+
+function observeReveals() {
+  const vh = window.innerHeight || 800;
+  let i = 0;
+  document.querySelectorAll('[data-reveal]:not(.is-visible)').forEach(el => {
+    if (el.getBoundingClientRect().top < vh * 0.92) {
+      el.classList.add('is-visible');
+      tweenReveal(el, Math.min(i++ * 100, 600));
+    }
+  });
+}
+
+function revealAll() {
+  let i = 0;
+  document.querySelectorAll('[data-reveal]:not(.is-visible)').forEach(el => {
+    el.classList.add('is-visible');
+    tweenReveal(el, Math.min(i++ * 90, 500));
+  });
+}
+
+function enterPages() {
+  document.querySelectorAll('[data-page]:not([data-entered])').forEach(el => {
+    el.setAttribute('data-entered', '');
+    el.style.transform = 'translateY(12px)';
+    requestAnimationFrame(() => requestAnimationFrame(() => { el.style.transform = 'none'; }));
+  });
+}
+
+// ── Theme ──────────────────────────────────────────────────────────────────
+function applyTheme(t) {
+  const app = document.getElementById('app');
+  if (app) app.setAttribute('data-theme', t);
+  document.body.setAttribute('data-theme', t);
+  const lbl = document.getElementById('theme-label');
+  if (lbl) lbl.textContent = t;
+}
+
+function toggleTheme() {
+  const t = state.theme === 'dark' ? 'light' : 'dark';
+  state.theme = t;
+  applyTheme(t);
+  try { localStorage.setItem('wt-theme', t); } catch (e) {}
+  refreshParticleColor();
+}
+
+// ── Nav ────────────────────────────────────────────────────────────────────
+function updateNav() {
+  const map = { home:'home', about:'about', projects:'projects', project:'projects', contact:'contact' };
+  const active = map[state.route];
+  document.querySelectorAll('[data-route]').forEach(a => {
+    const on = a.getAttribute('data-route') === active;
+    if (on) a.setAttribute('data-active', ''); else a.removeAttribute('data-active');
+    const bar = a.querySelector('[data-bar]');
+    if (bar) bar.style.opacity = on ? '1' : '0';
+  });
+  const lbl = document.getElementById('theme-label');
+  if (lbl) lbl.textContent = state.theme;
+}
+
+// ── Router ─────────────────────────────────────────────────────────────────
+function onHash() {
+  const navLinks = document.getElementById('nav-links');
+  const burger = document.getElementById('nav-burger');
+  if (navLinks && navLinks.classList.contains('open')) {
+    navLinks.classList.remove('open');
+    if (burger) burger.setAttribute('aria-expanded', 'false');
+  }
+  const raw = (location.hash || '').replace(/^#\/?/, '');
+  const parts = raw.split('/').filter(Boolean);
+  let route = 'home', projectId = null;
+  if (parts[0] === 'about') route = 'about';
+  else if (parts[0] === 'projects') {
+    if (parts[1]) { route = 'project'; projectId = parts[1]; }
+    else route = 'projects';
+  } else if (parts[0] === 'contact') route = 'contact';
+  if (route === 'project' && !PROJECTS.find(p => p.id === projectId)) {
+    route = 'projects'; projectId = null;
+  }
+  state.route = route;
+  state.projectId = projectId;
+  window.scrollTo({ top: 0, left: 0 });
+  render();
+}
+
+// ── Templates ──────────────────────────────────────────────────────────────
 const PROJECT_ICONS = {
   oppipolku: '<svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="16" width="46" height="13" rx="2" stroke="currentColor" stroke-width="1.5"/><rect x="10" y="36" width="46" height="13" rx="2" stroke="currentColor" stroke-width="1.5"/><rect x="10" y="56" width="46" height="13" rx="2" stroke="currentColor" stroke-width="1.5"/><circle cx="18" cy="22.5" r="2" fill="currentColor"/><circle cx="18" cy="42.5" r="2" fill="currentColor"/><circle cx="18" cy="62.5" r="2" fill="currentColor"/><line x1="56" y1="20" x2="82" y2="12" stroke="currentColor" stroke-width="1.2"/><line x1="56" y1="25" x2="82" y2="28" stroke="currentColor" stroke-width="1.2"/><line x1="56" y1="40" x2="82" y2="36" stroke="currentColor" stroke-width="1.2"/><line x1="56" y1="46" x2="82" y2="50" stroke="currentColor" stroke-width="1.2"/><line x1="56" y1="60" x2="82" y2="60" stroke="currentColor" stroke-width="1.2"/><line x1="56" y1="65" x2="82" y2="72" stroke="currentColor" stroke-width="1.2"/><circle cx="82" cy="12" r="2.5" stroke="currentColor" stroke-width="1.5"/><circle cx="82" cy="28" r="2.5" stroke="currentColor" stroke-width="1.5"/><circle cx="82" cy="36" r="2.5" stroke="currentColor" stroke-width="1.5"/><circle cx="82" cy="50" r="2.5" stroke="currentColor" stroke-width="1.5"/><circle cx="82" cy="60" r="2.5" stroke="currentColor" stroke-width="1.5"/><circle cx="82" cy="72" r="2.5" stroke="currentColor" stroke-width="1.5"/></svg>',
   kratos: '<svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M48 8 L82 22 L82 52 Q82 74 48 88 Q14 74 14 52 L14 22 Z" stroke="currentColor" stroke-width="1.5"/><rect x="30" y="38" width="36" height="24" rx="2" stroke="currentColor" stroke-width="1.5"/><line x1="30" y1="46" x2="66" y2="46" stroke="currentColor" stroke-width="1"/><line x1="34" y1="53" x2="44" y2="53" stroke="currentColor" stroke-width="1.5"/><line x1="46" y1="53" x2="49" y2="53" stroke="currentColor" stroke-width="2.5"/></svg>',
@@ -427,6 +556,13 @@ const PROJECT_ICONS = {
   'career-ai': '<svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="30" width="14" height="50" rx="2" stroke="currentColor" stroke-width="1.5"/><rect x="28" y="42" width="14" height="38" rx="2" stroke="currentColor" stroke-width="1.5"/><rect x="48" y="18" width="14" height="62" rx="2" stroke="currentColor" stroke-width="1.5"/><rect x="68" y="36" width="14" height="44" rx="2" stroke="currentColor" stroke-width="1.5"/><line x1="6" y1="82" x2="84" y2="82" stroke="currentColor" stroke-width="1.5"/><line x1="6" y1="82" x2="6" y2="14" stroke="currentColor" stroke-width="1.5"/></svg>',
   'batterytracker': '<svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="26" width="72" height="44" rx="7" stroke="currentColor" stroke-width="5"/><rect x="78" y="37" width="12" height="22" rx="4" fill="currentColor"/><polyline points="16,48 26,48 33,28 41,68 50,32 56,54 63,48 74,48" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
 };
+
+const num = i => String(i + 1).padStart(2, '0');
+
+// One icon family (simpleicons.org, flat single-color marks) everywhere it has
+// coverage. skillicons.dev is kept only for the handful of vendor/OS logos
+// simpleicons doesn't carry at all (AWS, Azure, VS Code, PowerShell, Windows) --
+// a hard coverage gap, not a stylistic choice.
 const TECH_ICONS = {
   'Python':                 'https://cdn.simpleicons.org/python/3776AB',
   'Linux':                  'https://cdn.simpleicons.org/linux/FCC624',
@@ -472,362 +608,409 @@ const TECH_ICONS = {
   'Gemini':                 'https://cdn.simpleicons.org/googlegemini/8E75B2',
 };
 
-// Router State
-const state = { route: 'home', projectId: null };
-
-function techBadge(t) {
+function techPill(t, bg, size, pad) {
+  bg  = bg   || 'var(--bg)';
+  size = size || '0.7rem';
+  pad  = pad  || '5px 10px';
   const src = TECH_ICONS[t];
-  const img = src ? `<img src="${src}" width="14" height="14" style="border-radius:2px;">` : '';
-  return `<span class="tech-pill">${img}${t}</span>`;
+  const img = src ? '<img src="' + src + '" width="14" height="14" style="border-radius:3px;flex-shrink:0" loading="lazy" onerror="this.style.display=\'none\'">' : '';
+  return '<span style="display:inline-flex;align-items:center;gap:' + (src ? '6px' : '0') + ';font-family:var(--font-mono);font-size:' + size + ';padding:' + pad + ';border:1px solid var(--border);border-radius:var(--radius);color:var(--text-dim);background:' + bg + '">' + img + t + '</span>';
 }
 
 function renderHome() {
-  return `
-    <div class="container">
-      <div class="reveal" style="padding-top: 6vh; padding-bottom: 10vh;">
-        <div class="status-pill">
-          <div class="status-dot"></div>
+  const cards = PROJECTS.map((p, i) => `
+    <a href="#/projects/${p.id}" data-reveal class="card-link" style="position:relative">
+      <div style="position:absolute;top:14px;right:14px;color:var(--accent);opacity:0.1;pointer-events:none;width:58px;flex-shrink:0">
+        ${PROJECT_ICONS[p.id] || ''}
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;font-family:var(--font-mono);font-size:0.72rem">
+        <span style="color:var(--accent)">${num(i)}</span>
+        ${p.tag ? `<span style="font-family:var(--font-mono);font-size:0.68rem;font-weight:700;background:var(--accent);color:var(--on-accent);border-radius:99px;padding:3px 10px;white-space:nowrap;letter-spacing:0.02em">${p.tag}</span>` : ''}
+      </div>
+      <div>
+        <h3 style="margin:0;font-size:1.35rem;font-weight:600;letter-spacing:-0.02em">${p.name}</h3>
+        <p style="margin:5px 0 0;font-family:var(--font-mono);font-size:0.76rem;color:var(--text-dim)">${p.subtitle}</p>
+      </div>
+      <p style="margin:0;font-size:0.93rem;line-height:1.6;color:var(--text-dim)">${p.oneliner}</p>
+      <div style="display:flex;align-items:baseline;gap:7px;padding-top:10px;border-top:1px solid var(--border)">
+        <span style="font-family:var(--font-mono);font-size:1.45rem;font-weight:700;color:var(--accent);letter-spacing:-0.03em;line-height:1">${p.stat.value}</span>
+        <span style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-dim)">${p.stat.label}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:0.74rem;color:var(--accent)">view project <span>→</span></div>
+    </a>`).join('');
+
+  return `<section data-page>
+    <div style="position:relative;min-height:calc(100vh - var(--nav-h));display:flex;align-items:center;overflow:hidden;padding:clamp(40px,6vw,80px) clamp(18px,5vw,48px)">
+      <canvas id="hero-particles" style="position:absolute;inset:0;width:100%;height:100%;z-index:0"></canvas>
+      <div style="position:absolute;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 70% 55% at 50% 0%,var(--accent-soft),transparent 70%)"></div>
+      <div style="position:relative;z-index:1;width:100%;max-width:var(--maxw);margin:0 auto">
+        <div style="display:inline-flex;align-items:center;gap:9px;font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.04em;color:var(--text-dim);border:1px solid var(--border);border-radius:99px;padding:6px 13px;margin-bottom:var(--space-md);white-space:nowrap">
+          <span style="width:7px;height:7px;border-radius:50%;background:var(--accent);animation:pulse 2.4s var(--ease) infinite"></span>
           AVAILABLE FOR HIRE · TAMPERE, FI
         </div>
-        <h1 class="display-title">WALID<br>HASSAN.</h1>
-        <div class="subtitle" id="typewriter"></div>
-        <p class="text-body" style="margin-bottom: 40px; font-size: 1.25rem;">
-          Engineering at the edge of the stack. Building high-performance backend systems, local AI pipelines, and cloud infrastructure that works in the real world.
-        </p>
-        <div style="display: flex; gap: 20px; flex-wrap: wrap;">
-          <a href="#/projects" class="btn btn-primary">Explore Work</a>
-          <a href="#/about" class="btn btn-secondary">About Me</a>
-        </div>
-      </div>
-
-      <div class="reveal" style="margin-top: 100px;">
-        <h2 style="font-family: var(--font-display); font-size: 2.5rem; margin-bottom: 40px;">Featured Engineering</h2>
-        <div class="bento-grid">
-          ${PROJECTS.slice(0, 3).map((p, i) => `
-            <div class="glass-card ${i === 0 ? 'col-span-12' : 'col-span-6'}" style="display: flex; flex-direction: ${i===0 ? 'row' : 'column'}; gap: 40px; align-items: ${i===0 ? 'center' : 'flex-start'}; cursor: pointer;" onclick="location.hash='#/projects/${p.id}'">
-              <div style="flex: 1;">
-                <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px;">
-                  ${p.tag ? `<span class="project-tag">${p.tag}</span>` : ''}
-                  <span style="font-family: var(--font-mono); color: var(--text-faint);">0${i+1}</span>
-                </div>
-                <h3 style="font-family: var(--font-display); font-size: ${i===0 ? '3rem' : '2rem'}; margin-bottom: 12px;">${p.name}</h3>
-                <p style="font-family: var(--font-mono); color: var(--accent); margin-bottom: 20px;">${p.subtitle}</p>
-                <p style="color: var(--text-dim); line-height: 1.6; margin-bottom: 30px; font-size: 1.05rem;">${p.oneliner}</p>
-                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                  ${p.stack.slice(0,4).map(t => techBadge(t)).join('')}
-                  ${p.stack.length > 4 ? `<span class="tech-pill">+${p.stack.length - 4}</span>` : ''}
-                </div>
-              </div>
-              ${i === 0 && p.stageDemos[0] ? `
-                <div style="flex: 1; min-width: 300px; width: 100%;">
-                  <div class="demo-frame-wrapper" style="pointer-events: none; margin:0; box-shadow: 0 30px 60px rgba(0,0,0,0.5); transform: perspective(1000px) rotateY(-5deg) rotateX(5deg);">
-                    <iframe src="${p.stageDemos[0]}"></iframe>
-                  </div>
-                </div>
-              ` : `
-                <div style="position: absolute; right: -20px; bottom: -20px; opacity: 0.05; width: 200px; pointer-events: none;">
-                  ${PROJECT_ICONS[p.id] || ''}
-                </div>
-              `}
-            </div>
-          `).join('')}
-        </div>
-        <div style="text-align: center; margin-top: 60px;">
-          <a href="#/projects" class="btn btn-secondary" style="border-color: var(--border);">View All Projects</a>
+        <h1 style="margin:0;font-size:var(--fs-display);font-weight:600;line-height:1.02;letter-spacing:-0.035em;background:linear-gradient(105deg,var(--accent) 0%,var(--text) 52%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Walid Hassan<br>Tahrim</h1>
+        <p style="margin:var(--space-md) 0 4px;font-family:var(--font-mono);font-size:0.95rem;color:var(--accent);font-weight:500"><span id="home-role"></span><span style="display:inline-block;width:9px;height:1.1em;background:var(--accent);margin-left:2px;vertical-align:-2px;animation:blink 1.1s step-end infinite"></span></p>
+        <p style="margin:0 0 var(--space-md);font-family:var(--font-mono);font-size:0.82rem;color:var(--text-faint);letter-spacing:0.01em">Backend · Cloud · Edge AI · Local LLM Infrastructure</p>
+        <p style="margin:0 0 var(--space-lg);max-width:46ch;color:var(--text-dim);font-size:1.02rem;line-height:1.7">Software Engineering graduate from Tampere University of Applied Sciences. I build backend systems, cloud infrastructure, and local AI pipelines — work that sits at the intersection of data engineering, cloud architecture, and on-device AI, with a focus on things that work in the real world, not just in demos.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:14px">
+          <a href="#/projects" class="btn-primary">view projects <span>→</span></a>
+          <a href="#/contact" class="btn-secondary">get in touch</a>
         </div>
       </div>
     </div>
-  `;
-}
 
-function renderProjects() {
-  return `
-    <div class="container">
-      <div class="reveal" style="margin-bottom: 80px;">
-        <h1 class="display-title" style="font-size: clamp(2.5rem, 6vw, 5rem);">SYSTEMS<br>& PIPELINES.</h1>
-        <p class="text-body" style="font-size: 1.2rem;">Architectures shipped against real constraints — agentic boundaries, self-hosted models, scraped data at scale, and pure offline tooling.</p>
+    <div style="max-width:var(--maxw);margin:0 auto;padding:var(--space-2xl) clamp(18px,5vw,48px)">
+      <div data-reveal style="display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:14px;margin-bottom:var(--space-lg)">
+        <h2 style="margin:0;font-size:var(--fs-h2);font-weight:600;letter-spacing:-0.03em"><span style="font-family:var(--font-mono);font-size:0.7em;color:var(--accent);margin-right:10px">//</span>Selected work</h2>
+        <a href="#/projects" class="dim-link" style="font-family:var(--font-mono);font-size:0.8rem">all projects →</a>
       </div>
-
-      <div class="bento-grid">
-        ${PROJECTS.map((p, i) => `
-          <div class="glass-card col-span-12 reveal" style="display: grid; grid-template-columns: 1fr 2fr; gap: 60px; padding: 60px;">
-            <div>
-              <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px;">
-                <span style="font-family: var(--font-mono); font-size: 1.5rem; color: var(--accent);">0${i+1}</span>
-                ${p.tag ? `<span class="project-tag">${p.tag}</span>` : ''}
-              </div>
-              <h2 style="font-family: var(--font-display); font-size: 3rem; margin-bottom: 12px; line-height: 1.1;">${p.name}</h2>
-              <p style="font-family: var(--font-mono); color: var(--accent); margin-bottom: 30px;">${p.subtitle}</p>
-              
-              <div style="margin-bottom: 40px;">
-                <div style="font-family: var(--font-display); font-size: 2.5rem; font-weight: 700; color: #fff;">${p.stat.value}</div>
-                <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-faint); text-transform: uppercase;">${p.stat.label}</div>
-              </div>
-
-              <a href="#/projects/${p.id}" class="btn btn-secondary" style="padding: 12px 24px; font-size: 0.8rem;">Deep Dive →</a>
-            </div>
-            
-            <div style="display: flex; flex-direction: column; justify-content: space-between;">
-              <p style="font-size: 1.15rem; color: var(--text-dim); line-height: 1.8; margin-bottom: 30px;">${p.oneliner}</p>
-              <div>
-                <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-faint); margin-bottom: 16px; text-transform: uppercase;">Tech Stack</div>
-                <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-                  ${p.stack.map(t => techBadge(t)).join('')}
-                </div>
-              </div>
-            </div>
-          </div>
-        `).join('')}
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:var(--space-md)">
+        ${cards}
       </div>
     </div>
-  `;
-}
-
-function renderProjectDetail() {
-  const p = PROJECTS.find(p => p.id === state.projectId) || PROJECTS[0];
-  
-  return `
-    <div class="container">
-      <a href="#/projects" style="font-family: var(--font-mono); color: var(--text-dim); display: inline-block; margin-bottom: 40px; transition: color 0.3s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-dim)'">← Back to Projects</a>
-      
-      <div class="reveal" style="margin-bottom: 60px;">
-        ${p.tag ? `<span class="project-tag" style="margin-bottom: 20px; display: inline-block;">${p.tag}</span>` : ''}
-        <h1 class="display-title" style="font-size: clamp(3rem, 7vw, 6rem);">${p.name.toUpperCase()}</h1>
-        <p style="font-family: var(--font-mono); font-size: 1.2rem; color: var(--accent); margin-bottom: 40px;">${p.subtitle}</p>
-        
-        <div style="display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 40px;">
-          ${p.links.map(l => `
-            <a href="https://${l.url}" target="_blank" class="btn btn-secondary" style="padding: 10px 20px; font-size: 0.8rem;">
-              ${l.label} ↗
-            </a>
-          `).join('')}
-        </div>
-      </div>
-
-      <div class="bento-grid reveal">
-        <div class="col-span-8 glass-card" style="padding: 50px;">
-          <h3 style="font-family: var(--font-display); font-size: 1.5rem; margin-bottom: 24px;">Architecture & Overview</h3>
-          ${p.description.map(d => `<p style="color: var(--text-dim); font-size: 1.1rem; line-height: 1.8; margin-bottom: 24px;">${d}</p>`).join('')}
-          ${p.note ? `
-            <div style="background: rgba(0, 255, 163, 0.05); border-left: 3px solid var(--accent); padding: 20px; border-radius: 4px; font-family: var(--font-mono); font-size: 0.9rem; color: var(--text);">
-              ${p.note}
-            </div>
-          ` : ''}
-        </div>
-        
-        <div class="col-span-4" style="display: flex; flex-direction: column; gap: 24px;">
-          <div class="glass-card" style="padding: 40px;">
-            <h3 style="font-family: var(--font-display); font-size: 1.5rem; margin-bottom: 24px;">Stack</h3>
-            <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-              ${p.stack.map(t => techBadge(t)).join('')}
-            </div>
-          </div>
-          <div class="glass-card" style="padding: 40px; background: linear-gradient(135deg, rgba(123, 97, 255, 0.1), transparent);">
-            <div style="font-family: var(--font-display); font-size: 3rem; font-weight: 700; color: var(--text);">${p.stat.value}</div>
-            <div style="font-family: var(--font-mono); font-size: 0.9rem; color: var(--accent); text-transform: uppercase;">${p.stat.label}</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="reveal" style="margin-top: 80px;">
-        <h2 style="font-family: var(--font-display); font-size: 2.5rem; margin-bottom: 40px;">System Walkthrough</h2>
-        <div class="bento-grid">
-          ${p.stages.map((s, i) => `
-            <div class="glass-card col-span-6" style="padding: 30px;">
-              <div style="display: flex; gap: 12px; align-items: flex-start; margin-bottom: 20px;">
-                <span style="font-family: var(--font-mono); color: var(--accent);">0${i+1}</span>
-                <h4 style="font-size: 1.1rem; line-height: 1.5;">${s}</h4>
-              </div>
-              ${p.stageDemos[i] ? `
-                <div class="demo-frame-wrapper">
-                  <iframe src="${p.stageDemos[i]}" loading="lazy"></iframe>
-                </div>
-              ` : `
-                <div class="demo-frame-wrapper" style="display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.02); border-style: dashed;">
-                  <span style="font-family: var(--font-mono); color: var(--text-faint);">[ Demo Missing ]</span>
-                </div>
-              `}
-            </div>
-          `).join('')}
-        </div>
-      </div>
-    </div>
-  `;
+  </section>`;
 }
 
 function renderAbout() {
-  return `
-    <div class="container">
-      <div class="reveal" style="margin-bottom: 80px;">
-        <h1 class="display-title" style="font-size: clamp(3rem, 7vw, 6rem);">ENGINEERING<br>AT THE EDGE.</h1>
+  const skillCards = SKILLS.map(g => `
+    <div data-reveal class="skill-card">
+      <h3 style="margin:0 0 16px;font-family:var(--font-mono);font-size:0.82rem;font-weight:500;color:var(--accent);letter-spacing:0.02em">${g.cat}</h3>
+      <div style="display:flex;flex-wrap:wrap;gap:8px">
+        ${g.items.map(item => `<span style="font-family:var(--font-mono);font-size:0.72rem;padding:6px 11px;border:1px solid var(--border);border-radius:var(--radius);color:var(--text-dim);background:var(--bg)">${item}</span>`).join('')}
       </div>
+    </div>`).join('');
 
-      <div class="bento-grid">
-        <div class="glass-card col-span-7 reveal" style="padding: 50px;">
-          <p style="font-size: 1.15rem; color: var(--text-dim); line-height: 1.8; margin-bottom: 24px;">
-            I graduated from <span style="color: #fff;">TAMK in May 2026</span> with a Bachelor's in Software Engineering. Over the past year I've built five projects spanning agentic AI security tooling, ETL pipelines that surface algorithmic bias in job markets, AI-driven cloud infrastructure compilers, a course benchmarking platform that won <span style="color: #fff;">€5,000 in institutional funding</span>, and zero-dependency Windows systems tooling.
-          </p>
-          <p style="font-size: 1.15rem; color: var(--text-dim); line-height: 1.8;">
-            I'm actively pursuing <span style="color: var(--accent);">AZ-104 (Azure Administrator Associate)</span> and targeting backend, cloud, and data engineering roles in Finland. I work well at the edges of a stack — the parts where data moves, infrastructure gets provisioned, and models run, whether that's a self-hosted model on-device or a cloud API.
-          </p>
-        </div>
+  return `<section data-page style="max-width:var(--maxw);margin:0 auto;padding:var(--space-2xl) clamp(18px,5vw,48px)">
+    <span data-reveal style="display:block;font-family:var(--font-mono);font-size:0.78rem;color:var(--accent);margin-bottom:var(--space-sm)">// about</span>
+    <h1 data-reveal style="margin:0 0 var(--space-lg);font-size:var(--fs-h1);font-weight:600;letter-spacing:-0.03em;max-width:18ch">Engineering at the edges of the stack.</h1>
 
-        <div class="glass-card col-span-5 reveal" style="padding: 0; background: #050508;">
-          <div class="terminal" style="border: none; border-radius: 24px; box-shadow: none; height: 100%;">
-            <div class="terminal-header">
-              <div class="terminal-dot" style="background: #FF5F56;"></div>
-              <div class="terminal-dot" style="background: #FFBD2E;"></div>
-              <div class="terminal-dot" style="background: #27C93F;"></div>
-              <span style="margin-left: 10px; font-size: 0.75rem; color: var(--text-faint);">walid@tahrim: ~</span>
-            </div>
-            <div class="terminal-body" id="term-body"></div>
-          </div>
-        </div>
-
-        <div class="col-span-12 reveal" style="margin-top: 40px;">
-          <h2 style="font-family: var(--font-display); font-size: 2rem; margin-bottom: 30px;">Technical Arsenal</h2>
-          <div class="bento-grid">
-            ${SKILLS.map(g => `
-              <div class="glass-card col-span-4" style="padding: 30px;">
-                <h3 style="font-family: var(--font-mono); color: var(--accent); margin-bottom: 20px; font-size: 0.9rem; text-transform: uppercase;">${g.cat}</h3>
-                <div style="display: flex; flex-wrap: wrap; gap: 8px;">
-                  ${g.items.map(i => `<span class="tech-pill">${i}</span>`).join('')}
-                </div>
-              </div>
-            `).join('')}
-          </div>
-        </div>
+    <div style="display:grid;grid-template-columns:1.3fr 0.7fr;gap:clamp(30px,5vw,70px);align-items:start" class="two-col">
+      <div data-reveal style="font-size:1.08rem;line-height:1.8;color:var(--text-dim)">
+        <p style="margin:0 0 var(--space-md)">I graduated from <span style="color:var(--text)">TAMK in May 2026</span> with a Bachelor's in Software Engineering. Over the past year I've built five projects spanning agentic AI security tooling, ETL pipelines that surface algorithmic bias in job markets, AI-driven cloud infrastructure compilers, a course benchmarking platform that won <span style="color:var(--text)">€5,000 in institutional funding</span>, and zero-dependency Windows systems tooling.</p>
+        <p style="margin:0 0 var(--space-md)">I'm actively pursuing <span style="color:var(--text)">AZ-104 (Azure Administrator Associate)</span> and targeting backend, cloud, and data engineering roles in Finland. I work well at the edges of a stack — the parts where data moves, infrastructure gets provisioned, and models run, whether that's a self-hosted model on-device or a cloud API.</p>
+        <p style="margin:0;color:var(--text-faint);font-family:var(--font-mono);font-size:0.85rem">Based in Tampere. Open to roles across Finland.</p>
+      </div>
+      <div data-reveal style="display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden">
+        <div style="background:var(--bg-elev);padding:18px 20px"><div style="font-family:var(--font-mono);font-size:0.68rem;color:var(--text-faint);margin-bottom:5px">DEGREE</div><div style="font-size:0.92rem">B.Eng Software Engineering · TAMK</div></div>
+        <div style="background:var(--bg-elev);padding:18px 20px"><div style="font-family:var(--font-mono);font-size:0.68rem;color:var(--text-faint);margin-bottom:5px">GRADUATED</div><div style="font-size:0.92rem">May 2026</div></div>
+        <div style="background:var(--bg-elev);padding:18px 20px"><div style="font-family:var(--font-mono);font-size:0.68rem;color:var(--text-faint);margin-bottom:5px">PURSUING</div><div style="font-size:0.92rem;color:var(--accent)">AZ-104 — Azure Admin</div></div>
+        <div style="background:var(--bg-elev);padding:18px 20px"><div style="font-family:var(--font-mono);font-size:0.68rem;color:var(--text-faint);margin-bottom:5px">LOCATION</div><div style="font-size:0.92rem">Tampere, Finland</div></div>
       </div>
     </div>
-  `;
+
+    <div data-reveal style="margin:var(--space-2xl) 0 0">
+      <div style="background:#0d0d10;border:1px solid #222229;border-radius:var(--radius);overflow:hidden;font-family:'JetBrains Mono',monospace;font-size:clamp(0.72rem,1.5vw,0.84rem)">
+        <div style="background:#111116;border-bottom:1px solid #222229;padding:10px 14px;display:flex;align-items:center;gap:6px">
+          <span style="width:10px;height:10px;border-radius:50%;background:#ff5f57;flex-shrink:0"></span>
+          <span style="width:10px;height:10px;border-radius:50%;background:#febc2e;flex-shrink:0"></span>
+          <span style="width:10px;height:10px;border-radius:50%;background:#28c840;flex-shrink:0"></span>
+          <span style="margin-left:8px;color:#34343d;font-size:0.76rem">walid@tahrim: ~</span>
+        </div>
+        <div id="about-term-body" style="padding:18px 22px;min-height:280px;line-height:1.75;color:#9a9aa4"></div>
+      </div>
+    </div>
+  </section>`;
+}
+
+function renderProjects() {
+  const badge = p => p.tag
+    ? `<span style="font-family:var(--font-mono);font-size:0.69rem;font-weight:700;background:var(--accent);color:var(--on-accent);border-radius:99px;padding:3px 11px;white-space:nowrap;line-height:1.4;flex-shrink:0;letter-spacing:0.02em">${p.tag}</span>`
+    : `<span style="font-family:var(--font-mono);font-size:0.72rem;color:var(--text-faint)">${p.tagline}</span>`;
+
+  const card = (p, i) => `
+    <a href="#/projects/${p.id}" data-reveal class="project-row" style="position:relative;overflow:hidden;display:flex;flex-direction:column;gap:14px;align-items:flex-start">
+      <div style="position:absolute;right:18px;top:18px;color:var(--accent);opacity:0.11;pointer-events:none;width:80px">
+        ${PROJECT_ICONS[p.id] || ''}
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <span style="font-family:var(--font-mono);font-size:0.95rem;color:var(--accent);font-weight:500">${num(i)}</span>
+        <h3 style="margin:0;font-size:1.5rem;font-weight:600;letter-spacing:-0.025em">${p.name}</h3>
+        ${badge(p)}
+      </div>
+      <p style="margin:0;font-family:var(--font-mono);font-size:0.78rem;color:var(--text-dim)">${p.subtitle}</p>
+      <p style="margin:0;font-size:0.93rem;line-height:1.65;color:var(--text-dim)">${p.oneliner}</p>
+      <div style="display:flex;flex-wrap:wrap;gap:7px">${p.stack.map(t => techPill(t)).join('')}</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;width:100%;margin-top:auto;padding-top:14px;border-top:1px solid var(--border)">
+        <div style="display:flex;align-items:baseline;gap:7px">
+          <span style="font-family:var(--font-mono);font-size:1.8rem;font-weight:700;color:var(--accent);letter-spacing:-0.04em;line-height:1">${p.stat.value}</span>
+          <span style="font-family:var(--font-mono);font-size:0.63rem;color:var(--text-dim)">${p.stat.label}</span>
+        </div>
+        <span style="font-family:var(--font-mono);font-size:0.74rem;color:var(--accent)">open →</span>
+      </div>
+    </a>`;
+
+  return `<section data-page style="max-width:var(--maxw);margin:0 auto;padding:var(--space-2xl) clamp(18px,5vw,48px)">
+    <span data-reveal style="display:block;font-family:var(--font-mono);font-size:0.78rem;color:var(--accent);margin-bottom:var(--space-sm)">// projects</span>
+    <h1 data-reveal style="margin:0 0 var(--space-sm);font-size:var(--fs-h1);font-weight:600;letter-spacing:-0.03em">Five projects, built to run.</h1>
+    <p data-reveal style="margin:0 0 var(--space-2xl);color:var(--text-dim);max-width:54ch">Each one shipped against a real constraint — an agentic safety boundary, self-hosted models, scraped data at scale, live institutional infrastructure, or zero-dependency Windows systems tooling.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:var(--space-md)">
+      ${PROJECTS.map((p, i) => card(p, i)).join('')}
+      <div data-reveal style="grid-column:1/-1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:12px;padding:clamp(36px,5vw,56px);border:1.5px dashed var(--border-strong);border-radius:var(--radius)">
+        <span style="font-family:var(--font-mono);font-size:0.74rem;color:var(--accent)">// more soon</span>
+        <h3 style="margin:0;font-size:1.3rem;font-weight:600;letter-spacing:-0.02em">Next project in progress</h3>
+        <p style="margin:0;color:var(--text-dim);max-width:46ch">New work in cloud, data engineering, and edge AI is on the way. Currently pursuing AZ-104.</p>
+      </div>
+    </div>
+  </section>`;
+}
+
+function renderProjectDetail() {
+  const idx = PROJECTS.findIndex(p => p.id === state.projectId);
+  const p = PROJECTS[idx];
+  if (!p) return renderProjects();
+  const next = PROJECTS[(idx + 1) % PROJECTS.length];
+
+  const linkBtns = p.links.map(l => `
+    <a href="https://${l.url}" target="_blank" rel="noopener" class="ext-link">
+      <span style="color:var(--accent)">${l.label}</span>
+      <span style="color:var(--text-dim)">${l.url}</span>
+      <span style="color:var(--text-faint)">↗</span>
+    </a>`).join('');
+
+  const noteHtml = p.note
+    ? `<div style="display:flex;gap:12px;align-items:center;padding:14px 18px;border-left:2px solid var(--accent);background:var(--accent-soft);border-radius:var(--radius);margin-bottom:var(--space-lg);font-family:var(--font-mono);font-size:0.8rem;color:var(--text-dim)">${p.note}</div>`
+    : '';
+
+  const stages = p.stages.map((s, i) => {
+    const demo = p.stageDemos && p.stageDemos[i];
+    const media = demo
+      ? `<iframe src="${demo}" style="position:absolute;inset:0;width:100%;height:100%;border:none;" loading="lazy" scrolling="no"></iframe>`
+      : `<div style="position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 11px,var(--accent-soft) 11px,var(--accent-soft) 12px)"></div><span style="position:relative;font-family:var(--font-mono);font-size:0.74rem;color:var(--text-dim);text-align:center;padding:0 18px">[ GIF: ${s} ]</span>`;
+    return `
+    <div data-reveal style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:baseline;gap:12px">
+        <span style="font-family:var(--font-mono);font-size:0.8rem;color:var(--accent)">${num(i)}</span>
+        <h4 style="margin:0;font-size:1.02rem;font-weight:600;letter-spacing:-0.01em">${s.replace(/(\(.*?\))/g, '<span style="font-family:var(--font-mono);font-size:0.72rem;font-weight:400;color:var(--text-faint)">$1</span>')}</h4>
+      </div>
+      <div style="position:relative;aspect-ratio:16/9;${demo ? 'border:1px solid var(--border)' : 'border:1.5px dashed var(--border-strong)'};border-radius:var(--radius);display:flex;align-items:center;justify-content:center;overflow:hidden;background:var(--bg-elev)">
+        ${media}
+      </div>
+    </div>`;
+  }).join('');
+
+  return `<section data-page style="max-width:var(--maxw);margin:0 auto;padding:var(--space-xl) clamp(18px,5vw,48px) var(--space-2xl)">
+    <a href="#/projects" class="back-link"><span>←</span> all projects</a>
+
+    <div style="display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:6px">
+      <span style="font-family:var(--font-mono);font-size:1rem;color:var(--accent)">${num(idx)}</span>
+      <h1 style="margin:0;font-size:var(--fs-h1);font-weight:600;letter-spacing:-0.03em">${p.name}</h1>
+      ${p.tag ? `<span style="font-family:var(--font-mono);font-size:0.72rem;font-weight:700;background:var(--accent);color:var(--on-accent);border-radius:99px;padding:5px 12px;white-space:nowrap;letter-spacing:0.02em">${p.tag}</span>` : ''}
+    </div>
+    <p style="margin:0 0 var(--space-md);font-family:var(--font-mono);font-size:0.9rem;color:var(--text-dim)">${p.subtitle}</p>
+    <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:var(--space-lg)">
+      ${p.stack.map(t => techPill(t, 'var(--bg-elev)', '0.72rem', '5px 11px')).join('')}
+    </div>
+    <p style="margin:0 0 var(--space-lg);font-size:1.18rem;line-height:1.7;max-width:70ch;color:var(--text)">${p.oneliner}</p>
+
+    <div style="max-width:72ch;margin:0 0 var(--space-lg)">
+      ${p.description.map(para => `<p style="margin:0 0 var(--space-md);color:var(--text-dim);font-size:1.04rem;line-height:1.8">${para}</p>`).join('')}
+    </div>
+
+    ${linkBtns ? `<div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:var(--space-lg)">${linkBtns}</div>` : ''}
+    ${noteHtml}
+
+    <h2 data-reveal style="margin:0 0 var(--space-lg);font-size:var(--fs-h2);font-weight:600;letter-spacing:-0.03em"><span style="font-family:var(--font-mono);font-size:0.7em;color:var(--accent);margin-right:10px">//</span>Walkthrough</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:var(--space-md)">
+      ${stages}
+    </div>
+
+    <a href="#/projects/${next.id}" class="next-link">
+      <span style="font-family:var(--font-mono);font-size:0.74rem;color:var(--text-faint)">next project</span>
+      <span style="display:flex;align-items:center;gap:12px;font-size:1.2rem;font-weight:600;letter-spacing:-0.02em">${next.name} <span style="color:var(--accent)">→</span></span>
+    </a>
+  </section>`;
 }
 
 function renderContact() {
-  return `
-    <div class="container" style="min-height: 60vh; display: flex; flex-direction: column; justify-content: center;">
-      <div class="reveal">
-        <h1 class="display-title">INITIATE<br>HANDSHAKE.</h1>
-        <p class="text-body" style="font-size: 1.4rem; margin-bottom: 60px; color: var(--accent);">I would love to work with cloud architecture, DevOps and low level LLM deployment at scale.</p>
-        
-        <div class="bento-grid">
-          <a href="mailto:tahrimwalid@gmail.com" class="glass-card col-span-6" style="padding: 40px; display: flex; align-items: center; justify-content: space-between;">
-            <div>
-              <div style="font-family: var(--font-mono); color: var(--text-faint); margin-bottom: 10px;">EMAIL</div>
-              <div style="font-size: 1.5rem;">tahrimwalid@gmail.com</div>
-            </div>
-            <span style="font-family: var(--font-mono); color: var(--accent);">↗</span>
-          </a>
-          
-          <a href="tel:+358442463779" class="glass-card col-span-6" style="padding: 40px; display: flex; align-items: center; justify-content: space-between;">
-            <div>
-              <div style="font-family: var(--font-mono); color: var(--text-faint); margin-bottom: 10px;">PHONE</div>
-              <div style="font-size: 1.5rem;">+358 44 2463779</div>
-            </div>
-            <span style="font-family: var(--font-mono); color: var(--accent);">↗</span>
-          </a>
-          
-          <a href="https://github.com/TahrimWalid" target="_blank" class="glass-card col-span-6" style="padding: 40px; display: flex; align-items: center; justify-content: space-between;">
-            <div>
-              <div style="font-family: var(--font-mono); color: var(--text-faint); margin-bottom: 10px;">GITHUB</div>
-              <div style="font-size: 1.5rem;">TahrimWalid</div>
-            </div>
-            <span style="font-family: var(--font-mono); color: var(--accent);">↗</span>
-          </a>
-          
-          <a href="https://linkedin.com/in/walid-hassan-tahrim" target="_blank" class="glass-card col-span-6" style="padding: 40px; display: flex; align-items: center; justify-content: space-between;">
-            <div>
-              <div style="font-family: var(--font-mono); color: var(--text-faint); margin-bottom: 10px;">LINKEDIN</div>
-              <div style="font-size: 1.5rem;">walid-hassan-tahrim</div>
-            </div>
-            <span style="font-family: var(--font-mono); color: var(--accent);">↗</span>
-          </a>
-        </div>
-      </div>
+  return `<section data-page style="max-width:var(--maxw);margin:0 auto;padding:var(--space-2xl) clamp(18px,5vw,48px);min-height:calc(100vh - var(--nav-h) - 120px)">
+    <span data-reveal style="display:block;font-family:var(--font-mono);font-size:0.78rem;color:var(--accent);margin-bottom:var(--space-sm)">// contact</span>
+    <h1 data-reveal style="margin:0 0 var(--space-md);font-size:var(--fs-display);font-weight:600;letter-spacing:-0.035em;line-height:1.04">Let's build<br>something.</h1>
+    <div data-reveal style="margin-bottom:var(--space-2xl)">
+      <p style="margin:0;font-family:var(--font-mono);font-size:0.95rem;color:var(--accent);font-weight:500"><span id="contact-tagline"></span><span style="display:inline-block;width:9px;height:1.1em;background:var(--accent);margin-left:2px;vertical-align:-2px;animation:blink 1.1s step-end infinite"></span></p>
     </div>
-  `;
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden">
+      <a href="mailto:tahrimwalid@gmail.com" data-reveal class="contact-card">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="1.5"/><path d="m3.5 6.5 8.5 6 8.5-6"/></svg>
+        <span style="font-size:1.02rem;color:var(--text);word-break:break-word">tahrimwalid@gmail.com</span>
+        <span style="font-family:var(--font-mono);font-size:0.72rem;color:var(--accent);margin-top:auto">send mail ↗</span>
+      </a>
+      <a href="tel:+358442463779" data-reveal class="contact-card">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 3.5h3l1.5 4-2 1.5a12 12 0 0 0 5.5 5.5l1.5-2 4 1.5v3a2 2 0 0 1-2 2A16 16 0 0 1 4.5 5.5a2 2 0 0 1 2-2Z"/></svg>
+        <span style="font-size:1.02rem;color:var(--text)">+358 44 2463779</span>
+        <span style="font-family:var(--font-mono);font-size:0.72rem;color:var(--accent);margin-top:auto">call ↗</span>
+      </a>
+      <a href="https://github.com/TahrimWalid" target="_blank" rel="noopener" data-reveal class="contact-card">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="var(--accent)"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.5.5.09.68-.22.68-.48 0-.24-.01-.87-.01-1.7-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.56 9.56 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85 0 1.34-.01 2.42-.01 2.75 0 .27.18.58.69.48A10 10 0 0 0 22 12c0-5.52-4.48-10-10-10z"/></svg>
+        <span style="font-size:1.02rem;color:var(--text)">github.com/TahrimWalid</span>
+        <span style="font-family:var(--font-mono);font-size:0.72rem;color:var(--accent);margin-top:auto">view profile ↗</span>
+      </a>
+      <a href="https://linkedin.com/in/walid-hassan-tahrim" target="_blank" rel="noopener" data-reveal class="contact-card">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="var(--accent)"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14zM8.34 18.34V9.99H5.67v8.35h2.67zM7 8.8a1.55 1.55 0 1 0 0-3.1 1.55 1.55 0 0 0 0 3.1zm11.34 9.54v-4.58c0-2.45-1.31-3.59-3.06-3.59-1.41 0-2.04.78-2.39 1.32v-1.13h-2.67c.04.75 0 8.35 0 8.35h2.67v-4.66c0-.24.02-.48.09-.65.19-.48.63-.98 1.37-.98.97 0 1.35.74 1.35 1.82v4.47h2.64z"/></svg>
+        <span style="font-size:1.02rem;color:var(--text);word-break:break-word">linkedin.com/in/walid-hassan-tahrim</span>
+        <span style="font-family:var(--font-mono);font-size:0.72rem;color:var(--accent);margin-top:auto">view profile ↗</span>
+      </a>
+    </div>
+  </section>`;
 }
 
-// Router & App Logic
-function onHash() {
-  const raw = (location.hash || '').replace(/^#\/?/, '');
-  const parts = raw.split('/').filter(Boolean);
-  state.route = parts[0] || 'home';
-  if (state.route === 'projects' && parts[1]) {
-    state.route = 'project'; state.projectId = parts[1];
-  }
-  
-  document.querySelectorAll('.nav-link').forEach(n => {
-    n.removeAttribute('data-active');
-    if (n.getAttribute('data-route') === (state.route === 'project' ? 'projects' : state.route)) {
-      n.setAttribute('data-active', '');
+// ── Main render ────────────────────────────────────────────────────────────
+let revealAllTimer = null;
+
+function typeText(id, text, delay) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  let i = 0;
+  el.textContent = '';
+  const interval = setInterval(() => {
+    el.textContent = text.slice(0, ++i);
+    if (i >= text.length) clearInterval(interval);
+  }, delay || 32);
+}
+
+function typeContactTagline() {
+  typeText('contact-tagline', 'I would love to work with cloud architecture, DevOps and low level LLM deployment at scale', 28);
+}
+
+function runAboutTerminal() {
+  const body = document.getElementById('about-term-body');
+  if (!body) return;
+  body.innerHTML = '';
+  const PROMPT = '<span style="color:#00ff41">walid@tahrim</span><span style="color:#444450">:~$</span> ';
+  const steps = [
+    { t: 'cmd',  text: 'whoami' },
+    { t: 'out',  html: '<span style="color:#ededf0;font-weight:600">Walid Hassan Tahrim</span>  ·  Full-Stack Software Engineer  ·  Tampere, FI' },
+    { t: 'out',  html: '<span style="color:#5f5f6a">Backend · Cloud infrastructure · On-device AI inference</span>' },
+    { t: 'gap' },
+    { t: 'cmd',  text: 'cat timeline.txt' },
+    { t: 'out',  html: '<span style="color:#5f5f6a">2024–2026</span>  <span style="color:#ededf0">TAMK</span>  ·  B.Eng Software Engineering' },
+    { t: 'out',  html: '<span style="color:#5f5f6a">2025     </span>  <span style="color:#00ff41">Oppipolku</span>  ·  Backend Lead  ·  €5,000 TAMK Foundation grant' },
+    { t: 'out',  html: '<span style="color:#5f5f6a">2025     </span>  <span style="color:#00ff41">Kratos</span>    ·  Solo · Bachelor\'s Thesis · agentic, model-agnostic' },
+    { t: 'out',  html: '<span style="color:#5f5f6a">2025     </span>  <span style="color:#00ff41">InGen</span>     ·  Full-Stack · self-hosted 27B · 32 validation rules' },
+    { t: 'out',  html: '<span style="color:#5f5f6a">2026     </span>  <span style="color:#00ff41">Career AI</span> ·  Solo · 1,998 jobs · 100% LLM extraction' },
+    { t: 'gap' },
+    { t: 'cmd',  text: 'echo $STATUS' },
+    { t: 'out',  html: '<span style="color:#febc2e">Pursuing AZ-104 (Azure Administrator Associate)</span>' },
+    { t: 'out',  html: '<span style="color:#ededf0">Open to backend, cloud &amp; infrastructure roles in Finland</span>' },
+    { t: 'cursor' },
+  ];
+  let ms = 0;
+  steps.forEach(step => {
+    if (step.t === 'cmd') {
+      setTimeout(() => {
+        const row = document.createElement('div');
+        row.innerHTML = PROMPT + '<span class="tc"></span>';
+        body.appendChild(row);
+        const span = row.querySelector('.tc');
+        let i = 0;
+        const iv = setInterval(() => {
+          if (!span.isConnected) { clearInterval(iv); return; }
+          span.textContent = step.text.slice(0, ++i);
+          if (i >= step.text.length) clearInterval(iv);
+        }, 46);
+      }, ms);
+      ms += step.text.length * 46 + 280;
+    } else if (step.t === 'out') {
+      setTimeout(() => {
+        const row = document.createElement('div');
+        row.innerHTML = step.html;
+        body.appendChild(row);
+      }, ms);
+      ms += 55;
+    } else if (step.t === 'gap') {
+      ms += 220;
+    } else if (step.t === 'cursor') {
+      setTimeout(() => {
+        const row = document.createElement('div');
+        row.innerHTML = PROMPT + '<span style="display:inline-block;width:8px;height:1em;background:#00ff41;vertical-align:-2px;animation:blink 1.1s step-end infinite"></span>';
+        body.appendChild(row);
+      }, ms);
     }
   });
-
-  const app = document.getElementById('app');
-  const maps = { home: renderHome, projects: renderProjects, project: renderProjectDetail, about: renderAbout, contact: renderContact };
-  app.innerHTML = (maps[state.route] || renderHome)();
-  window.scrollTo(0, 0);
-  
-  setTimeout(() => {
-    document.querySelectorAll('.reveal').forEach((el, i) => {
-      setTimeout(() => el.classList.add('active'), i * 100);
-    });
-    
-    if (state.route === 'home') runTypewriter();
-    if (state.route === 'about') runTerminal();
-  }, 50);
 }
 
-function runTypewriter() {
-  const tw = document.getElementById('typewriter');
-  if(!tw) return;
-  const text = "Backend • Cloud Infrastructure • Edge AI Inference";
-  let i = 0; tw.innerHTML = '';
-  const iv = setInterval(() => {
-    tw.innerHTML = text.slice(0, ++i) + '<span style="border-right: 2px solid var(--accent); padding-right: 2px; animation: blink 1s step-end infinite;"></span>';
-    if(i >= text.length) clearInterval(iv);
-  }, 40);
-}
-
-function runTerminal() {
-  const tb = document.getElementById('term-body');
-  if(!tb) return;
-  tb.innerHTML = '<div style="color: var(--accent); margin-bottom:10px;">$ fetching timeline...</div>';
-  setTimeout(() => {
-    tb.innerHTML += `
-      <div style="margin-bottom: 5px;"><span style="color:#FF5F56;">2024-2026</span>  TAMK B.Eng Software Engineering</div>
-      <div style="margin-bottom: 5px;"><span style="color:#FFBD2E;">2025</span>       Oppipolku Backend Lead (Funded €5k)</div>
-      <div style="margin-bottom: 5px;"><span style="color:#FFBD2E;">2025</span>       Kratos Agentic Assistant</div>
-      <div style="margin-bottom: 5px;"><span style="color:#FFBD2E;">2025</span>       InGen Full-Stack & GenAI</div>
-      <div style="margin-bottom: 5px;"><span style="color:#27C93F;">2026</span>       Career AI ETL Pipeline</div>
-      <div style="margin-top: 15px; color: var(--accent);">$ status check</div>
-      <div style="color: var(--text);">> Pursuing AZ-104</div>
-      <div style="color: var(--text);">> Ready for hire<span style="border-right: 8px solid var(--accent); animation: blink 1s step-end infinite; display: inline-block; width: 8px; height: 14px; transform: translateY(2px); margin-left: 5px;"></span></div>
-    `;
-  }, 600);
-}
-
-// Mouse Follower
-document.addEventListener('mousemove', e => {
-  const cursor = document.getElementById('cursor-glow');
-  if(cursor) {
-    cursor.style.left = e.clientX + 'px';
-    cursor.style.top = e.clientY + 'px';
+function startRoleRotation() {
+  const el = document.getElementById('home-role');
+  if (!el) return;
+  const roles = [
+    'Full-Stack Software Engineer',
+    'Aspiring Cloud & Network Infrastructure Engineer',
+  ];
+  let roleIdx = 0;
+  function typeRole() {
+    const text = roles[roleIdx];
+    let i = 0;
+    el.textContent = '';
+    const typing = setInterval(() => {
+      if (!document.getElementById('home-role')) { clearInterval(typing); return; }
+      el.textContent = text.slice(0, ++i);
+      if (i >= text.length) {
+        clearInterval(typing);
+        setTimeout(deleteRole, 1800);
+      }
+    }, 52);
   }
-  
-  // Card hover glow effect
-  document.querySelectorAll('.glass-card').forEach(card => {
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    card.style.setProperty('--mouse-x', `${x}px`);
-    card.style.setProperty('--mouse-y', `${y}px`);
+  function deleteRole() {
+    const text = el.textContent;
+    let i = text.length;
+    const deleting = setInterval(() => {
+      if (!document.getElementById('home-role')) { clearInterval(deleting); return; }
+      el.textContent = text.slice(0, --i);
+      if (i <= 0) {
+        clearInterval(deleting);
+        roleIdx = (roleIdx + 1) % roles.length;
+        setTimeout(typeRole, 350);
+      }
+    }, 22);
+  }
+  typeRole();
+}
+
+function render() {
+  const main = document.getElementById('main');
+  const map = { home: renderHome, about: renderAbout, projects: renderProjects, project: renderProjectDetail, contact: renderContact };
+  main.innerHTML = (map[state.route] || renderHome)();
+  updateNav();
+  enterPages();
+  setupParticles();
+  observeReveals();
+  setTimeout(() => { enterPages(); observeReveals(); }, 80);
+  setTimeout(() => observeReveals(), 360);
+  clearTimeout(revealAllTimer);
+  revealAllTimer = setTimeout(revealAll, 1400);
+  if (state.route === 'contact') setTimeout(typeContactTagline, 300);
+  if (state.route === 'home') setTimeout(startRoleRotation, 400);
+  if (state.route === 'about') setTimeout(runAboutTerminal, 350);
+}
+
+// ── Boot ───────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  let t = 'dark';
+  try { t = localStorage.getItem('wt-theme') || 'dark'; } catch (e) {}
+  state.theme = t;
+  applyTheme(t);
+
+  document.getElementById('theme-btn').addEventListener('click', toggleTheme);
+
+  const burger = document.getElementById('nav-burger');
+  const navLinks = document.getElementById('nav-links');
+  burger.addEventListener('click', () => {
+    const open = navLinks.classList.toggle('open');
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
   });
+
+  let scrollTick = false;
+  const onScroll = () => {
+    if (scrollTick) return;
+    scrollTick = true;
+    requestAnimationFrame(() => { scrollTick = false; observeReveals(); });
+  };
+  window.addEventListener('scroll', onScroll, { passive: true, capture: true });
+  window.addEventListener('resize', onScroll);
+
+  window.addEventListener('hashchange', onHash);
+  onHash();
 });
-
-window.addEventListener('hashchange', onHash);
-document.addEventListener('DOMContentLoaded', onHash);
-
 </script>
 </body>
 </html>
