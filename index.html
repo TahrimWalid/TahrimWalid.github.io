@@ -196,7 +196,7 @@ const PROJECTS = [
     tagline: 'Since AI 2026 · Turku Energia',
     subtitle: 'Finnish Electricity Imbalance Price Forecasting',
     tag: 'Since AI 2026',
-    stat: { value: '37%', label: 'lower error · official baseline' },
+    stat: { value: '78%', label: 'price spikes flagged 1 h ahead · unseen month' },
     oneliner: "A 10-hour forecast of the Finnish imbalance price in 15-minute steps — best guess, likely range, regulation direction and spike risk — rebuilt after Fingrid changed how the price is calculated on 1 June 2026. I re-implemented both pricing rules, reproduced Fingrid's published price to the cent in 99.55% of quarter-hours, re-priced 14 months of history, and shipped it as a two-view dashboard with a live simulation.",
     stack: ['Python','pandas','XGBoost','LightGBM','scikit-learn','Optuna','Vue','Fingrid API','ENTSO-E API'],
     links: [
@@ -206,17 +206,19 @@ const PROJECTS = [
     description: [
       "Built for the Turku Energia challenge at the Since AI 2026 hackathon: forecast the next 10 hours of the Finnish imbalance price — what a balance-responsible party pays or receives for being out of balance — with a p10–p90 range, the direction of regulation and the probability of extreme prices. The rule is strict: at every forecast time, only data already published may be used. I built the model: features, time-ordered cross-validation, Optuna tuning and an eight-model blend that cut the organisers' baseline error by 35% on the best guess and 49% on the range.",
       "The hard part came after. On 1 June 2026 Fingrid switched from charging the more extreme of two balancing prices to a volume-weighted price, so only four months of history matched the new market. I implemented both rules from Fingrid's documents, matched the published price within €0.01 in 99.55% (new rule) and 99.85% (old rule) of quarter-hours — all but three mismatches traced to Fingrid's own corrections or data limits — and re-priced March 2025 – May 2026 as if the new rule had applied.",
-      "Then a controlled experiment: same features, models and tuning budget, only the training history changes, compared with a day-block bootstrap so one unusual day can't decide the result. The re-priced 14-month history beat four months on all four official metrics (2.8–7.2%, each a clear difference) and at every forecast horizon. An extra year of older hourly prices added nothing, so it was dropped. Along the way: licensed market data removed from the pipeline, leakage tests on every input, and a memory-safe tuning search after a quantile forest exhausted 30 GB.",
+      "Then a controlled experiment: same features, models and tuning budget, only the training history changes, compared with a day-block bootstrap so one unusual day can't decide the result. The re-priced 14-month history beat four months on all four official metrics (2.8–7.2%, each a clear difference) and at every forecast horizon. An extra year of older hourly prices added nothing, so it was dropped. The real check is reality: on the unseen test month (5 Oct – 1 Nov 2026), against Fingrid's published prices, half of all quarter-hours land within €10/MWh an hour ahead, 86% of prices fall inside the predicted range, the regulation direction is right 74% of the time and 78% of price spikes are flagged an hour in advance — better than my hackathon submission on all four official metrics. Along the way: licensed market data removed from the pipeline, leakage tests on every input, and a memory-safe tuning search after a quantile forest exhausted 30 GB.",
       "The dashboard answers two questions. Overview: does the forecast work? — a month of forecasts against actual prices, scores per model and per hour ahead, day by day. Control room: what should a trader do in the next hours? — alerts with an act-by time before intraday gate closure, exposure in euros, and a live simulation that replays any day quarter-hour by quarter-hour. The public build uses a synthetic spot price, so no licensed data is published; every score is still the real one.",
     ],
     stages: [
       'Live simulation of 24 Sep — a new forecast every hour, 42 of 43 price spikes flagged (fast-forward)',
+      'Unseen test month — the forecast against what actually happened (Fingrid prices)',
       "Same day, two pricing rules — and Fingrid's price reproduced to the cent",
-      'Validation month, scored with the official scorer',
+      'Against the organisers\' baseline — validation month, official scorer',
       'Overview — a month of forecasts against actual prices, zooming to a week and a day',
     ],
     stageDemos: [
       'demos/imbalance-sim.html',
+      'demos/imbalance-reality.html',
       'demos/imbalance-rule.html',
       'demos/imbalance-results.html',
       'demos/imbalance-overview.html',
