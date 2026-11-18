@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#08080a;--border:#222229;--track:#16161c;--text:#ededf0;--dim:#9a9aa4;--faint:#5f5f6a;--accent:#00ff41;--accent2:rgba(0,255,65,0.35)}
+[data-theme="light"]{--bg:#ffffff;--border:#e3e3e8;--track:#f0f0f3;--text:#121217;--dim:#54545e;--faint:#9b9ba4;--accent:#0891b2;--accent2:rgba(8,145,178,0.35)}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text)}
+body{font-family:'JetBrains Mono',monospace;font-size:clamp(8px,1.7vw,12px);display:flex;flex-direction:column;padding:4.5% 5% 3.5%;gap:4%}
+h1{font-family:'Space Grotesk',system-ui,sans-serif;font-weight:600;font-size:1.45em;letter-spacing:-0.02em}
+.sub{color:var(--dim);margin-top:.3em}
+.rows{flex:1;display:flex;flex-direction:column;justify-content:space-around;min-height:0}
+.row{display:grid;grid-template-columns:7.5em 1fr 9.5em;align-items:center;gap:1.2em}
+.name{color:var(--dim)}
+.name b{display:block;color:var(--text);font-weight:700}
+.track{position:relative;height:1.5em;background:var(--track);border-radius:2px;overflow:hidden}
+.bar{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--accent);border-radius:2px;transition:width 1.6s cubic-bezier(.22,1,.36,1)}
+.val{white-space:nowrap;font-variant-numeric:tabular-nums}
+.val b{font-size:1.5em;color:var(--accent);letter-spacing:-0.03em}
+.val span{color:var(--dim);display:block;font-size:.9em}
+.foot{display:flex;justify-content:space-between;gap:1em;color:var(--faint);font-size:.85em;border-top:1px solid var(--border);padding-top:.8em}
+.foot b{color:var(--text);font-weight:700}
+</style>
+</head>
+<body>
+<div><h1>Better than the official baseline on every metric</h1><p class="sub">Validation month 7 Sep – 4 Oct 2026 · 26,700 quarter-hours · official scorer</p></div>
+<div class="rows" id="rows"></div>
+<div class="foot"><span>Re-priced 14-month history vs 4 months: <b>2.8–7.2% better</b> on all four, each a clear difference (90% day-block bootstrap)</span></div>
+<script>
+const apply = () => { let t = 'dark'; try { t = localStorage.getItem('wt-theme') || 'dark'; } catch (e) {} document.documentElement.dataset.theme = t; };
+apply(); addEventListener('storage', (e) => { if (e.key === 'wt-theme') apply(); });
+const R = [['Accuracy', 'avg miss, €/MWh', 37, '66.2 → 42.0'], ['Range', 'p10–p90 pinball', 52, '24.2 → 11.5'], ['Spikes', 'Brier score', 22, '0.113 → 0.088'], ['Direction', 'Brier score', 12, '0.451 → 0.399']];
+document.getElementById('rows').innerHTML = R.map(([a, b, p, v]) => `<div class="row"><span class="name"><b>${a}</b>${b}</span><div class="track"><div class="bar" data-p="${p}"></div></div><span class="val"><b data-n="${p}">0%</b> lower error<span>${v}</span></span></div>`).join('');
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+function run() {
+  const bars = document.querySelectorAll('.bar'), nums = document.querySelectorAll('[data-n]');
+  bars.forEach((b) => { b.style.transition = 'none'; b.style.width = reduce ? b.dataset.p / 60 * 100 + '%' : '0'; });
+  document.body.getBoundingClientRect();
+  bars.forEach((b, i) => setTimeout(() => { b.style.transition = ''; b.style.width = b.dataset.p / 60 * 100 + '%'; }, reduce ? 0 : 200 + i * 180));
+  const t0 = performance.now();
+  const tick = (t) => { const f = reduce ? 1 : Math.min(1, (t - t0 - 200) / 1700); nums.forEach((n) => { n.textContent = Math.round(n.dataset.n * Math.max(0, 1 - Math.pow(1 - Math.max(0, f), 3))) + '%'; }); if (f < 1) requestAnimationFrame(tick); };
+  requestAnimationFrame(tick);
+}
+run(); if (!reduce) setInterval(run, 8000);
+</script>
+</body>
+</html>
