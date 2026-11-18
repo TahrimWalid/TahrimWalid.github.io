@@ -138,10 +138,16 @@ nav a[data-active]{color:var(--accent)!important}
 }
 .award-tag{display:inline-flex;align-items:center;gap:7px;width:fit-content;font-family:var(--font-mono);font-size:0.72rem;font-weight:600;color:var(--accent);background:var(--accent-soft);border:1px solid var(--accent);border-radius:99px;padding:5px 12px;max-width:100%;line-height:1.4;transition:background var(--dur)}
 a.award-tag:hover{background:color-mix(in srgb,var(--accent) 22%,transparent)}
-.about-grid{display:grid;grid-template-columns:1.15fr 1fr;gap:var(--space-xl) clamp(30px,5vw,70px);align-items:start}
-@media(max-width:840px){.about-grid{grid-template-columns:1fr}}
-.about-list{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
-.about-row{display:flex;flex-direction:column;align-items:flex-start;padding:20px 22px;background:var(--bg-elev)}
+.cards-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-md)}
+@media(max-width:840px){.cards-2{grid-template-columns:1fr}}
+/* Five cards: three on the first row, two wider ones on the second, so no row has a hole. */
+.cards-5{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:var(--space-md)}
+.cards-5 > *{grid-column:span 2}
+.cards-5 > :nth-child(n+4){grid-column:span 3}
+@media(max-width:1000px){.cards-5{grid-template-columns:repeat(2,minmax(0,1fr))}.cards-5 > *,.cards-5 > :nth-child(n+4){grid-column:auto}.cards-5 > :last-child:nth-child(odd){grid-column:1/-1}}
+@media(max-width:680px){.cards-5{grid-template-columns:1fr}.cards-5 > :last-child:nth-child(odd){grid-column:auto}}
+.about-row{display:flex;flex-direction:column;align-items:flex-start;padding:22px 24px;background:var(--bg-elev);border:1px solid var(--border);border-radius:var(--radius);height:100%}
+.about-row .row-links{margin-top:auto!important;padding-top:14px}
 .about-row > div:first-child{width:100%}
 </style>
 </head>
@@ -760,7 +766,7 @@ function renderHome() {
         <h2 style="margin:0;font-size:var(--fs-h2);font-weight:600;letter-spacing:-0.03em"><span style="font-family:var(--font-mono);font-size:0.7em;color:var(--accent);margin-right:10px">//</span>Selected work</h2>
         <a href="#/projects" class="dim-link" style="font-family:var(--font-mono);font-size:0.8rem">all projects →</a>
       </div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:var(--space-md)">
+      <div class="cards-5">
         ${cards}
       </div>
     </div>
@@ -776,7 +782,7 @@ function renderAbout() {
         <span style="font-family:var(--font-mono);font-size:0.74rem;color:var(--text-faint);white-space:nowrap">${when}</span>
       </div>
       ${body ? `<p style="margin:8px 0 0;color:var(--text-dim);font-size:0.96rem;line-height:1.7">${body}</p>` : ''}
-      ${links ? `<div style="display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:10px;font-family:var(--font-mono);font-size:0.74rem">${links}</div>` : ''}
+      ${links ? `<div class="row-links" style="display:flex;flex-wrap:wrap;gap:8px 18px;font-family:var(--font-mono);font-size:0.74rem">${links}</div>` : ''}
     </div>`;
   const ln = (text, href, ext) => `<a href="${href}"${ext ? ' target="_blank" rel="noopener"' : ''} class="dim-link" style="color:var(--accent)">${text} ${ext ? '↗' : '→'}</a>`;
 
@@ -798,48 +804,40 @@ function renderAbout() {
       <p style="margin:0;color:var(--text-faint);font-family:var(--font-mono);font-size:0.85rem">Based in Tampere · open to roles across Finland · English (fluent), Finnish (A2)</p>
     </div>
 
-    <div class="about-grid" style="margin-top:var(--space-2xl)">
-      <div data-reveal>
-        ${label('Experience')}
-        <div class="about-list">
-          ${row('Co-founder', 'Hackers Hostel', '2026 – present',
-            'A startup in its incubator phase that builds complete open-source applications teams run on their own infrastructure: free to use, with a paid licence for white-labelling. I build its AI workspace, AgentWebUI, with two other developers.',
-            ln('hackershostel.com', 'https://hackershostel.com', true) + ln('AgentWebUI', '#/projects/agentwebui'))}
-          ${row('Developer, Security & Data Engineer', 'Oppipolku', '2025 – 2026',
-            'A team of three building a course benchmarking platform for Finnish higher education. I work on the API, data verification and deployment.',
-            ln('Oppipolku', '#/projects/oppipolku'))}
-        </div>
+    <div data-reveal style="margin-top:var(--space-2xl)">
+      ${label('Experience')}
+      <div class="cards-2">
+        ${row('Co-founder', 'Hackers Hostel', '2026 – present',
+          'A startup in its incubator phase that builds complete open-source applications teams run on their own infrastructure: free to use, with a paid licence for white-labelling. I build its AI workspace, AgentWebUI, with two other developers.',
+          ln('hackershostel.com', 'https://hackershostel.com', true) + ln('AgentWebUI', '#/projects/agentwebui'))}
+        ${row('Developer, Security & Data Engineer', 'Oppipolku', '2025 – 2026',
+          'A team of three building a course benchmarking platform for Finnish higher education. I work on the API, data verification and deployment.',
+          ln('Oppipolku', '#/projects/oppipolku'))}
       </div>
-      <div style="display:flex;flex-direction:column;gap:var(--space-xl)">
-        <div data-reveal>
-          ${label('Education')}
-          <div class="about-list">
-            ${row("Bachelor's in Software Engineering", 'TAMK', 'Aug 2023 – May 2026',
-              'Thesis: explainable security analysis with a quantized language model on ARM edge hardware, which grew into Kratos.',
-              ln('Kratos', '#/projects/kratos'))}
+    </div>
+
+    <div data-reveal style="margin-top:var(--space-xl)">
+      ${label('Education &amp; certifications')}
+      <div class="cards-2">
+        ${row("Bachelor's in Software Engineering", 'TAMK', 'Aug 2023 – May 2026',
+          'Thesis: explainable security analysis with a quantized language model on ARM edge hardware, which grew into Kratos.',
+          ln('Kratos', '#/projects/kratos'))}
+        <div class="about-row">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:6px 16px;flex-wrap:wrap">
+            <h3 style="margin:0;font-size:1.08rem;font-weight:600;letter-spacing:-0.01em">Since AI Hackathon 2026<span style="color:var(--text-dim);font-weight:400"> · Turku</span></h3>
+            <span style="font-family:var(--font-mono);font-size:0.74rem;color:var(--text-faint);white-space:nowrap">Nov 2026</span>
           </div>
+          <a href="#/projects/imbalance" class="award-tag" style="margin-top:12px">${AWARD_ICON}3rd place · Turku Energia challenge →</a>
+          <div class="row-links" style="display:flex;flex-wrap:wrap;gap:8px 18px;font-family:var(--font-mono);font-size:0.74rem">${ln('Certificate', CERT_URL, true)}${ln('Imbalance Outlook', '#/projects/imbalance')}</div>
         </div>
-        <div data-reveal>
-          ${label('Certifications &amp; awards')}
-          <div class="about-list">
-            <div class="about-row">
-              <div style="display:flex;justify-content:space-between;align-items:baseline;gap:6px 16px;flex-wrap:wrap">
-                <h3 style="margin:0;font-size:1.08rem;font-weight:600;letter-spacing:-0.01em">Since AI Hackathon 2026<span style="color:var(--text-dim);font-weight:400"> · Turku</span></h3>
-                <span style="font-family:var(--font-mono);font-size:0.74rem;color:var(--text-faint);white-space:nowrap">Nov 2026</span>
-              </div>
-              <a href="#/projects/imbalance" class="award-tag" style="margin-top:10px">${AWARD_ICON}3rd place · Turku Energia challenge →</a>
-              <div style="display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:10px;font-family:var(--font-mono);font-size:0.74rem">${ln('Certificate', CERT_URL, true)}${ln('Imbalance Outlook', '#/projects/imbalance')}</div>
-            </div>
-            ${row('€5,000 funding', 'TAMK Foundation', '2025', 'Awarded to the Oppipolku team.', '')}
-            ${row('Azure Administrator Associate (AZ-104)', 'Microsoft', 'in progress', '', '')}
-          </div>
-        </div>
+        ${row('€5,000 funding', 'TAMK Foundation', '2025', 'Awarded to the Oppipolku team for its course benchmarking platform.', ln('Oppipolku', '#/projects/oppipolku'))}
+        ${row('Azure Administrator Associate (AZ-104)', 'Microsoft', 'in progress', 'Microsoft certification for administering Azure: identity, storage, compute and networking.', '')}
       </div>
     </div>
 
     <div style="margin-top:var(--space-2xl)">
       <div data-reveal>${label('Skills')}</div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:var(--space-md)">
+      <div class="cards-5">
         ${skillCards}
       </div>
     </div>
@@ -880,7 +878,7 @@ function renderProjects() {
     <p data-reveal style="margin:0 0 var(--space-2xl);color:var(--text-dim);max-width:54ch">Each one shipped against a real constraint — letting AI agents touch real code safely, a market rule that changed under the model, an agentic safety boundary, self-hosted models, scraped data at scale, live institutional infrastructure, or zero-dependency Windows systems tooling.</p>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:var(--space-md)">
       ${PROJECTS.map((p, i) => card(p, i)).join('')}
-      <div data-reveal style="grid-column:1/-1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:12px;padding:clamp(36px,5vw,56px);border:1.5px dashed var(--border-strong);border-radius:var(--radius)">
+      <div data-reveal style="display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:12px;padding:clamp(36px,5vw,56px);border:1.5px dashed var(--border-strong);border-radius:var(--radius)">
         <span style="font-family:var(--font-mono);font-size:0.74rem;color:var(--accent)">// more soon</span>
         <h3 style="margin:0;font-size:1.3rem;font-weight:600;letter-spacing:-0.02em">Next project in progress</h3>
         <p style="margin:0;color:var(--text-dim);max-width:46ch">New work in cloud, data engineering, and edge AI is on the way. Currently pursuing AZ-104.</p>
