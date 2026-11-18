@@ -148,16 +148,22 @@ a.award-tag:hover{background:color-mix(in srgb,var(--accent) 22%,transparent)}
 @media(max-width:680px){.cards-5{grid-template-columns:1fr}.cards-5 > :last-child:nth-child(odd){grid-column:auto}}
 .about-row{display:flex;flex-direction:column;align-items:flex-start;padding:22px 24px;background:var(--bg-elev);border:1px solid var(--border);border-radius:var(--radius);height:100%}
 .about-row .row-links{margin-top:auto!important;padding-top:14px}
-.work-list{display:flex;flex-direction:column;gap:var(--space-sm)}
-.work-row{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1.7fr) minmax(150px,0.5fr);gap:clamp(20px,3.4vw,44px);align-items:start;padding:clamp(22px,2.6vw,30px);background:var(--bg-elev);border:1px solid var(--border);border-radius:var(--radius);transition:border-color var(--dur) var(--ease),translate var(--dur) var(--ease),box-shadow var(--dur) var(--ease)}
-.work-row:hover{border-color:var(--accent);translate:0 -4px;box-shadow:0 22px 60px -26px var(--accent-glow)}
-.wr-head{display:flex;flex-direction:column;gap:9px;align-items:flex-start;min-width:0}
-.wr-body{display:flex;flex-direction:column;gap:14px;min-width:0}
+.work-list{display:flex;flex-direction:column;gap:18px}
+.work-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);background:var(--bg-elev);border:1px solid var(--border);border-radius:6px;overflow:hidden;transition:border-color var(--dur) var(--ease)}
+.wr-text{display:flex;flex-direction:column;gap:12px;align-items:flex-start;padding:30px 32px;min-width:0}
 .wr-clamp{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-.wr-stat{display:flex;flex-direction:column;gap:6px;align-self:stretch;padding-left:clamp(16px,2vw,24px);border-left:1px solid var(--border)}
-.wr-stat .wr-open{margin-top:auto;padding-top:12px}
-@media(max-width:960px){.work-row{grid-template-columns:minmax(0,1fr) minmax(0,1.6fr)}.wr-stat{grid-column:1/-1;flex-direction:row;flex-wrap:wrap;align-items:baseline;gap:8px;padding:14px 0 0;border-left:none;border-top:1px solid var(--border)}.wr-stat .wr-open{margin:0 0 0 auto;padding:0}}
-@media(max-width:680px){.work-row{grid-template-columns:1fr}}
+.wr-stat{display:flex;align-items:baseline;flex-wrap:wrap;gap:8px 10px;width:100%;margin-top:auto;padding-top:16px;border-top:1px solid var(--border)}
+.wr-cover{border-left:1px solid var(--border);align-self:stretch}
+.cover-frame{position:relative;aspect-ratio:16/9;overflow:hidden;background:#0c0c10}
+.cover-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;transition:transform 400ms var(--ease)}
+.wr-cover .cover-img{object-position:left center}
+.project-card{display:flex;flex-direction:column;background:var(--bg-elev);border:1px solid var(--border);border-radius:6px;overflow:hidden;transition:border-color var(--dur) var(--ease)}
+.pc-cover{border-bottom:1px solid var(--border)}
+.pc-body{display:flex;flex-direction:column;gap:14px;align-items:flex-start;padding:clamp(22px,2.6vw,30px);flex-grow:1}
+.work-row:hover,.project-card:hover{border-color:var(--accent)}
+@media (hover:hover) and (pointer:fine){.work-row:hover .cover-img,.project-card:hover .cover-img{transform:scale(1.03)}}
+@media(prefers-reduced-motion:reduce){.cover-img{transition:none}}
+@media(max-width:880px){.work-row{grid-template-columns:minmax(0,1fr)}.wr-cover{order:-1;border-left:none;border-bottom:1px solid var(--border)}.wr-text{padding:22px 20px}}
 .contact-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
 .contact-grid .contact-wide{grid-column:span 2}
 @media(max-width:900px){.contact-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
@@ -769,27 +775,33 @@ function techPill(t, bg, size, pad) {
 // Projects kept off the home page; they stay on the projects page.
 const HOME_HIDDEN = ['ingen', 'batterytracker'];
 
+function coverImg(p, sizes) {
+  const base = 'assets/covers/' + p.id + '-cover';
+  return `<img class="cover-img" src="${base}-800.webp" srcset="${base}-800.webp 800w, ${base}.webp 1600w" sizes="${sizes}" width="1600" height="900" alt="${p.name} cover" loading="lazy" decoding="async">`;
+}
+
 function renderHome() {
   const cards = PROJECTS.filter(p => !HOME_HIDDEN.includes(p.id)).map((p, i) => `
     <a href="#/projects/${p.id}" data-reveal class="work-row">
-      <div class="wr-head">
+      <div class="wr-text">
         <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
           <span style="font-family:var(--font-mono);font-size:0.8rem;color:var(--accent)">${num(i)}</span>
-          ${p.tag ? `<span style="font-family:var(--font-mono);font-size:0.68rem;font-weight:700;background:var(--accent);color:var(--on-accent);border-radius:99px;padding:3px 10px;white-space:nowrap;letter-spacing:0.02em">${p.tag}</span>` : ''}
+          ${p.tag ? `<span style="font-family:var(--font-mono);font-size:0.68rem;font-weight:700;background:var(--accent);color:var(--on-accent);border-radius:99px;padding:3px 10px;white-space:nowrap;letter-spacing:0.02em">${p.tag}</span>` : `<span style="font-family:var(--font-mono);font-size:0.72rem;color:var(--text-faint)">${p.tagline}</span>`}
         </div>
-        <h3 style="margin:0;font-size:1.55rem;font-weight:600;letter-spacing:-0.025em;line-height:1.15">${p.name}</h3>
-        <p style="margin:0;font-family:var(--font-mono);font-size:0.76rem;color:var(--text-dim);line-height:1.5">${p.subtitle}</p>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <h3 style="margin:0;font-size:1.6rem;font-weight:600;letter-spacing:-0.025em;line-height:1.12">${p.name}</h3>
+          <p style="margin:0;font-family:var(--font-mono);font-size:0.76rem;color:var(--text-dim);line-height:1.5">${p.subtitle}</p>
+        </div>
         ${p.award ? `<span class="award-tag">${AWARD_ICON}${p.award}</span>` : ''}
-      </div>
-      <div class="wr-body">
-        <p class="wr-clamp" style="margin:0;font-size:0.95rem;line-height:1.65;color:var(--text-dim)">${p.oneliner}</p>
+        <p class="wr-clamp" style="margin:2px 0 0;font-size:0.95rem;line-height:1.65;color:var(--text-dim)">${p.oneliner}</p>
         <div style="display:flex;flex-wrap:wrap;gap:7px">${p.stack.slice(0, 4).map(t => techPill(t)).join('')}</div>
+        <div class="wr-stat">
+          <span style="font-family:var(--font-mono);font-size:1.75rem;font-weight:700;color:var(--accent);letter-spacing:-0.04em;line-height:1">${p.stat.value}</span>
+          <span style="font-family:var(--font-mono);font-size:0.68rem;color:var(--text-dim);line-height:1.5">${p.stat.label}</span>
+          <span style="margin-left:auto;font-family:var(--font-mono);font-size:0.74rem;color:var(--accent);white-space:nowrap">view project →</span>
+        </div>
       </div>
-      <div class="wr-stat">
-        <span style="font-family:var(--font-mono);font-size:2rem;font-weight:700;color:var(--accent);letter-spacing:-0.04em;line-height:1">${p.stat.value}</span>
-        <span style="font-family:var(--font-mono);font-size:0.68rem;color:var(--text-dim);line-height:1.5">${p.stat.label}</span>
-        <span class="wr-open" style="font-family:var(--font-mono);font-size:0.74rem;color:var(--accent)">view project →</span>
-      </div>
+      <div class="wr-cover cover-frame">${coverImg(p, '(max-width:880px) 100vw, 560px')}</div>
     </a>`).join('');
 
   return `<section data-page>
@@ -917,25 +929,25 @@ function renderProjects() {
     : `<span style="font-family:var(--font-mono);font-size:0.72rem;color:var(--text-faint)">${p.tagline}</span>`;
 
   const card = (p, i) => `
-    <a href="#/projects/${p.id}" data-reveal class="project-row" style="position:relative;overflow:hidden;display:flex;flex-direction:column;gap:14px;align-items:flex-start">
-      <div style="position:absolute;right:18px;top:18px;color:var(--accent);opacity:0.11;pointer-events:none;width:80px">
-        ${PROJECT_ICONS[p.id] || ''}
-      </div>
-      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-        <span style="font-family:var(--font-mono);font-size:0.95rem;color:var(--accent);font-weight:500">${num(i)}</span>
-        <h3 style="margin:0;font-size:1.5rem;font-weight:600;letter-spacing:-0.025em">${p.name}</h3>
-        ${badge(p)}
-      </div>
-      <p style="margin:0;font-family:var(--font-mono);font-size:0.78rem;color:var(--text-dim)">${p.subtitle}</p>
-      ${p.award ? `<span class="award-tag">${AWARD_ICON}${p.award}</span>` : ''}
-      <p style="margin:0;font-size:0.93rem;line-height:1.65;color:var(--text-dim)">${p.oneliner}</p>
-      <div style="display:flex;flex-wrap:wrap;gap:7px">${p.stack.map(t => techPill(t)).join('')}</div>
-      <div style="display:flex;align-items:center;justify-content:space-between;width:100%;margin-top:auto;padding-top:14px;border-top:1px solid var(--border)">
-        <div style="display:flex;align-items:baseline;gap:7px">
-          <span style="font-family:var(--font-mono);font-size:1.8rem;font-weight:700;color:var(--accent);letter-spacing:-0.04em;line-height:1">${p.stat.value}</span>
-          <span style="font-family:var(--font-mono);font-size:0.63rem;color:var(--text-dim)">${p.stat.label}</span>
+    <a href="#/projects/${p.id}" data-reveal class="project-card">
+      <div class="pc-cover cover-frame">${coverImg(p, '(max-width:960px) 100vw, 580px')}</div>
+      <div class="pc-body">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <span style="font-family:var(--font-mono);font-size:0.95rem;color:var(--accent);font-weight:500">${num(i)}</span>
+          <h3 style="margin:0;font-size:1.5rem;font-weight:600;letter-spacing:-0.025em;line-height:1.2">${p.name}</h3>
+          ${badge(p)}
         </div>
-        <span style="font-family:var(--font-mono);font-size:0.74rem;color:var(--accent)">open →</span>
+        <p style="margin:0;font-family:var(--font-mono);font-size:0.78rem;color:var(--text-dim)">${p.subtitle}</p>
+        ${p.award ? `<span class="award-tag">${AWARD_ICON}${p.award}</span>` : ''}
+        <p style="margin:0;font-size:0.93rem;line-height:1.65;color:var(--text-dim)">${p.oneliner}</p>
+        <div style="display:flex;flex-wrap:wrap;gap:7px">${p.stack.map(t => techPill(t)).join('')}</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;width:100%;margin-top:auto;padding-top:14px;border-top:1px solid var(--border)">
+          <div style="display:flex;align-items:baseline;gap:7px;flex-wrap:wrap">
+            <span style="font-family:var(--font-mono);font-size:1.8rem;font-weight:700;color:var(--accent);letter-spacing:-0.04em;line-height:1">${p.stat.value}</span>
+            <span style="font-family:var(--font-mono);font-size:0.63rem;color:var(--text-dim)">${p.stat.label}</span>
+          </div>
+          <span style="font-family:var(--font-mono);font-size:0.74rem;color:var(--accent);white-space:nowrap">open →</span>
+        </div>
       </div>
     </a>`;
 
