@@ -277,35 +277,6 @@ const PROJECTS = [
     ],
   },
   {
-    id: 'oppipolku',
-    name: 'Oppipolku',
-    tagline: '€5,000 Funded',
-    subtitle: 'Finnish HE Course Benchmarking API',
-    tag: '€5,000 Funded',
-    stat: { value: '13,846', label: 'courses · 36 institutions' },
-    oneliner: "A production-deployed benchmarking API covering 13,846 continuing education courses across 36 Finnish universities — 5-tier endpoint structure, deterministic <50ms responses, and a Gemini 2.5 Pro agent layer that answers HE market questions from live structured data.",
-    stack: ['Python','FastAPI','Docker','Gemini 2.5 Pro','Open WebUI','Tailscale','systemd','Linux'],
-    links: [],
-    note: 'Repo private — code available on request.',
-    description: [
-      "Oppipolku is a course benchmarking API for the Finnish higher education market, awarded €5,000 by the TAMK Foundation. The dataset covers 13,846 continuing education courses scraped from opin.fi across 36 institutions. All data loads into memory at startup; every request hits pure computation functions with no database round-trip — p99 latency under 50ms.",
-      "The API is structured in five tiers: market-wide aggregates (price, ECTS, language, delivery distributions), per-organization snapshots and side-by-side comparisons, dimensional breakdowns (delivery, availability, themes, study fields, credits, pricing per org), rankings and gap analysis, and a course search endpoint supporting eight combinable filters. The data pipeline runs nightly via a systemd timer, fetches from opin.fi, and auto-deploys via a git-polling script every three minutes.",
-      "The AI layer is a Gemini 2.5 Pro assistant running inside Open WebUI with a 19-function Python tool that calls the benchmark API. A middleware patch was required to fix a Gemini streaming tool-call bug in Open WebUI — the patch is idempotent and ships in the repo. The whole stack (API + Open WebUI) runs on a single ARM homelab node behind Tailscale Serve with auto-issued TLS, reachable from any device on the tailnet.",
-    ],
-    stages: [
-      'Data pipeline: reverse-engineering opin.fi to scrape 13,846 courses',
-      '/benchmark/snapshot/TAMK — full org profile, <20ms response',
-      '/market/gaps?org=TAMK — where TAMK trails the national average',
-      'Gemini 2.5 Pro agent calling the tool to answer a market question',
-    ],
-    stageDemos: [
-      'demos/oppipolku-pipeline.html',
-      'demos/oppipolku-snapshot.html',
-      'demos/oppipolku-marketgaps.html',
-      'demos/oppipolku-agent.html',
-    ],
-  },
-  {
     id: 'kratos',
     name: 'Kratos',
     tagline: "Bachelor's Thesis",
@@ -338,6 +309,35 @@ const PROJECTS = [
       'demos/kratos-evoloop.html',
       'demos/kratos-palette.html',
       'demos/kratos-settings.html',
+    ],
+  },
+  {
+    id: 'oppipolku',
+    name: 'Oppipolku',
+    tagline: '€5,000 Funded',
+    subtitle: 'Finnish HE Course Benchmarking API',
+    tag: '€5,000 Funded',
+    stat: { value: '13,846', label: 'courses · 36 institutions' },
+    oneliner: "A production-deployed benchmarking API covering 13,846 continuing education courses across 36 Finnish universities — 5-tier endpoint structure, deterministic <50ms responses, and a Gemini 2.5 Pro agent layer that answers HE market questions from live structured data.",
+    stack: ['Python','FastAPI','Docker','Gemini 2.5 Pro','Open WebUI','Tailscale','systemd','Linux'],
+    links: [],
+    note: 'Repo private — code available on request.',
+    description: [
+      "Oppipolku is a course benchmarking API for the Finnish higher education market, awarded €5,000 by the TAMK Foundation. The dataset covers 13,846 continuing education courses scraped from opin.fi across 36 institutions. All data loads into memory at startup; every request hits pure computation functions with no database round-trip — p99 latency under 50ms.",
+      "The API is structured in five tiers: market-wide aggregates (price, ECTS, language, delivery distributions), per-organization snapshots and side-by-side comparisons, dimensional breakdowns (delivery, availability, themes, study fields, credits, pricing per org), rankings and gap analysis, and a course search endpoint supporting eight combinable filters. The data pipeline runs nightly via a systemd timer, fetches from opin.fi, and auto-deploys via a git-polling script every three minutes.",
+      "The AI layer is a Gemini 2.5 Pro assistant running inside Open WebUI with a 19-function Python tool that calls the benchmark API. A middleware patch was required to fix a Gemini streaming tool-call bug in Open WebUI — the patch is idempotent and ships in the repo. The whole stack (API + Open WebUI) runs on a single ARM homelab node behind Tailscale Serve with auto-issued TLS, reachable from any device on the tailnet.",
+    ],
+    stages: [
+      'Data pipeline: reverse-engineering opin.fi to scrape 13,846 courses',
+      '/benchmark/snapshot/TAMK — full org profile, <20ms response',
+      '/market/gaps?org=TAMK — where TAMK trails the national average',
+      'Gemini 2.5 Pro agent calling the tool to answer a market question',
+    ],
+    stageDemos: [
+      'demos/oppipolku-pipeline.html',
+      'demos/oppipolku-snapshot.html',
+      'demos/oppipolku-marketgaps.html',
+      'demos/oppipolku-agent.html',
     ],
   },
   {
@@ -655,7 +655,7 @@ const num = i => String(i + 1).padStart(2, '0');
 // simpleicons doesn't carry at all (AWS, Azure, VS Code, PowerShell, Windows) --
 // a hard coverage gap, not a stylistic choice.
 const TECH_ICONS = {
-  'pandas':                 'https://cdn.simpleicons.org/pandas/150458',
+  'pandas':                 'https://cdn.simpleicons.org/pandas/E70488',
   'scikit-learn':           'https://cdn.simpleicons.org/scikitlearn/F7931E',
   'Vue':                    'https://cdn.simpleicons.org/vuedotjs/4FC08D',
   'Python':                 'https://cdn.simpleicons.org/python/3776AB',
@@ -700,10 +700,25 @@ const TECH_ICONS = {
   'FastAPI':                'https://cdn.simpleicons.org/fastapi/009688',
   'Gemini 2.5 Pro':         'https://cdn.simpleicons.org/googlegemini/8E75B2',
   'Open WebUI':             'https://cdn.simpleicons.org/ollama/ffffff',
-  'Tailscale':              'https://cdn.simpleicons.org/tailscale/242424',
+  'Tailscale':              'https://cdn.simpleicons.org/tailscale/9A9AA4',
   'Textual':                'https://cdn.simpleicons.org/python/3776AB',
   'MCP':                    'https://cdn.simpleicons.org/anthropic/D97757',
   'Gemini':                 'https://cdn.simpleicons.org/googlegemini/8E75B2',
+  'SQL':                    'https://cdn.simpleicons.org/postgresql/4169E1',
+  'LightGBM':               'https://cdn.simpleicons.org/python/3776AB',
+  'Incus':                  'https://cdn.simpleicons.org/linuxcontainers/9A9AA4',
+  'Cloudflare':             'https://cdn.simpleicons.org/cloudflare/F38020',
+  'CI/CD':                  'https://cdn.simpleicons.org/githubactions/2088FF',
+  'ACP':                    'https://cdn.simpleicons.org/zedindustries/084CCF',
+  'Local LLMs (Ollama, vLLM, Llama.cpp)': 'https://cdn.simpleicons.org/ollama/ffffff',
+  'Forecasting (LightGBM, XGBoost)':      'https://cdn.simpleicons.org/scikitlearn/F7931E',
+  'Sigma & YARA rules':     'https://cdn.simpleicons.org/virustotal/394EFF',
+  'Log analysis':           'https://cdn.simpleicons.org/elasticstack/005571',
+  'Sandboxing':             'https://cdn.simpleicons.org/docker/2496ED',
+  'LLM agents & tool calling': 'https://cdn.simpleicons.org/anthropic/D97757',
+  'Evaluation harnesses':   'https://cdn.simpleicons.org/pytest/0A9EDC',
+  'Quantization':           'https://cdn.simpleicons.org/huggingface/FFD21E',
+  'Adversarial testing':    'https://cdn.simpleicons.org/kalilinux/557C94',
 };
 
 function techPill(t, bg, size, pad) {
@@ -790,7 +805,7 @@ function renderAbout() {
     <div data-reveal class="skill-card">
       <h3 style="margin:0 0 16px;font-family:var(--font-mono);font-size:0.82rem;font-weight:500;color:var(--accent);letter-spacing:0.02em">${g.cat}</h3>
       <div style="display:flex;flex-wrap:wrap;gap:8px">
-        ${g.items.map(item => `<span style="font-family:var(--font-mono);font-size:0.72rem;padding:6px 11px;border:1px solid var(--border);border-radius:var(--radius);color:var(--text-dim);background:var(--bg)">${item}</span>`).join('')}
+        ${g.items.map(item => techPill(item, 'var(--bg)', '0.72rem', '6px 11px')).join('')}
       </div>
     </div>`).join('');
 
