@@ -181,15 +181,49 @@ nav a[data-active]{color:var(--accent)!important}
 </div>
 <script>
 const SKILLS = [
-  { cat: 'Frontend',        items: ['React','React Native','Next.js','ReactFlow','Monaco'] },
-  { cat: 'Backend',         items: ['Python','REST APIs','Web Scraping','API inspection (DevTools)'] },
-  { cat: 'AI & Edge',       items: ['LLMs (Llama.cpp, Qwen 2.5–27B, vLLM)','4-bit quantization','ARM & GPU deployment'] },
+  { cat: 'Frontend',        items: ['React','TypeScript','React Native','Next.js','ReactFlow','Monaco','CodeMirror'] },
+  { cat: 'Backend',         items: ['Python','FastAPI','SQLAlchemy','PostgreSQL','Redis','REST APIs / OpenAPI','Web Scraping','API inspection (DevTools)'] },
+  { cat: 'AI & Edge',       items: ['LLMs (Llama.cpp, Qwen 2.5–27B, vLLM)','Coding agents (ACP, MCP)','Tool calling & sandboxing','4-bit quantization','ARM & GPU deployment'] },
   { cat: 'Data',            items: ['SQLite','SQL','ETL pipelines','NLP parsing'] },
   { cat: 'Security',        items: ['NDR','Log analysis','Nmap','adversarial benchmarking'] },
   { cat: 'Infrastructure',  items: ['Linux','Apache','Cloudflare','SSH','systemd','Git','Terraform','Vercel','CI/CD'] },
 ];
 
 const PROJECTS = [
+  {
+    id: 'agentwebui',
+    name: 'AgentWebUI',
+    tagline: 'Team of 3 · 8 weeks',
+    subtitle: 'Self-hosted AI Workspace for Models and Coding Agents',
+    tag: 'Team of 3 · 8 weeks',
+    stat: { value: '143', label: 'of 269 merged PRs · mine' },
+    oneliner: "A self-hosted workspace where a team chats with any model and hands real work to coding agents — Claude Code, Codex and Gemini CLI on each person's own subscription — inside git workspaces where every change is a reviewed commit, every tool call passes a policy, and code only runs in a sandbox. Three developers, eight weeks, 11,400+ automated tests; I authored over half of the merged pull requests.",
+    stack: ['Python','FastAPI','SQLAlchemy','PostgreSQL','Redis','React','TypeScript','CodeMirror','Docker','ACP','Playwright'],
+    links: [
+      { label: 'Open-source edition', url: 'github.com/HackersHostel/AgentWebUI' },
+    ],
+    note: 'The full product repo is private — I am happy to walk through the code on a call.',
+    description: [
+      "AgentWebUI is one server for a team's AI work. On the chat side it does what you expect from the best hosted assistants — any OpenAI-compatible, Anthropic, Ollama or OpenRouter model, replies that branch, artifacts, knowledge bases, memory, voice — and keeps it on your own infrastructure. On the agent side it gives models and coding agents a real place to work: git-backed workspaces with an editor, terminal, history and worktrees. External agents connect over the Agent Client Protocol and run either on the server or on the person's own laptop through a paired desktop helper, so a Claude Code or Codex subscription stays that person's alone — not even an administrator can use or see it.",
+      "Letting a model touch code and the network safely was the core design problem. Every tool — built-in, MCP, OpenAPI or plugin — sits in one catalog, and policies decide who may use it, where, and whether it must ask first. When it asks, the person sees the risk and the exact call before anything runs, and every call lands in an audit log. Code runs in a Docker sandbox with a read-only root, dropped capabilities, a timeout and no network unless a policy allows it. A model never writes straight into a repository: its edits arrive as a change set you review hunk by hunk, then apply as one commit you can undo.",
+      "The engineering is built to be trusted. The contract is written first (OpenAPI, linted in CI); the backend runs 11,400+ tests against both SQLite and PostgreSQL, the React client 1,350 more, plus browser tests; ninety schema migrations keep upgrades safe; and a bundle-size budget keeps the first load fast on phones. Every screen has a design board, and a CI check fails any pull request that changes a screen without updating its board. Each feature has a spec whose implementation rows a script audits, so ‘done’ means the same thing to everyone.",
+      "I merged 143 of the team's 269 pull requests: the tool system end to end (registry, tool loop, approvals, policies, audit and run_code), change-set review, artifacts, the context builder and inspector, the data layer across SQLite, PostgreSQL and Redis, agents with sub-agents and budgets, workflows, the phone and tablet layouts, and the desktop helper with agent onboarding — a packaged app, pairing, a relay to the server, and per-account isolation. The walkthrough below was recorded on a live instance with Gemini 2.5 Pro; nothing in it is scripted or mocked.",
+    ],
+    stages: [
+      'Ask for a change, get a commit | the model reads the code · you review the diff · waiting sped up',
+      'A live HTML artifact | written by the model · sandboxed preview · waiting sped up',
+      'Code runs only if you allow it | Docker sandbox · network off · waiting sped up',
+      'The same app on a phone | streamed reply · off-canvas sidebar',
+      'Admin and guardrails | your own agent subscriptions · computers · tool policies · sandbox',
+    ],
+    stageDemos: [
+      'demos/agentwebui-workspace.html',
+      'demos/agentwebui-artifact.html',
+      'demos/agentwebui-approval.html',
+      'demos/agentwebui-mobile.html',
+      'demos/agentwebui-admin.html',
+    ],
+  },
   {
     id: 'imbalance',
     name: 'Imbalance Outlook',
@@ -587,6 +621,7 @@ function onHash() {
 
 // ── Templates ──────────────────────────────────────────────────────────────
 const PROJECT_ICONS = {
+  agentwebui: '<svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="14" width="58" height="42" rx="5" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="24" x2="66" y2="24" stroke="currentColor" stroke-width="1.5"/><polyline points="20,34 26,40 20,46" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="31" y1="46" x2="44" y2="46" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M44 50 H84 a4 4 0 0 1 4 4 V76 a4 4 0 0 1 -4 4 H60 L50 88 V80 H44 a4 4 0 0 1 -4 -4 V54 a4 4 0 0 1 4 -4 Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="54" cy="65" r="2.5" fill="currentColor"/><circle cx="64" cy="65" r="2.5" fill="currentColor"/><circle cx="74" cy="65" r="2.5" fill="currentColor"/></svg>',
   imbalance: '<svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg"><line x1="10" y1="80" x2="86" y2="80" stroke="currentColor" stroke-width="1.5"/><polyline points="10,62 22,58 30,66 40,40 48,52 56,30 64,44" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M64 44 L86 36 L86 58 L64 52 Z" fill="currentColor" opacity="0.25"/><line x1="64" y1="14" x2="64" y2="80" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 3"/><path d="M52 10 L46 22 L52 22 L48 32" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>',
   oppipolku: '<svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="16" width="46" height="13" rx="2" stroke="currentColor" stroke-width="1.5"/><rect x="10" y="36" width="46" height="13" rx="2" stroke="currentColor" stroke-width="1.5"/><rect x="10" y="56" width="46" height="13" rx="2" stroke="currentColor" stroke-width="1.5"/><circle cx="18" cy="22.5" r="2" fill="currentColor"/><circle cx="18" cy="42.5" r="2" fill="currentColor"/><circle cx="18" cy="62.5" r="2" fill="currentColor"/><line x1="56" y1="20" x2="82" y2="12" stroke="currentColor" stroke-width="1.2"/><line x1="56" y1="25" x2="82" y2="28" stroke="currentColor" stroke-width="1.2"/><line x1="56" y1="40" x2="82" y2="36" stroke="currentColor" stroke-width="1.2"/><line x1="56" y1="46" x2="82" y2="50" stroke="currentColor" stroke-width="1.2"/><line x1="56" y1="60" x2="82" y2="60" stroke="currentColor" stroke-width="1.2"/><line x1="56" y1="65" x2="82" y2="72" stroke="currentColor" stroke-width="1.2"/><circle cx="82" cy="12" r="2.5" stroke="currentColor" stroke-width="1.5"/><circle cx="82" cy="28" r="2.5" stroke="currentColor" stroke-width="1.5"/><circle cx="82" cy="36" r="2.5" stroke="currentColor" stroke-width="1.5"/><circle cx="82" cy="50" r="2.5" stroke="currentColor" stroke-width="1.5"/><circle cx="82" cy="60" r="2.5" stroke="currentColor" stroke-width="1.5"/><circle cx="82" cy="72" r="2.5" stroke="currentColor" stroke-width="1.5"/></svg>',
   kratos: '<svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M48 8 L82 22 L82 52 Q82 74 48 88 Q14 74 14 52 L14 22 Z" stroke="currentColor" stroke-width="1.5"/><rect x="30" y="38" width="36" height="24" rx="2" stroke="currentColor" stroke-width="1.5"/><line x1="30" y1="46" x2="66" y2="46" stroke="currentColor" stroke-width="1"/><line x1="34" y1="53" x2="44" y2="53" stroke="currentColor" stroke-width="1.5"/><line x1="46" y1="53" x2="49" y2="53" stroke="currentColor" stroke-width="2.5"/></svg>',
@@ -621,6 +656,10 @@ const TECH_ICONS = {
   'Azure':                  'https://skillicons.dev/icons?i=azure',
   'Git':                    'https://cdn.simpleicons.org/git/F05032',
   'TypeScript':             'https://cdn.simpleicons.org/typescript/3178C6',
+  'PostgreSQL':             'https://cdn.simpleicons.org/postgresql/4169E1',
+  'Redis':                  'https://cdn.simpleicons.org/redis/FF4438',
+  'SQLAlchemy':             'https://cdn.simpleicons.org/sqlalchemy/D71F00',
+  'CodeMirror':             'https://cdn.simpleicons.org/codemirror/D30707',
   'JavaScript':             'https://cdn.simpleicons.org/javascript/F7DF1E',
   'Kotlin':                 'https://cdn.simpleicons.org/kotlin/7F52FF',
   'Pydantic':               'https://cdn.simpleicons.org/pydantic/E92063',
@@ -727,7 +766,7 @@ function renderAbout() {
 
     <div style="display:grid;grid-template-columns:1.3fr 0.7fr;gap:clamp(30px,5vw,70px);align-items:start" class="two-col">
       <div data-reveal style="font-size:1.08rem;line-height:1.8;color:var(--text-dim)">
-        <p style="margin:0 0 var(--space-md)">I graduated from <span style="color:var(--text)">TAMK in May 2026</span> with a Bachelor's in Software Engineering. Over the past year I've built six projects spanning electricity-market forecasting, agentic AI security tooling, ETL pipelines that surface algorithmic bias in job markets, AI-driven cloud infrastructure compilers, a course benchmarking platform that won <span style="color:var(--text)">€5,000 in institutional funding</span>, and zero-dependency Windows systems tooling.</p>
+        <p style="margin:0 0 var(--space-md)">I graduated from <span style="color:var(--text)">TAMK in May 2026</span> with a Bachelor's in Software Engineering. Over the past year I've built seven projects spanning a self-hosted AI workspace for models and coding agents (built with a team of three), electricity-market forecasting, agentic AI security tooling, ETL pipelines that surface algorithmic bias in job markets, AI-driven cloud infrastructure compilers, a course benchmarking platform that won <span style="color:var(--text)">€5,000 in institutional funding</span>, and zero-dependency Windows systems tooling.</p>
         <p style="margin:0 0 var(--space-md)">I'm actively pursuing <span style="color:var(--text)">AZ-104 (Azure Administrator Associate)</span> and targeting backend, cloud, and data engineering roles in Finland. I work well at the edges of a stack — the parts where data moves, infrastructure gets provisioned, and models run, whether that's a self-hosted model on-device or a cloud API.</p>
         <p style="margin:0;color:var(--text-faint);font-family:var(--font-mono);font-size:0.85rem">Based in Tampere. Open to roles across Finland.</p>
       </div>
@@ -782,8 +821,8 @@ function renderProjects() {
 
   return `<section data-page style="max-width:var(--maxw);margin:0 auto;padding:var(--space-2xl) clamp(18px,5vw,48px)">
     <span data-reveal style="display:block;font-family:var(--font-mono);font-size:0.78rem;color:var(--accent);margin-bottom:var(--space-sm)">// projects</span>
-    <h1 data-reveal style="margin:0 0 var(--space-sm);font-size:var(--fs-h1);font-weight:600;letter-spacing:-0.03em">Six projects, built to run.</h1>
-    <p data-reveal style="margin:0 0 var(--space-2xl);color:var(--text-dim);max-width:54ch">Each one shipped against a real constraint — a market rule that changed under the model, an agentic safety boundary, self-hosted models, scraped data at scale, live institutional infrastructure, or zero-dependency Windows systems tooling.</p>
+    <h1 data-reveal style="margin:0 0 var(--space-sm);font-size:var(--fs-h1);font-weight:600;letter-spacing:-0.03em">Seven projects, built to run.</h1>
+    <p data-reveal style="margin:0 0 var(--space-2xl);color:var(--text-dim);max-width:54ch">Each one shipped against a real constraint — letting AI agents touch real code safely, a market rule that changed under the model, an agentic safety boundary, self-hosted models, scraped data at scale, live institutional infrastructure, or zero-dependency Windows systems tooling.</p>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:var(--space-md)">
       ${PROJECTS.map((p, i) => card(p, i)).join('')}
       <div data-reveal style="grid-column:1/-1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:12px;padding:clamp(36px,5vw,56px);border:1.5px dashed var(--border-strong);border-radius:var(--radius)">
