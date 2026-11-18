@@ -699,8 +699,11 @@ function techPill(t, bg, size, pad) {
   return '<span style="display:inline-flex;align-items:center;gap:' + (src ? '6px' : '0') + ';font-family:var(--font-mono);font-size:' + size + ';padding:' + pad + ';border:1px solid var(--border);border-radius:var(--radius);color:var(--text-dim);background:' + bg + '">' + img + t + '</span>';
 }
 
+// Projects kept off the home page; they stay on the projects page.
+const HOME_HIDDEN = ['ingen', 'batterytracker'];
+
 function renderHome() {
-  const cards = PROJECTS.map((p, i) => `
+  const cards = PROJECTS.filter(p => !HOME_HIDDEN.includes(p.id)).map((p, i) => `
     <a href="#/projects/${p.id}" data-reveal class="card-link" style="position:relative">
       <div style="position:absolute;top:14px;right:14px;color:var(--accent);opacity:0.1;pointer-events:none;width:58px;flex-shrink:0">
         ${PROJECT_ICONS[p.id] || ''}
