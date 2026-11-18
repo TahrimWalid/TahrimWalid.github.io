@@ -136,6 +136,13 @@ nav a[data-active]{color:var(--accent)!important}
   .nav-links.open{max-height:340px;padding-top:10px;padding-bottom:20px}
   .nav-links a.nav-link{width:100%;padding:13px 0;border-bottom:1px solid var(--border)}
 }
+.award-tag{display:inline-flex;align-items:center;gap:7px;width:fit-content;font-family:var(--font-mono);font-size:0.72rem;font-weight:600;color:var(--accent);background:var(--accent-soft);border:1px solid var(--accent);border-radius:99px;padding:5px 12px;max-width:100%;line-height:1.4;transition:background var(--dur)}
+a.award-tag:hover{background:color-mix(in srgb,var(--accent) 22%,transparent)}
+.about-grid{display:grid;grid-template-columns:1.15fr 1fr;gap:var(--space-xl) clamp(30px,5vw,70px);align-items:start}
+@media(max-width:840px){.about-grid{grid-template-columns:1fr}}
+.about-list{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.about-row{display:flex;flex-direction:column;align-items:flex-start;padding:20px 22px;background:var(--bg-elev)}
+.about-row > div:first-child{width:100%}
 </style>
 </head>
 <body>
@@ -181,13 +188,15 @@ nav a[data-active]{color:var(--accent)!important}
 </div>
 <script>
 const SKILLS = [
-  { cat: 'Frontend',        items: ['React','TypeScript','React Native','Next.js','ReactFlow','Monaco','CodeMirror'] },
-  { cat: 'Backend',         items: ['Python','FastAPI','SQLAlchemy','PostgreSQL','Redis','REST APIs / OpenAPI','Web Scraping','API inspection (DevTools)'] },
-  { cat: 'AI & Edge',       items: ['LLMs (Llama.cpp, Qwen 2.5–27B, vLLM)','Coding agents (ACP, MCP)','Tool calling & sandboxing','4-bit quantization','ARM & GPU deployment'] },
-  { cat: 'Data',            items: ['SQLite','SQL','ETL pipelines','NLP parsing'] },
-  { cat: 'Security',        items: ['NDR','Log analysis','Nmap','adversarial benchmarking'] },
-  { cat: 'Infrastructure',  items: ['Linux','Apache','Cloudflare','SSH','systemd','Git','Terraform','Vercel','CI/CD'] },
+  { cat: 'Languages & frameworks', items: ['Python','TypeScript','JavaScript','SQL','React','Vue','Next.js','FastAPI'] },
+  { cat: 'AI & agents',            items: ['LLM agents & tool calling','MCP','ACP','Evaluation harnesses','Local LLMs (Ollama, vLLM, Llama.cpp)','Quantization'] },
+  { cat: 'Data',                   items: ['PostgreSQL','SQLite','SQLAlchemy','Redis','pandas','ETL pipelines','Forecasting (LightGBM, XGBoost)'] },
+  { cat: 'Security',               items: ['Log analysis','Sigma & YARA rules','Sandboxing','Nmap','Adversarial testing'] },
+  { cat: 'Infrastructure',         items: ['Linux','Docker','Incus','systemd','Tailscale','Cloudflare','Apache','Git','CI/CD','Terraform'] },
 ];
+
+const CERT_URL = 'certs/since-ai-2026-certificate.pdf';
+const AWARD_ICON = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="m8.5 14.2-1.5 7.8 5-3 5 3-1.5-7.8"/></svg>';
 
 const PROJECTS = [
   {
@@ -230,6 +239,7 @@ const PROJECTS = [
     tagline: 'Since AI 2026 · Turku Energia',
     subtitle: 'Finnish Electricity Imbalance Price Forecasting',
     tag: 'Since AI 2026',
+    award: '3rd place · Turku Energia challenge',
     stat: { value: '78%', label: 'price spikes flagged 1 h ahead · unseen month' },
     oneliner: "A 10-hour forecast of the Finnish imbalance price in 15-minute steps — best guess, likely range, regulation direction and spike risk — rebuilt after Fingrid changed how the price is calculated on 1 June 2026. I re-implemented both pricing rules, reproduced Fingrid's published price to the cent in 99.55% of quarter-hours, re-priced 14 months of history, and shipped it as a two-view dashboard with a live simulation.",
     stack: ['Python','pandas','XGBoost','LightGBM','scikit-learn','Optuna','Vue','Fingrid API','ENTSO-E API'],
@@ -715,6 +725,7 @@ function renderHome() {
       <div>
         <h3 style="margin:0;font-size:1.35rem;font-weight:600;letter-spacing:-0.02em">${p.name}</h3>
         <p style="margin:5px 0 0;font-family:var(--font-mono);font-size:0.76rem;color:var(--text-dim)">${p.subtitle}</p>
+        ${p.award ? `<span class="award-tag" style="margin-top:10px">${AWARD_ICON}${p.award}</span>` : ''}
       </div>
       <p style="margin:0;font-size:0.93rem;line-height:1.6;color:var(--text-dim)">${p.oneliner}</p>
       <div style="display:flex;align-items:baseline;gap:7px;padding-top:10px;border-top:1px solid var(--border)">
@@ -757,6 +768,18 @@ function renderHome() {
 }
 
 function renderAbout() {
+  const label = t => `<h2 style="margin:0 0 var(--space-md);font-family:var(--font-mono);font-size:0.78rem;font-weight:500;color:var(--accent);letter-spacing:0.04em;text-transform:uppercase">${t}</h2>`;
+  const row = (title, org, when, body, links) => `
+    <div class="about-row">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:6px 16px;flex-wrap:wrap">
+        <h3 style="margin:0;font-size:1.08rem;font-weight:600;letter-spacing:-0.01em">${title}<span style="color:var(--text-dim);font-weight:400"> · ${org}</span></h3>
+        <span style="font-family:var(--font-mono);font-size:0.74rem;color:var(--text-faint);white-space:nowrap">${when}</span>
+      </div>
+      ${body ? `<p style="margin:8px 0 0;color:var(--text-dim);font-size:0.96rem;line-height:1.7">${body}</p>` : ''}
+      ${links ? `<div style="display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:10px;font-family:var(--font-mono);font-size:0.74rem">${links}</div>` : ''}
+    </div>`;
+  const ln = (text, href, ext) => `<a href="${href}"${ext ? ' target="_blank" rel="noopener"' : ''} class="dim-link" style="color:var(--accent)">${text} ${ext ? '↗' : '→'}</a>`;
+
   const skillCards = SKILLS.map(g => `
     <div data-reveal class="skill-card">
       <h3 style="margin:0 0 16px;font-family:var(--font-mono);font-size:0.82rem;font-weight:500;color:var(--accent);letter-spacing:0.02em">${g.cat}</h3>
@@ -769,29 +792,55 @@ function renderAbout() {
     <span data-reveal style="display:block;font-family:var(--font-mono);font-size:0.78rem;color:var(--accent);margin-bottom:var(--space-sm)">// about</span>
     <h1 data-reveal style="margin:0 0 var(--space-lg);font-size:var(--fs-h1);font-weight:600;letter-spacing:-0.03em;max-width:18ch">Engineering at the edges of the stack.</h1>
 
-    <div style="display:grid;grid-template-columns:1.3fr 0.7fr;gap:clamp(30px,5vw,70px);align-items:start" class="two-col">
-      <div data-reveal style="font-size:1.08rem;line-height:1.8;color:var(--text-dim)">
-        <p style="margin:0 0 var(--space-md)">I graduated from <span style="color:var(--text)">TAMK in May 2026</span> with a Bachelor's in Software Engineering. Over the past year I've built seven projects spanning a self-hosted AI workspace for models and coding agents (built with a team of three), electricity-market forecasting, agentic AI security tooling, ETL pipelines that surface algorithmic bias in job markets, AI-driven cloud infrastructure compilers, a course benchmarking platform that won <span style="color:var(--text)">€5,000 in institutional funding</span>, and zero-dependency Windows systems tooling.</p>
-        <p style="margin:0 0 var(--space-md)">I'm actively pursuing <span style="color:var(--text)">AZ-104 (Azure Administrator Associate)</span> and targeting backend, cloud, and data engineering roles in Finland. I work well at the edges of a stack — the parts where data moves, infrastructure gets provisioned, and models run, whether that's a self-hosted model on-device or a cloud API.</p>
-        <p style="margin:0;color:var(--text-faint);font-family:var(--font-mono);font-size:0.85rem">Based in Tampere. Open to roles across Finland.</p>
+    <div data-reveal style="max-width:68ch;font-size:1.08rem;line-height:1.8;color:var(--text-dim)">
+      <p style="margin:0 0 var(--space-md)">I'm a software engineer in Tampere. I graduated from <span style="color:var(--text)">TAMK in May 2026</span> with a Bachelor's in Software Engineering, and I build AI agents, backend systems and data pipelines. What I care about most is whether something still works with real data, real users and real limits, and whether I can show the evidence that it does.</p>
+      <p style="margin:0 0 var(--space-md)">Alongside that, I'm co-founding <span style="color:var(--text)">Hackers Hostel</span>, a startup in its incubator phase. I'm looking for backend, cloud, data or AI engineering roles in Finland, and studying for Microsoft's <span style="color:var(--text)">AZ-104 Azure Administrator</span> certification.</p>
+      <p style="margin:0;color:var(--text-faint);font-family:var(--font-mono);font-size:0.85rem">Based in Tampere · open to roles across Finland · English (fluent), Finnish (A2)</p>
+    </div>
+
+    <div class="about-grid" style="margin-top:var(--space-2xl)">
+      <div data-reveal>
+        ${label('Experience')}
+        <div class="about-list">
+          ${row('Co-founder', 'Hackers Hostel', '2026 – present',
+            'A startup in its incubator phase that builds complete open-source applications teams run on their own infrastructure: free to use, with a paid licence for white-labelling. I build its AI workspace, AgentWebUI, with two other developers.',
+            ln('hackershostel.com', 'https://hackershostel.com', true) + ln('AgentWebUI', '#/projects/agentwebui'))}
+          ${row('Developer', 'Oppipolku', '2025 – 2026',
+            'A team of three building a course benchmarking platform for Finnish higher education. I work on the API, data verification and deployment.',
+            ln('Oppipolku', '#/projects/oppipolku'))}
+        </div>
       </div>
-      <div data-reveal style="display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden">
-        <div style="background:var(--bg-elev);padding:18px 20px"><div style="font-family:var(--font-mono);font-size:0.68rem;color:var(--text-faint);margin-bottom:5px">DEGREE</div><div style="font-size:0.92rem">B.Eng Software Engineering · TAMK</div></div>
-        <div style="background:var(--bg-elev);padding:18px 20px"><div style="font-family:var(--font-mono);font-size:0.68rem;color:var(--text-faint);margin-bottom:5px">GRADUATED</div><div style="font-size:0.92rem">May 2026</div></div>
-        <div style="background:var(--bg-elev);padding:18px 20px"><div style="font-family:var(--font-mono);font-size:0.68rem;color:var(--text-faint);margin-bottom:5px">PURSUING</div><div style="font-size:0.92rem;color:var(--accent)">AZ-104 — Azure Admin</div></div>
-        <div style="background:var(--bg-elev);padding:18px 20px"><div style="font-family:var(--font-mono);font-size:0.68rem;color:var(--text-faint);margin-bottom:5px">LOCATION</div><div style="font-size:0.92rem">Tampere, Finland</div></div>
+      <div style="display:flex;flex-direction:column;gap:var(--space-xl)">
+        <div data-reveal>
+          ${label('Education')}
+          <div class="about-list">
+            ${row("Bachelor's in Software Engineering", 'TAMK', '2024 – May 2026',
+              'Thesis: explainable security analysis with a quantized language model on ARM edge hardware, which grew into Kratos.',
+              ln('Kratos', '#/projects/kratos'))}
+          </div>
+        </div>
+        <div data-reveal>
+          ${label('Certifications &amp; awards')}
+          <div class="about-list">
+            <div class="about-row">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;gap:6px 16px;flex-wrap:wrap">
+                <h3 style="margin:0;font-size:1.08rem;font-weight:600;letter-spacing:-0.01em">Since AI Hackathon 2026<span style="color:var(--text-dim);font-weight:400"> · Turku</span></h3>
+                <span style="font-family:var(--font-mono);font-size:0.74rem;color:var(--text-faint);white-space:nowrap">Nov 2026</span>
+              </div>
+              <a href="#/projects/imbalance" class="award-tag" style="margin-top:10px">${AWARD_ICON}3rd place · Turku Energia challenge →</a>
+              <div style="display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:10px;font-family:var(--font-mono);font-size:0.74rem">${ln('Certificate', CERT_URL, true)}${ln('Imbalance Outlook', '#/projects/imbalance')}</div>
+            </div>
+            ${row('€5,000 funding', 'TAMK Foundation', '2025', 'Awarded to the Oppipolku team.', '')}
+            ${row('Azure Administrator Associate (AZ-104)', 'Microsoft', 'in progress', '', '')}
+          </div>
+        </div>
       </div>
     </div>
 
-    <div data-reveal style="margin:var(--space-2xl) 0 0">
-      <div style="background:#0d0d10;border:1px solid #222229;border-radius:var(--radius);overflow:hidden;font-family:'JetBrains Mono',monospace;font-size:clamp(0.72rem,1.5vw,0.84rem)">
-        <div style="background:#111116;border-bottom:1px solid #222229;padding:10px 14px;display:flex;align-items:center;gap:6px">
-          <span style="width:10px;height:10px;border-radius:50%;background:#ff5f57;flex-shrink:0"></span>
-          <span style="width:10px;height:10px;border-radius:50%;background:#febc2e;flex-shrink:0"></span>
-          <span style="width:10px;height:10px;border-radius:50%;background:#28c840;flex-shrink:0"></span>
-          <span style="margin-left:8px;color:#34343d;font-size:0.76rem">walid@tahrim: ~</span>
-        </div>
-        <div id="about-term-body" style="padding:18px 22px;min-height:280px;line-height:1.75;color:#9a9aa4"></div>
+    <div style="margin-top:var(--space-2xl)">
+      <div data-reveal>${label('Skills')}</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:var(--space-md)">
+        ${skillCards}
       </div>
     </div>
   </section>`;
@@ -813,6 +862,7 @@ function renderProjects() {
         ${badge(p)}
       </div>
       <p style="margin:0;font-family:var(--font-mono);font-size:0.78rem;color:var(--text-dim)">${p.subtitle}</p>
+      ${p.award ? `<span class="award-tag">${AWARD_ICON}${p.award}</span>` : ''}
       <p style="margin:0;font-size:0.93rem;line-height:1.65;color:var(--text-dim)">${p.oneliner}</p>
       <div style="display:flex;flex-wrap:wrap;gap:7px">${p.stack.map(t => techPill(t)).join('')}</div>
       <div style="display:flex;align-items:center;justify-content:space-between;width:100%;margin-top:auto;padding-top:14px;border-top:1px solid var(--border)">
@@ -884,6 +934,7 @@ function renderProjectDetail() {
       ${p.tag ? `<span style="font-family:var(--font-mono);font-size:0.72rem;font-weight:700;background:var(--accent);color:var(--on-accent);border-radius:99px;padding:5px 12px;white-space:nowrap;letter-spacing:0.02em">${p.tag}</span>` : ''}
     </div>
     <p style="margin:0 0 var(--space-md);font-family:var(--font-mono);font-size:0.9rem;color:var(--text-dim)">${p.subtitle}</p>
+    ${p.award ? `<a href="${CERT_URL}" target="_blank" rel="noopener" class="award-tag" style="margin-bottom:var(--space-md)" title="Since AI 2026 certificate">${AWARD_ICON}${p.award} · certificate ↗</a>` : ''}
     <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:var(--space-lg)">
       ${p.stack.map(t => techPill(t, 'var(--bg-elev)', '0.72rem', '5px 11px')).join('')}
     </div>
@@ -959,63 +1010,6 @@ function typeContactTagline() {
   typeText('contact-tagline', 'I would love to work with cloud architecture, DevOps and low level LLM deployment at scale', 28);
 }
 
-function runAboutTerminal() {
-  const body = document.getElementById('about-term-body');
-  if (!body) return;
-  body.innerHTML = '';
-  const PROMPT = '<span style="color:#00ff41">walid@tahrim</span><span style="color:#444450">:~$</span> ';
-  const steps = [
-    { t: 'cmd',  text: 'whoami' },
-    { t: 'out',  html: '<span style="color:#ededf0;font-weight:600">Walid Hassan Tahrim</span>  ·  Full-Stack Software Engineer  ·  Tampere, FI' },
-    { t: 'out',  html: '<span style="color:#5f5f6a">Backend · Cloud infrastructure · On-device AI inference</span>' },
-    { t: 'gap' },
-    { t: 'cmd',  text: 'cat timeline.txt' },
-    { t: 'out',  html: '<span style="color:#5f5f6a">2024–2026</span>  <span style="color:#ededf0">TAMK</span>  ·  B.Eng Software Engineering' },
-    { t: 'out',  html: '<span style="color:#5f5f6a">2025     </span>  <span style="color:#00ff41">Oppipolku</span>  ·  Backend Lead  ·  €5,000 TAMK Foundation grant' },
-    { t: 'out',  html: '<span style="color:#5f5f6a">2025     </span>  <span style="color:#00ff41">Kratos</span>    ·  Solo · Bachelor\'s Thesis · agentic, model-agnostic' },
-    { t: 'out',  html: '<span style="color:#5f5f6a">2025     </span>  <span style="color:#00ff41">InGen</span>     ·  Full-Stack · self-hosted 27B · 32 validation rules' },
-    { t: 'out',  html: '<span style="color:#5f5f6a">2026     </span>  <span style="color:#00ff41">Career AI</span> ·  Solo · 1,998 jobs · 100% LLM extraction' },
-    { t: 'gap' },
-    { t: 'cmd',  text: 'echo $STATUS' },
-    { t: 'out',  html: '<span style="color:#febc2e">Pursuing AZ-104 (Azure Administrator Associate)</span>' },
-    { t: 'out',  html: '<span style="color:#ededf0">Open to backend, cloud &amp; infrastructure roles in Finland</span>' },
-    { t: 'cursor' },
-  ];
-  let ms = 0;
-  steps.forEach(step => {
-    if (step.t === 'cmd') {
-      setTimeout(() => {
-        const row = document.createElement('div');
-        row.innerHTML = PROMPT + '<span class="tc"></span>';
-        body.appendChild(row);
-        const span = row.querySelector('.tc');
-        let i = 0;
-        const iv = setInterval(() => {
-          if (!span.isConnected) { clearInterval(iv); return; }
-          span.textContent = step.text.slice(0, ++i);
-          if (i >= step.text.length) clearInterval(iv);
-        }, 46);
-      }, ms);
-      ms += step.text.length * 46 + 280;
-    } else if (step.t === 'out') {
-      setTimeout(() => {
-        const row = document.createElement('div');
-        row.innerHTML = step.html;
-        body.appendChild(row);
-      }, ms);
-      ms += 55;
-    } else if (step.t === 'gap') {
-      ms += 220;
-    } else if (step.t === 'cursor') {
-      setTimeout(() => {
-        const row = document.createElement('div');
-        row.innerHTML = PROMPT + '<span style="display:inline-block;width:8px;height:1em;background:#00ff41;vertical-align:-2px;animation:blink 1.1s step-end infinite"></span>';
-        body.appendChild(row);
-      }, ms);
-    }
-  });
-}
-
 function startRoleRotation() {
   const el = document.getElementById('home-role');
   if (!el) return;
@@ -1067,7 +1061,6 @@ function render() {
   revealAllTimer = setTimeout(revealAll, 1400);
   if (state.route === 'contact') setTimeout(typeContactTagline, 300);
   if (state.route === 'home') setTimeout(startRoleRotation, 400);
-  if (state.route === 'about') setTimeout(runAboutTerminal, 350);
 }
 
 // ── Boot ───────────────────────────────────────────────────────────────────
